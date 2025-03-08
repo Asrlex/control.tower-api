@@ -1,0 +1,994 @@
+[
+  {
+    "customerName": "AIRPHARM",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "93 264 19 19",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1000",
+        "sgaCustomerName": "AIRPHARM",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "Paseo de la Zona Franca, 46",
+        "cityID": "881",
+        "stateID": "9",
+        "countryID": "62",
+        "customerAddressCP": "08038",
+        "customerAddressPhone": "93 264 19 19",
+        "customerAddressFax": "93 264 19 00",
+        "customerAddressEmail": "airpharm@airpharmlogistics.com",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "ALDISCA",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1188",
+        "sgaCustomerName": "ALDISCA",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "CALLE 22 16-18",
+        "cityID": "881",
+        "stateID": "9",
+        "countryID": "62",
+        "customerAddressCP": "08040",
+        "customerAddressPhone": "",
+        "customerAddressFax": "",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "BEMAR ADUANAS",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "637 21 35 29",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1170",
+        "sgaCustomerName": "BEMAR ADUANAS",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "",
+        "cityID": "881",
+        "stateID": "9",
+        "countryID": "62",
+        "customerAddressCP": "08006",
+        "customerAddressPhone": "637 21 35 29",
+        "customerAddressFax": "",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "CLINICA ESMEDIC",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "972 09 34 08",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1212",
+        "sgaCustomerName": "CLINICA ESMEDIC",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "Av. Vila de Blanes, 139",
+        "cityID": "2541",
+        "stateID": "20",
+        "countryID": "62",
+        "customerAddressCP": "17310",
+        "customerAddressPhone": "972 09 34 08",
+        "customerAddressFax": "",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "DAU",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1205",
+        "sgaCustomerName": "DAU",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "",
+        "cityID": "881",
+        "stateID": "9",
+        "countryID": "62",
+        "customerAddressCP": "",
+        "customerAddressPhone": "",
+        "customerAddressFax": "",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "DAU - DENTAID",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1204",
+        "sgaCustomerName": "DAU - DENTAID",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "XX",
+        "cityID": "881",
+        "stateID": "9",
+        "countryID": "62",
+        "customerAddressCP": "",
+        "customerAddressPhone": "",
+        "customerAddressFax": "",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "DAU - GENSENTA",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1141",
+        "sgaCustomerName": "DAU - GENSENTA",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "",
+        "cityID": "881",
+        "stateID": "9",
+        "countryID": "62",
+        "customerAddressCP": "",
+        "customerAddressPhone": "",
+        "customerAddressFax": "",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "DAU - LORIEN",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "93 300 08 58",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1076",
+        "sgaCustomerName": "DAU - LORIEN",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "Carrer C, 12-14",
+        "cityID": "881",
+        "stateID": "9",
+        "countryID": "62",
+        "customerAddressCP": "08040",
+        "customerAddressPhone": "93 300 08 58",
+        "customerAddressFax": "",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "DAU-INTAS",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1143",
+        "sgaCustomerName": "DAU-INTAS",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "",
+        "cityID": "881",
+        "stateID": "9",
+        "countryID": "62",
+        "customerAddressCP": "",
+        "customerAddressPhone": "",
+        "customerAddressFax": "",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "DR/AB MAURI",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1213",
+        "sgaCustomerName": "DR/AB MAURI",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "",
+        "cityID": "881",
+        "stateID": "9",
+        "countryID": "62",
+        "customerAddressCP": "",
+        "customerAddressPhone": "",
+        "customerAddressFax": "",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "ESTEVE QUIMICA S.A.",
+    "customerNIF": "A08335671",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1191",
+        "sgaCustomerName": "ESTEVE QUIMICA S.A.",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "PASEO ZONA FRANCA 109, PLANTA 4",
+        "cityID": "881",
+        "stateID": "9",
+        "countryID": "62",
+        "customerAddressCP": "08038",
+        "customerAddressPhone": "",
+        "customerAddressFax": "",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "GENSENTA PHARMACEUTICALS",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "(212)3373800",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1033",
+        "sgaCustomerName": "GENSENTA PHARMACEUTICALS",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "Levent Mah. Meltem Sok.",
+        "cityID": "8368",
+        "stateID": "90",
+        "countryID": "224",
+        "customerAddressCP": "",
+        "customerAddressPhone": "(212)3373800",
+        "customerAddressFax": "(212)3373801",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "I+D LICONSA",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1123",
+        "sgaCustomerName": "I+D LICONSA",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "",
+        "cityID": "4353",
+        "stateID": "30",
+        "countryID": "62",
+        "customerAddressCP": "",
+        "customerAddressPhone": "",
+        "customerAddressFax": "",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "INDUSTRIAL VETERINARIA, S.A (M.P.)",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1005",
+        "sgaCustomerName": "INDUSTRIAL VETERINARIA, S.A (M.P.)",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "",
+        "cityID": "881",
+        "stateID": "9",
+        "countryID": "62",
+        "customerAddressCP": "",
+        "customerAddressPhone": "",
+        "customerAddressFax": "",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "INTERNATIONAL PHARMA TRADE",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "",
+    "customerEmail": "info@internationalpharmatrade.com",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1055",
+        "sgaCustomerName": "INTERNATIONAL PHARMA TRADE",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "Office 202, 2nd  floor,Park Place Tower",
+        "cityID": "8369",
+        "stateID": "91",
+        "countryID": "58",
+        "customerAddressCP": "413459",
+        "customerAddressPhone": "",
+        "customerAddressFax": "",
+        "customerAddressEmail": "info@internationalpharmatrade.com",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "INVESA ANIMEDICA",
+    "customerNIF": "A-08630667",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1011",
+        "sgaCustomerName": "INVESA ANIMEDICA",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "C/ESMERALDA, 19 - 21",
+        "cityID": "941",
+        "stateID": "9",
+        "countryID": "62",
+        "customerAddressCP": "08950",
+        "customerAddressPhone": "",
+        "customerAddressFax": "",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "ISS GLOBAL",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1157",
+        "sgaCustomerName": "ISS GLOBAL",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "Avda. Paral-lel , 21 , 3º 1ª",
+        "cityID": "881",
+        "stateID": "9",
+        "countryID": "62",
+        "customerAddressCP": "08004",
+        "customerAddressPhone": "",
+        "customerAddressFax": "",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "KROMTON - SAFIC",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1147",
+        "sgaCustomerName": "KROMTON - SAFIC",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "",
+        "cityID": "881",
+        "stateID": "9",
+        "countryID": "62",
+        "customerAddressCP": "",
+        "customerAddressPhone": "",
+        "customerAddressFax": "",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "KYKEON ANALYTICS",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1251",
+        "sgaCustomerName": "KYKEON ANALYTICS",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "JAUME I EL CONQUERIDOR, Nº 18 BAJOS",
+        "cityID": "1158",
+        "stateID": "9",
+        "countryID": "62",
+        "customerAddressCP": "08500",
+        "customerAddressPhone": "",
+        "customerAddressFax": "",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "LIVISTO LAME/ADT",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1231",
+        "sgaCustomerName": "LIVISTO LAME/ADT",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "",
+        "cityID": "881",
+        "stateID": "9",
+        "countryID": "62",
+        "customerAddressCP": "",
+        "customerAddressPhone": "",
+        "customerAddressFax": "",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "MPA VETERINARY",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "937 47 96 59",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1135",
+        "sgaCustomerName": "MPA VETERINARY",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "Carrer de Mogoda, nº 16",
+        "cityID": "1125",
+        "stateID": "9",
+        "countryID": "62",
+        "customerAddressCP": "08130",
+        "customerAddressPhone": "937 47 96 59",
+        "customerAddressFax": "",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "NEUROCIENCIA EXTAVIA",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1025",
+        "sgaCustomerName": "NEUROCIENCIA EXTAVIA",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "",
+        "cityID": "881",
+        "stateID": "9",
+        "countryID": "62",
+        "customerAddressCP": "",
+        "customerAddressPhone": "",
+        "customerAddressFax": "",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "NOVARTIS FARMACÉUTICA S.A",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1018",
+        "sgaCustomerName": "NOVARTIS FARMACÉUTICA S.A",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "",
+        "cityID": "881",
+        "stateID": "9",
+        "countryID": "62",
+        "customerAddressCP": "",
+        "customerAddressPhone": "",
+        "customerAddressFax": "",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "NOVARTIS ICRO",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1031",
+        "sgaCustomerName": "NOVARTIS ICRO",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "",
+        "cityID": "881",
+        "stateID": "9",
+        "countryID": "62",
+        "customerAddressCP": "",
+        "customerAddressPhone": "",
+        "customerAddressFax": "",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "PROFARMACO S.A.",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "934 147 009",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1071",
+        "sgaCustomerName": "PROFARMACO S.A.",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "c/ Numancia, 187, 5ta planta",
+        "cityID": "881",
+        "stateID": "9",
+        "countryID": "62",
+        "customerAddressCP": "08034",
+        "customerAddressPhone": "934 147 009",
+        "customerAddressFax": "934 143 639",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "PROFESSIONAL DERMA",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "",
+    "customerEmail": "info@pderma.it",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1247",
+        "sgaCustomerName": "PROFESSIONAL DERMA",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "Via Umberto Giordano 82-84",
+        "cityID": "8370",
+        "stateID": "92",
+        "countryID": "62",
+        "customerAddressCP": "00124",
+        "customerAddressPhone": "",
+        "customerAddressFax": "",
+        "customerAddressEmail": "info@pderma.it",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "TEKNOKROMA ANALITICA",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "936748800",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1196",
+        "sgaCustomerName": "TEKNOKROMA ANALITICA",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "CAMÍ DE CAN CALDERS, 14",
+        "cityID": "1067",
+        "stateID": "9",
+        "countryID": "62",
+        "customerAddressCP": "08173",
+        "customerAddressPhone": "936748800",
+        "customerAddressFax": "",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "TIAF",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "935 65 00 48",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1137",
+        "sgaCustomerName": "TIAF",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "CALLE LA RIGOLA 43",
+        "cityID": "994",
+        "stateID": "9",
+        "countryID": "62",
+        "customerAddressCP": "08110",
+        "customerAddressPhone": "935 65 00 48",
+        "customerAddressFax": "",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "TRANSGLORY S.A.",
+    "customerNIF": "A60973906",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "+34 93554050",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1084",
+        "sgaCustomerName": "TRANSGLORY S.A.",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "Calle Nyepa, 2-5",
+        "cityID": "1035",
+        "stateID": "9",
+        "countryID": "62",
+        "customerAddressCP": "08820",
+        "customerAddressPhone": "+34 93554050",
+        "customerAddressFax": "+34 93543326",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "VIDARA ADUANAS",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1199",
+        "sgaCustomerName": "VIDARA ADUANAS",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "",
+        "cityID": "881",
+        "stateID": "9",
+        "countryID": "62",
+        "customerAddressCP": "",
+        "customerAddressPhone": "",
+        "customerAddressFax": "",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  },
+  {
+    "customerName": "ZENIT PHARMA",
+    "customerNIF": "",
+    "customerIndustry": "Pharmaceutical",
+    "customerPhone": "",
+    "customerEmail": "",
+    "customerDefCurrency": "",
+    "customerDefCurrencyISO": "",
+    "customerDescription": "",
+    "ownerID": "63",
+    "customerSGADetails": [
+      {
+        "sgaID": "1133",
+        "sgaCustomerName": "ZENIT PHARMA",
+        "warehouseID": "SP"
+      }
+    ],
+    "customerAddresses": [
+      {
+        "customerAddressType": "Billing",
+        "customerAddressStreet": "C/ Circunvalacion 15 - Local 3",
+        "cityID": "2683",
+        "stateID": "21",
+        "countryID": "62",
+        "customerAddressCP": "18620",
+        "customerAddressPhone": "",
+        "customerAddressFax": "",
+        "customerAddressEmail": "",
+        "customerAddressGroupCode": ""
+      }
+    ]
+  }
+]

@@ -1,0 +1,285 @@
+import { forwardRef, Inject, Logger, NotFoundException } from '@nestjs/common';
+import { DatabaseConnection } from 'src/db/database.connection';
+import { SortI } from 'src/api/entities/interfaces/api.entity';
+import { KafkaService } from 'src/kafka/kafka.service';
+import { BaseRepository } from 'src/repository/base-repository';
+import { plainToInstance } from 'class-transformer';
+import { shoppingListQueries } from '@/db/queries/home-management.queries';
+import {
+  ShoppingListProductI,
+  StockProductI,
+} from '@/api/entities/interfaces/home-management.entity';
+import { ShoppingListProductRepository } from './shopping-list.repository.interface';
+import {
+  CreateShoppingListProductDto,
+  GetShoppingListProductDto,
+} from '@/api/entities/dtos/home-management/shopping-list.dto';
+import { StockProductRepository } from './stock.repository.interface';
+
+export class ShoppingListProductRepositoryImplementation
+  extends BaseRepository
+  implements ShoppingListProductRepository
+{
+  constructor(
+    @Inject('HOME_MANAGEMENT_CONNECTION')
+    private readonly homeManagementDbConnection: DatabaseConnection,
+    private readonly logger: Logger,
+    protected readonly kafkaService: KafkaService,
+    @Inject(forwardRef(() => 'STOCK_PRODUCT_REPOSITORY'))
+    protected readonly stockProductRepository: StockProductRepository,
+  ) {
+    super(homeManagementDbConnection, kafkaService);
+  }
+
+  /**
+   * Método para obtener todos los productos
+   * @returns string - todos los productos
+   */
+  async findAll(): Promise<{
+    entities: ShoppingListProductI[];
+    total: number;
+  }> {
+    this.logger.debug('GET /shopping-list-products/all');
+    const sql = shoppingListQueries.getAll;
+    const result = await this.homeManagementDbConnection.execute(sql);
+    const entities: ShoppingListProductI[] = this.resultToProduct(result);
+    return {
+      entities,
+      total: result[0] ? parseInt(result[0].total, 10) : 0,
+    };
+  }
+
+  /**
+   * Método para obtener lista de productos filtrados
+   * @returns string - lista de productos filtrados
+   */
+  async find(
+    page: number,
+    limit: number,
+    searchCriteria: any,
+  ): Promise<{ entities: ShoppingListProductI[]; total: number }> {
+    let filters = '';
+    let sort: SortI = { field: 'customerName', order: 'DESC' };
+    if (searchCriteria) {
+      const sqlFilters = this.filterstoSQL(searchCriteria);
+      filters = this.addSearchToFilters(
+        sqlFilters.filters,
+        searchCriteria.search,
+      );
+      sort = sqlFilters.sort || sort;
+    }
+    const offset: number = page * limit + 1;
+    limit = offset + parseInt(limit.toString(), 10) - 1;
+    const sql = shoppingListQueries.get
+      .replaceAll('@DynamicWhereClause', filters)
+      .replaceAll('@DynamicOrderByField', `${sort.field}`)
+      .replaceAll('@DynamicOrderByDirection', `${sort.order}`)
+      .replace('@start', offset.toString())
+      .replace('@end', limit.toString());
+    const result = await this.homeManagementDbConnection.execute(sql);
+    const entities: ShoppingListProductI[] = this.resultToProduct(result);
+    return {
+      entities,
+      total: result[0] ? parseInt(result[0].total, 10) : 0,
+    };
+  }
+
+  /**
+   * Método para obtener un producto por su id
+   * @param id - id del producto
+   * @returns string
+   */
+  async findById(id: string): Promise<ShoppingListProductI | null> {
+    const sql = shoppingListQueries.getOne.replace('@id', id);
+    const result = await this.homeManagementDbConnection.execute(sql);
+    const entities: ShoppingListProductI[] = this.resultToProduct(result);
+    return entities.length > 0 ? entities[0] : null;
+  }
+
+  /**
+   * Metodo para crear un nuevo producto
+   * @returns string - producto creado
+   */
+  async create(
+    dto: CreateShoppingListProductDto,
+  ): Promise<ShoppingListProductI> {
+    dto = this.prepareDTO(dto);
+    const sqlProduct = shoppingListQueries.create.replace(
+      '@InsertValues',
+      `'${dto.shoppingListAmount}', '${dto.shoppingListProductID}', '${dto.storeID}'`,
+    );
+
+    const responseProduct =
+      await this.homeManagementDbConnection.execute(sqlProduct);
+    const productID = responseProduct[0].id;
+
+    await this.saveLog(
+      'insert',
+      'shopping_list',
+      `Created product ${productID}`,
+    );
+    return this.findById(productID);
+  }
+
+  /**
+   * Método para actualizar un producto
+   * Si el producto no existe, se devuelve null
+   * Si el producto no tiene cambios, se devuelve el producto original
+   * @param id - id del producto
+   * @param product - producto
+   * @returns string - producto actualizado
+   */
+  async modify(
+    id: string,
+    dto: CreateShoppingListProductDto,
+  ): Promise<ShoppingListProductI> {
+    const originalProduct = await this.findById(id);
+    if (!originalProduct) {
+      throw new NotFoundException('Product not found');
+    }
+    dto = this.prepareDTO(dto);
+
+    const sqlProduct = shoppingListQueries.update
+      .replace('@amount', dto.shoppingListAmount.toString())
+      .replace('@product_id', dto.shoppingListProductID.toString())
+      .replace('@id', id);
+    await this.homeManagementDbConnection.execute(sqlProduct);
+
+    await this.saveLog('update', 'shopping_list', `Modified product ${id}`);
+    return this.findById(id);
+  }
+
+  /**
+   * Método para comprar un producto
+   * @param productId - id del producto
+   * @returns string - producto comprado
+   */
+  async buyProduct(productId: string): Promise<StockProductI> {
+    const originalProduct = await this.findById(productId);
+    if (!originalProduct) {
+      throw new NotFoundException('Product not found');
+    }
+
+    await this.delete(productId);
+    const response = await this.stockProductRepository.create({
+      stockProductID: originalProduct.product.productID,
+      stockProductAmount: originalProduct.shoppingListProductAmount,
+    });
+    await this.saveLog(
+      'update',
+      'shopping_list',
+      `Bought product ${productId}`,
+    );
+    return response;
+  }
+
+  /**
+   * Método para modificar la cantidad de un producto
+   * @param productId - id del producto
+   * @param amount - cantidad
+   * @returns string - producto modificado
+   */
+  async modifyAmount(productId: string, amount: number): Promise<void> {
+    const originalProduct = await this.findById(productId);
+    if (!originalProduct) {
+      throw new NotFoundException('Product not found');
+    }
+    const sql = shoppingListQueries.modifyAmount
+      .replace('@amount', amount.toString())
+      .replace('@id', productId);
+    await this.homeManagementDbConnection.execute(sql);
+    await this.saveLog(
+      'update',
+      'shopping_list',
+      `Modified amount of product ${productId}`,
+    );
+  }
+
+  /**
+   * Método para eliminar un producto
+   * @param id - id del producto
+   * @returns string - producto eliminado
+   */
+  async delete(id: string): Promise<void> {
+    const originalProduct = await this.findById(id);
+    if (!originalProduct) {
+      throw new NotFoundException('Product not found');
+    }
+    const sql = shoppingListQueries.delete.replace('@id', id);
+    await this.homeManagementDbConnection.execute(sql);
+    await this.saveLog('delete', 'shopping_list', `Deleted product ${id}`);
+  }
+
+  /**
+   * Método para inicializar valores opcionales del DTO
+   * @param dto - DTO
+   * @returns DTO
+   */
+  private prepareDTO(
+    dto: CreateShoppingListProductDto,
+  ): CreateShoppingListProductDto {
+    dto = plainToInstance(CreateShoppingListProductDto, dto, {
+      exposeDefaultValues: true,
+    });
+    return dto;
+  }
+
+  /**
+   * Método para convertir el resultado de la consulta a un array de productos
+   * @param result - resultado de la consulta
+   * @returns array de productos
+   */
+  private resultToProduct(
+    result: GetShoppingListProductDto[],
+  ): ShoppingListProductI[] {
+    const mappedProducts: Map<number, ShoppingListProductI> = new Map();
+    result.forEach((record: GetShoppingListProductDto) => {
+      let product: ShoppingListProductI;
+      if (mappedProducts.has(record.productID)) {
+        product = mappedProducts.get(record.productID);
+      } else {
+        product = {
+          shoppingListProductID: record.shoppingListProductID,
+          shoppingListProductAmount: record.shoppingListAmount,
+          product: {
+            productID: record.productID,
+            productName: record.productName,
+            productUnit: record.productUnit,
+            productDateLastBought: record.productDateLastBought,
+            productDateLastConsumed: record.productDateLastConsumed,
+            tags: [],
+          },
+          store: {
+            storeID: record.storeID,
+            storeName: record.storeName,
+          },
+        };
+        mappedProducts.set(record.productID, product);
+
+        if (record.tagID) {
+          product.product.tags.push({
+            tagID: record.tagID,
+            tagName: record.tagName,
+            tagType: record.tagType,
+          });
+        }
+      }
+    });
+    return Array.from(mappedProducts.values());
+  }
+
+  /**
+   * Método para añadir los criterios de búsqueda a los filtros
+   * @param filters - filtros
+   * @param search - criterios de búsqueda
+   * @returns filtros con criterios de búsqueda
+   */
+  private addSearchToFilters(filters: string, search: string): string {
+    if (search) {
+      filters += ` 
+        AND (productName LIKE '%${search}%')
+        `;
+    }
+    return filters;
+  }
+}
