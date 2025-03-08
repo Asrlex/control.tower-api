@@ -1,6 +1,5 @@
 import { Module, Logger, forwardRef } from '@nestjs/common';
 import { DatabaseModule } from '@/db/database.module';
-import { KafkaModule } from 'src/kafka/kafka.module';
 import { StockProductService } from './stock.service';
 import { StockProductController } from './stock.controller';
 import { STOCK_PRODUCT_REPOSITORY } from '@/repository/home-management/stock.repository.interface';
@@ -12,7 +11,6 @@ import { ShoppingListProductRepositoryImplementation } from '@/repository/home-m
 @Module({
   imports: [
     DatabaseModule,
-    forwardRef(() => KafkaModule),
     forwardRef(() => ShoppingListProductModule),
   ],
   controllers: [StockProductController],

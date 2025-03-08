@@ -1,7 +1,6 @@
 import { Inject, Logger, NotFoundException } from '@nestjs/common';
 import { DatabaseConnection } from 'src/db/database.connection';
 import { SortI } from 'src/api/entities/interfaces/api.entity';
-import { KafkaService } from 'src/kafka/kafka.service';
 import { BaseRepository } from 'src/repository/base-repository';
 import { plainToInstance } from 'class-transformer';
 import { ProductRepository } from './products.repository.interface';
@@ -20,9 +19,8 @@ export class ProductRepositoryImplementation
     @Inject('HOME_MANAGEMENT_CONNECTION')
     private readonly homeManagementDbConnection: DatabaseConnection,
     private readonly logger: Logger,
-    protected readonly kafkaService: KafkaService,
   ) {
-    super(homeManagementDbConnection, kafkaService);
+    super(homeManagementDbConnection);
   }
 
   /**

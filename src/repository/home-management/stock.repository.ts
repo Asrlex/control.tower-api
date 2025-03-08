@@ -1,7 +1,6 @@
 import { forwardRef, Inject, Logger, NotFoundException } from '@nestjs/common';
 import { DatabaseConnection } from 'src/db/database.connection';
 import { SortI } from 'src/api/entities/interfaces/api.entity';
-import { KafkaService } from 'src/kafka/kafka.service';
 import { BaseRepository } from 'src/repository/base-repository';
 import { plainToInstance } from 'class-transformer';
 import {
@@ -24,11 +23,10 @@ export class StockProductRepositoryImplementation
     @Inject('HOME_MANAGEMENT_CONNECTION')
     private readonly homeManagementDbConnection: DatabaseConnection,
     private readonly logger: Logger,
-    protected readonly kafkaService: KafkaService,
     @Inject(forwardRef(() => 'SHOPPING_LIST_PRODUCT_REPOSITORY'))
     protected readonly shoppingListProductRepository: ShoppingListProductRepository,
   ) {
-    super(homeManagementDbConnection, kafkaService);
+    super(homeManagementDbConnection);
   }
 
   /**

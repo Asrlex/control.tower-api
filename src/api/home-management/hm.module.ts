@@ -1,5 +1,4 @@
 import { DatabaseModule } from '@/db/database.module';
-import { KafkaModule } from '@/kafka/kafka.module';
 import { forwardRef, Logger, Module } from '@nestjs/common';
 import { ProductModule } from './products/products.module';
 import { ShoppingListProductModule } from './shopping-list/shopping-list.module';
@@ -24,7 +23,6 @@ import { TAG_REPOSITORY } from '@/repository/home-management/tag.repository.inte
 @Module({
   imports: [
     DatabaseModule,
-    KafkaModule,
     ProductModule,
     forwardRef(() => StockProductModule),
     forwardRef(() => ShoppingListProductModule),

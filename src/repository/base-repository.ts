@@ -6,15 +6,12 @@ import {
 } from 'src/api/entities/interfaces/api.entity';
 import { EscapingException } from 'src/common/exceptions/escaping.exception';
 import { DatabaseConnection } from 'src/db/database.connection';
-import { KafkaService } from 'src/kafka/kafka.service';
 
 export class BaseRepository {
   protected connection: DatabaseConnection;
-  protected kafkaService: KafkaService;
 
-  constructor(connection: DatabaseConnection, kafkaService: KafkaService) {
+  constructor(connection: DatabaseConnection) {
     this.connection = connection;
-    this.kafkaService = kafkaService;
   }
 
   /**
@@ -35,12 +32,12 @@ export class BaseRepository {
     ]);
     await this.connection.execute(sql);
 
-    setTimeout(async () => {
-      await this.kafkaService.sendMessage(
-        `control-tower-${action}`,
-        JSON.stringify({ table, description }),
-      );
-    }, 0);
+    // setTimeout(async () => {
+    //   await this.kafkaService.sendMessage(
+    //     `control-tower-${action}`,
+    //     JSON.stringify({ table, description }),
+    //   );
+    // }, 0);
   }
 
   /**
