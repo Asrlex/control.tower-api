@@ -16,6 +16,8 @@ import {
   RecipeIngredientI,
   RecipeStepI,
 } from '@/api/entities/interfaces/home-management.entity';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 export class RecipeRepositoryImplementation
   extends BaseRepository
@@ -25,6 +27,7 @@ export class RecipeRepositoryImplementation
     @Inject('HOME_MANAGEMENT_CONNECTION')
     private readonly homeManagementDbConnection: DatabaseConnection,
     private readonly logger: Logger,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {
     super(homeManagementDbConnection);
   }
@@ -37,12 +40,30 @@ export class RecipeRepositoryImplementation
     entities: RecipeDetailI[];
     total: number;
   }> {
+    if (this.cacheManager) {
+      const cacheKey = 'recipes';
+      const cachedRecipes: {
+        entities: RecipeDetailI[];
+        total: number;
+      } = await this.cacheManager.get(cacheKey);
+      if (cachedRecipes) {
+        return cachedRecipes;
+      }
+    }
     const sql = recipesQueries.getAll;
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: RecipeDetailI[] = this.resultToRecipe(result);
+    const total = result[0] ? parseInt(result[0].total, 10) : 0;
+    if (this.cacheManager) {
+      const cacheKey = 'recipes';
+      await this.cacheManager.set(cacheKey, {
+        entities,
+        total,
+      });
+    }
     return {
       entities,
-      total: result[0] ? parseInt(result[0].total, 10) : 0,
+      total,
     };
   }
 
@@ -133,6 +154,20 @@ export class RecipeRepositoryImplementation
     const responseRecipe =
       await this.homeManagementDbConnection.execute(sqlRecipe);
     const recipeID = responseRecipe[0].id;
+
+    if (dto.ingredients) {
+      dto.ingredients.forEach((ingredient) => {
+        ingredient.recipeID = recipeID;
+        this.createIngredient(ingredient);
+      });
+    }
+
+    if (dto.steps) {
+      dto.steps.forEach((step) => {
+        step.recipeID = recipeID;
+        this.createStep(step);
+      });
+    }
 
     await this.saveLog('insert', 'recipe', `Created recipe ${recipeID}`);
     return this.findById(recipeID);
@@ -358,6 +393,7 @@ export class RecipeRepositoryImplementation
           recipeIngredientID: record.ingredientID,
           recipeIngredientAmount: record.ingredientAmount,
           recipeIngredientUnit: record.ingredientUnit,
+          recipeIngredientIsOptional: record.ingredientIsOptional,
           product: {
             productID: record.productID,
             productName: record.productName,
@@ -378,6 +414,7 @@ export class RecipeRepositoryImplementation
           recipeStepName: record.stepName,
           recipeStepDescription: record.stepDescription,
           recipeStepOrder: record.stepOrder,
+          recipeStepIsOptional: record.stepIsOptional,
         });
       }
     });
@@ -400,6 +437,7 @@ export class RecipeRepositoryImplementation
           recipeIngredientID: record.ingredientID,
           recipeIngredientAmount: record.ingredientAmount,
           recipeIngredientUnit: record.ingredientUnit,
+          recipeIngredientIsOptional: record.ingredientIsOptional,
           product: {
             productID: record.productID,
             productName: record.productName,
@@ -432,6 +470,7 @@ export class RecipeRepositoryImplementation
           recipeStepName: record.stepName,
           recipeStepDescription: record.stepDescription,
           recipeStepOrder: record.stepOrder,
+          recipeStepIsOptional: record.stepIsOptional,
         };
         mappedStep.set(record.stepID, step);
       }

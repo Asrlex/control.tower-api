@@ -117,13 +117,17 @@ export class TagRepositoryImplementation
       throw new NotFoundException('Tag not found');
     }
 
-    const sql =
-      originalTag.tagType === 'Product'
-        ? tagsQueries.createProductTag
-        : tagsQueries.createTaskTag;
-    await this.homeManagementDbConnection.execute(
-      sql.replace('@InsertValues', `'${itemID}', '${tagID}'`),
-    );
+    let sql = '';
+    if (originalTag.tagType === 'Product') {
+      sql = tagsQueries.createProductTag;
+    } else if (originalTag.tagType === 'Task') {
+      sql = tagsQueries.createTaskTag;
+    } else if (originalTag.tagType === 'Recipe') {
+      sql = tagsQueries.createRecipeTag;
+    } else {
+      throw new NotFoundException('Tag type not found');
+    }
+    sql = sql.replace('@InsertValues', `'${itemID}', '${tagID}'`);
     await this.homeManagementDbConnection.execute(sql);
   }
 
@@ -179,16 +183,25 @@ export class TagRepositoryImplementation
       throw new NotFoundException('Tag not found');
     }
 
-    const sql =
-      originalTag.tagType === 'Product'
-        ? tagsQueries.deleteProductTag
-        : tagsQueries.deleteTaskTag;
-    await this.homeManagementDbConnection.execute(
-      sql.replace(
-        '@DeleteFields',
-        `itemID = '${itemID}' AND tagID = '${tagID}'`,
-      ),
+    let sql = '';
+    let sqlID = '';
+    if (originalTag.tagType === 'Product') {
+      sql = tagsQueries.deleteProductTag;
+      sqlID = 'product_id';
+    } else if (originalTag.tagType === 'Task') {
+      sql = tagsQueries.deleteTaskTag;
+      sqlID = 'task_id';
+    } else if (originalTag.tagType === 'Recipe') {
+      sql = tagsQueries.deleteRecipeTag;
+      sqlID = 'recipe_id';
+    } else {
+      throw new NotFoundException('Tag type not found');
+    }
+    sql = sql.replace(
+      '@DeleteFields',
+      `${sqlID} = '${itemID}' AND tag_id = '${tagID}'`,
     );
+    await this.homeManagementDbConnection.execute(sql);
   }
 
   /**

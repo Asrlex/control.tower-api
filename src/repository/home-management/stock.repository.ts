@@ -14,6 +14,8 @@ import {
   GetStockProductDto,
 } from '@/api/entities/dtos/home-management/stock-product.dto';
 import { ShoppingListProductRepository } from './shopping-list.repository.interface';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 export class StockProductRepositoryImplementation
   extends BaseRepository
@@ -25,6 +27,7 @@ export class StockProductRepositoryImplementation
     private readonly logger: Logger,
     @Inject(forwardRef(() => 'SHOPPING_LIST_PRODUCT_REPOSITORY'))
     protected readonly shoppingListProductRepository: ShoppingListProductRepository,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {
     super(homeManagementDbConnection);
   }
@@ -37,12 +40,27 @@ export class StockProductRepositoryImplementation
     entities: StockProductI[];
     total: number;
   }> {
+    if (this.cacheManager) {
+      const cacheKey = 'stock';
+      const cachedStock: {
+        entities: StockProductI[];
+        total: number;
+      } = await this.cacheManager.get(cacheKey);
+      if (cachedStock) {
+        return cachedStock;
+      }
+    }
     const sql = stockProductQueries.getAll;
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: StockProductI[] = this.resultToProduct(result);
+    const total = result[0] ? parseInt(result[0].total, 10) : 0;
+    if (this.cacheManager) {
+      const cacheKey = 'products';
+      await this.cacheManager.set(cacheKey, { entities, total });
+    }
     return {
       entities,
-      total: result[0] ? parseInt(result[0].total, 10) : 0,
+      total,
     };
   }
 

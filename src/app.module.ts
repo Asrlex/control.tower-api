@@ -9,6 +9,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ErrorWrapperFilter } from './common/filters/errorWrapping.filter';
 import { AuthModule } from './api/auth/auth.module';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -31,6 +32,11 @@ import { AuthModule } from './api/auth/auth.module';
         limit: 10,
       },
     ]),
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 5,
+      max: 10,
+    }),
     AuthModule,
     ApiModule,
   ],

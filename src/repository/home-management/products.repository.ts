@@ -10,6 +10,8 @@ import {
   CreateProductDto,
   GetProductDto,
 } from '@/api/entities/dtos/home-management/product.dto';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 export class ProductRepositoryImplementation
   extends BaseRepository
@@ -19,6 +21,7 @@ export class ProductRepositoryImplementation
     @Inject('HOME_MANAGEMENT_CONNECTION')
     private readonly homeManagementDbConnection: DatabaseConnection,
     private readonly logger: Logger,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {
     super(homeManagementDbConnection);
   }
@@ -31,12 +34,27 @@ export class ProductRepositoryImplementation
     entities: ProductI[];
     total: number;
   }> {
+    if (this.cacheManager) {
+      const cacheKey = 'products';
+      const cachedProducts: {
+        entities: ProductI[];
+        total: number;
+      } = await this.cacheManager.get(cacheKey);
+      if (cachedProducts) {
+        return cachedProducts;
+      }
+    }
     const sql = productsQueries.getAll;
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: ProductI[] = this.resultToProduct(result);
+    const total = result[0] ? parseInt(result[0].total, 10) : 0;
+    if (this.cacheManager) {
+      const cacheKey = 'products';
+      await this.cacheManager.set(cacheKey, { entities, total });
+    }
     return {
       entities,
-      total: result[0] ? parseInt(result[0].total, 10) : 0,
+      total,
     };
   }
 
