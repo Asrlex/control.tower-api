@@ -19,6 +19,9 @@ import { TaskModule } from './tasks/task.module';
 import { TagModule } from './tags/tags.module';
 import { TagRepositoryImplementation } from '@/repository/home-management/tag.repository';
 import { TAG_REPOSITORY } from '@/repository/home-management/tag.repository.interface';
+import { RecipeModule } from './recipes/recipes.module';
+import { RECIPE_REPOSITORY } from '@/repository/home-management/recipes.repository.interface';
+import { RecipeRepositoryImplementation } from '@/repository/home-management/recipes.repository';
 
 @Module({
   imports: [
@@ -29,6 +32,7 @@ import { TAG_REPOSITORY } from '@/repository/home-management/tag.repository.inte
     StoreModule,
     TaskModule,
     TagModule,
+    RecipeModule,
     RouterModule.register([
       {
         path: 'home-management',
@@ -57,6 +61,10 @@ import { TAG_REPOSITORY } from '@/repository/home-management/tag.repository.inte
           {
             path: 'tags',
             module: TagModule,
+          },
+          {
+            path: 'recipes',
+            module: RecipeModule,
           },
         ],
       },
@@ -88,6 +96,10 @@ import { TAG_REPOSITORY } from '@/repository/home-management/tag.repository.inte
     {
       provide: TAG_REPOSITORY,
       useClass: TagRepositoryImplementation,
+    },
+    {
+      provide: RECIPE_REPOSITORY,
+      useClass: RecipeRepositoryImplementation,
     },
   ],
 })

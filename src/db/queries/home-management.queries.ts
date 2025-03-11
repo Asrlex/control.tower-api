@@ -1,5 +1,4 @@
 import { baseQueries, generateQuery } from 'src/db/database.utils';
-
 const productsTable = 'products';
 const pantryTable = 'pantry';
 const storesTable = 'store';
@@ -9,12 +8,12 @@ const tagsTable = 'tag';
 const tasksTable = 'task';
 const taskTagsTable = 'task_tag';
 const orderTable = 'list_order';
+const recipesTable = 'recipe';
+const recipeTagsTable = 'recipe_tag';
+const recipeIngredientsTable = 'recipe_ingredient';
+const recipeStepsTable = 'recipe_step';
 // const usersTable = 'user';
 // const notesTable = 'note';
-// const recipesTable = 'recipe';
-// const recipeTagsTable = 'recipe_tag';
-// const recipeIngredientsTable = 'recipe_ingredient';
-// const recipeStepsTable = 'recipe_step';
 // const expensesTable = 'expenses';
 // const expenseCategoriesTable = 'expense_category';
 
@@ -357,6 +356,11 @@ export const tagsQueries = {
     { key: '@InsertFields', value: 'task_id, tag_id' },
     { key: '@InsertOutput', value: 'RETURNING id' },
   ]),
+  createRecipeTag: generateQuery(baseQueries.insertsqlite, [
+    { key: '@InsertTable', value: recipeTagsTable },
+    { key: '@InsertFields', value: 'recipe_id, tag_id' },
+    { key: '@InsertOutput', value: 'RETURNING id' },
+  ]),
   update: generateQuery(baseQueries.update, [
     { key: '@UpdateTable', value: tagsTable },
     { key: '@UpdateFields', value: `name = '@name', type = '@type'` },
@@ -444,5 +448,140 @@ export const tasksQueries = {
   ]),
   delete: generateQuery(baseQueries.delete, [
     { key: '@DeleteTable', value: tasksTable },
+  ]),
+};
+
+// ******************************************************
+// RECIPES
+// ******************************************************
+const recipeSelectRoot = `
+  r.id as recipeID,
+  r.name as recipeName,
+  r.description as recipeDescription,
+  ri.id as ingredientID,
+  ri.amount as ingredientAmount,
+  ri.unit as ingredientUnit,
+  p.id as productID,
+  p.name as productName,
+  rs.id as stepID,
+  rs.name as stepName,
+  rs.description as stepDescription,
+  rs.step_order as stepOrder,
+  tg.id as tagID,
+  tg.name as tagName,
+  tg.type as tagType
+`;
+const ingredientSelectRoot = `
+  ri.id as ingredientID,
+  ri.amount as ingredientAmount,
+  ri.unit as ingredientUnit,
+  p.id as productID,
+  p.name as productName
+`;
+const stepSelectRoot = `
+  rs.id as stepID,
+  rs.name as stepName,
+  rs.description as stepDescription,
+  rs.step_order as stepOrder
+`;
+const recipeJoin = `
+  INNER JOIN ${recipeIngredientsTable} ri ON ri.recipe_id = r.id
+  INNER JOIN ${productsTable} p ON p.id = ri.product_id
+  INNER JOIN ${recipeStepsTable} rs ON rs.recipe_id = r.id
+  LEFT JOIN ${recipeTagsTable} tt ON tt.recipe_id = r.id
+  LEFT JOIN ${tagsTable} tg ON tg.id = tt.tag_id
+`;
+const ingredientJoin = `
+  INNER JOIN ${productsTable} p ON p.id = ri.product_id
+`;
+export const recipesQueries = {
+  getAll: generateQuery(baseQueries.getAll, [
+    { key: '@KeyParam', value: 'recipeID' },
+    { key: '@SelectFields', value: recipeSelectRoot },
+    { key: '@SelectTables', value: `${recipesTable} r ${recipeJoin}` },
+  ]),
+  getOne: generateQuery(baseQueries.getById, [
+    { key: '@SelectFields', value: recipeSelectRoot },
+    { key: '@SelectTables', value: `${recipesTable} r ${recipeJoin}` },
+    { key: '@SelectId', value: `r.id` },
+  ]),
+  getOneIngredient: generateQuery(baseQueries.getById, [
+    { key: '@SelectFields', value: ingredientSelectRoot },
+    {
+      key: '@SelectTables',
+      value: `${recipeIngredientsTable} ri ${ingredientJoin}`,
+    },
+    { key: '@SelectId', value: `ri.id` },
+  ]),
+  getOneStep: generateQuery(baseQueries.getById, [
+    { key: '@SelectFields', value: stepSelectRoot },
+    { key: '@SelectTables', value: `${recipeStepsTable} rs` },
+    { key: '@SelectId', value: `rs.id` },
+  ]),
+  get: generateQuery(baseQueries.search, [
+    {
+      key: '@KeyParam',
+      value: 'recipeID',
+    },
+    {
+      key: '@IncludedItemsTable',
+      value: `${recipesTable} r ${recipeJoin}`,
+    },
+    {
+      key: '@SelectFields',
+      value: `${recipeSelectRoot}`,
+    },
+    {
+      key: '@FilterJoins',
+      value: `fr.recipeID = ai.recipeID`,
+    },
+  ]),
+  create: generateQuery(baseQueries.insertsqlite, [
+    { key: '@InsertTable', value: recipesTable },
+    { key: '@InsertFields', value: 'name, description' },
+    { key: '@InsertOutput', value: 'RETURNING id' },
+  ]),
+  createIngredient: generateQuery(baseQueries.insertsqlite, [
+    { key: '@InsertTable', value: recipeIngredientsTable },
+    { key: '@InsertFields', value: 'recipe_id, product_id, amount, unit' },
+    { key: '@InsertOutput', value: 'RETURNING id' },
+  ]),
+  createStep: generateQuery(baseQueries.insertsqlite, [
+    { key: '@InsertTable', value: recipeStepsTable },
+    { key: '@InsertFields', value: 'recipe_id, name, description, step_order' },
+    { key: '@InsertOutput', value: 'RETURNING id' },
+  ]),
+  update: generateQuery(baseQueries.update, [
+    { key: '@UpdateTable', value: recipesTable },
+    {
+      key: '@UpdateFields',
+      value: `name = '@name', description = '@description'`,
+    },
+    { key: '@UpdateId', value: 'id' },
+  ]),
+  updateIngredient: generateQuery(baseQueries.update, [
+    { key: '@UpdateTable', value: recipeIngredientsTable },
+    {
+      key: '@UpdateFields',
+      value: `amount = '@amount', unit = '@unit'`,
+    },
+    { key: '@UpdateId', value: 'id' },
+  ]),
+  updateStep: generateQuery(baseQueries.update, [
+    { key: '@UpdateTable', value: recipeStepsTable },
+    {
+      key: '@UpdateFields',
+      value: `name = '@name', description = '@description', step_order = '@order'`,
+    },
+    { key: '@UpdateId', value: 'id' },
+  ]),
+  delete: generateQuery(baseQueries.delete, [
+    { key: '@DeleteTable', value: recipesTable },
+  ]),
+  deleteIngredient: generateQuery(baseQueries.specificHardDelete, [
+    { key: '@DeleteTable', value: recipeIngredientsTable },
+  ]),
+  deleteStep: generateQuery(baseQueries.specificHardDelete, [
+    { key: '@DeleteTable', value: recipeStepsTable },
   ]),
 };

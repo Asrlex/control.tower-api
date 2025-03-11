@@ -9,10 +9,7 @@ import { SHOPPING_LIST_PRODUCT_REPOSITORY } from '@/repository/home-management/s
 import { ShoppingListProductRepositoryImplementation } from '@/repository/home-management/shopping-list.repository';
 
 @Module({
-  imports: [
-    DatabaseModule,
-    forwardRef(() => ShoppingListProductModule),
-  ],
+  imports: [DatabaseModule, forwardRef(() => ShoppingListProductModule)],
   controllers: [StockProductController],
   providers: [
     {

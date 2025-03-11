@@ -1,0 +1,169 @@
+import {
+  CreateIngredientDto,
+  CreateRecipeDto,
+  CreateStepDto,
+} from '@/api/entities/dtos/home-management/recipe.dto';
+import { SearchCriteriaI } from '@/api/entities/interfaces/api.entity';
+import {
+  RecipeDetailI,
+  RecipeIngredientI,
+  RecipeStepI,
+} from '@/api/entities/interfaces/home-management.entity';
+import {
+  RECIPE_REPOSITORY,
+  RecipeRepository,
+} from '@/repository/home-management/recipes.repository.interface';
+import { Inject, Injectable } from '@nestjs/common';
+
+@Injectable()
+export class RecipeService {
+  constructor(
+    @Inject(RECIPE_REPOSITORY)
+    private readonly recipeRepository: RecipeRepository,
+  ) {}
+
+  /**
+   * Método para verificar si el endpoint de recetas esta funcionando
+   * @returns string - mensaje indicando que el endpoint de recetas esta funcionando
+   */
+  async status() {
+    return {
+      statusCode: 200,
+      message: 'Recipe endpoint is working',
+    };
+  }
+
+  /**
+   * Método para obtener todos los recetas
+   * @returns string - todos los recetas
+   */
+  async getAllRecipes(): Promise<{
+    entities: RecipeDetailI[];
+    total: number;
+  }> {
+    return await this.recipeRepository.findAll();
+  }
+
+  /**
+   * Método para obtener lista de recetas filtrados
+   * @returns string - lista de recetas filtrados
+   */
+  async getRecipes(
+    page: number,
+    limit: number,
+    searchCriteria: SearchCriteriaI,
+  ): Promise<{
+    entities: RecipeDetailI[];
+    total: number;
+  }> {
+    return await this.recipeRepository.find(page, limit, searchCriteria);
+  }
+
+  /**
+   * Método para obtener un receta por su id
+   * @param id - id del receta
+   * @returns string
+   */
+  async getRecipeById(id: string): Promise<RecipeDetailI> {
+    return await this.recipeRepository.findById(id);
+  }
+
+  /**
+   * Método para obtener un ingrediente por su id
+   * @param ingredientID - id del ingrediente
+   * @returns string
+   */
+  async getIngredientByID(ingredientID: string): Promise<RecipeIngredientI> {
+    return await this.recipeRepository.findIngredientByID(ingredientID);
+  }
+
+  /**
+   * Método para obtener un paso por su id
+   * @param stepID - id del paso
+   * @returns string
+   */
+  async getStepByID(stepID: string): Promise<RecipeStepI> {
+    return await this.recipeRepository.findStepByID(stepID);
+  }
+
+  /**
+   * Metodo para crear una nueva receta
+   * @returns string - receta creada
+   */
+  async createRecipe(dto: CreateRecipeDto): Promise<RecipeDetailI> {
+    return await this.recipeRepository.create(dto);
+  }
+
+  /**
+   * Método para añadir un ingrediente a una receta
+   * @param dto - DTO del ingrediente
+   * @returns string - ingrediente añadido
+   */
+  async createIngredient(dto: CreateIngredientDto): Promise<RecipeIngredientI> {
+    return await this.recipeRepository.createIngredient(dto);
+  }
+
+  /**
+   * Método para añadir un paso a una receta
+   * @param dto - DTO del paso
+   * @returns string - paso añadido
+   */
+  async createStep(dto: CreateStepDto): Promise<RecipeStepI> {
+    return await this.recipeRepository.createStep(dto);
+  }
+
+  /**
+   * Método para actualizar una receta
+   * @param id - id de la receta
+   * @param customer - receta
+   * @returns string - receta actualizada
+   */
+  async updateRecipe(id: string, customer: CreateRecipeDto) {
+    return await this.recipeRepository.modify(id, customer);
+  }
+
+  /**
+   * Método para actualizar un ingrediente
+   * @param dto - DTO del ingrediente
+   * @returns string - ingrediente actualizado
+   */
+  async modifyIngredient(dto: CreateIngredientDto): Promise<RecipeIngredientI> {
+    return await this.recipeRepository.modifyIngredient(dto);
+  }
+
+  /**
+   * Método para actualizar un paso
+   * @param dto - DTO del paso
+   * @returns string - paso actualizado
+   */
+  async modifyStep(dto: CreateStepDto): Promise<RecipeStepI> {
+    return await this.recipeRepository.modifyStep(dto);
+  }
+
+  /**
+   * Método para eliminar una receta
+   * @param id - id de la receta
+   * @returns null - receta eliminada
+   */
+  async deleteRecipe(id: string) {
+    await this.recipeRepository.delete(id);
+  }
+
+  /**
+   * Método para eliminar un ingrediente
+   * @param ingredientID - id del ingrediente
+   * @returns null - ingrediente eliminado
+   */
+  async deleteIngredient(ingredientID: string) {
+    await this.recipeRepository.deleteIngredient(ingredientID);
+  }
+
+  /**
+   * Método para eliminar un paso
+   * @param stepID - id del paso
+   * @returns null - paso eliminado
+   */
+  async deleteStep(stepID: string) {
+    await this.recipeRepository.deleteStep(stepID);
+  }
+}

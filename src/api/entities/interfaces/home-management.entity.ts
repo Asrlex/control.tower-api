@@ -41,3 +41,33 @@ export interface TaskI {
   taskDateModified: string;
   tags: TagI[];
 }
+
+export interface RecipeDetailI {
+  recipeID: number;
+  recipeName: string;
+  recipeDescription: string;
+  tags: TagI[];
+}
+
+export interface RecipeDetailI {
+  recipeID: number;
+  recipeName: string;
+  recipeDescription: string;
+  tags: TagI[];
+  steps: RecipeStepI[];
+  ingredients: RecipeIngredientI[];
+}
+
+export interface RecipeStepI {
+  recipeStepID: number;
+  recipeStepName: string;
+  recipeStepDescription: string;
+  recipeStepOrder: number;
+}
+
+export interface RecipeIngredientI {
+  recipeIngredientID: number;
+  recipeIngredientAmount: number;
+  recipeIngredientUnit: string;
+  product: ProductI;
+}
