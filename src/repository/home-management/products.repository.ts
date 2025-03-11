@@ -34,8 +34,8 @@ export class ProductRepositoryImplementation
     entities: ProductI[];
     total: number;
   }> {
+    const cacheKey = 'products';
     if (this.cacheManager) {
-      const cacheKey = 'products';
       const cachedProducts: {
         entities: ProductI[];
         total: number;
@@ -49,7 +49,6 @@ export class ProductRepositoryImplementation
     const entities: ProductI[] = this.resultToProduct(result);
     const total = result[0] ? parseInt(result[0].total, 10) : 0;
     if (this.cacheManager) {
-      const cacheKey = 'products';
       await this.cacheManager.set(cacheKey, { entities, total });
     }
     return {
@@ -68,7 +67,7 @@ export class ProductRepositoryImplementation
     searchCriteria: any,
   ): Promise<{ entities: ProductI[]; total: number }> {
     let filters = '';
-    let sort: SortI = { field: 'customerName', order: 'DESC' };
+    let sort: SortI = { field: 'productName', order: 'DESC' };
     if (searchCriteria) {
       const sqlFilters = this.filterstoSQL(searchCriteria);
       filters = this.addSearchToFilters(
@@ -150,10 +149,20 @@ export class ProductRepositoryImplementation
     );
     const responseProduct =
       await this.homeManagementDbConnection.execute(sqlProduct);
-    const customerID = responseProduct[0].id;
+    const productID = responseProduct[0].id;
+    const newProduct = await this.findById(productID);
 
-    await this.saveLog('insert', 'product', `Created product ${customerID}`);
-    return this.findById(customerID);
+    const products: {
+      entities: ProductI[];
+      total: number;
+    } = await this.cacheManager.get('products');
+    if (products) {
+      products.entities.push(newProduct);
+      await this.cacheManager.set('products', products);
+    }
+
+    await this.saveLog('insert', 'product', `Created product ${productID}`);
+    return newProduct;
   }
 
   /**
@@ -176,9 +185,22 @@ export class ProductRepositoryImplementation
       .replace('@unit', dto.stockProductUnit)
       .replace('@id', id);
     await this.homeManagementDbConnection.execute(sqlProduct);
+    const product = await this.findById(id);
+
+    const products: {
+      entities: ProductI[];
+      total: number;
+    } = await this.cacheManager.get('products');
+    if (products) {
+      const index = products.entities.findIndex(
+        (p: ProductI) => p.productID.toString() === id,
+      );
+      products.entities[index] = product;
+      await this.cacheManager.set('products', products);
+    }
 
     await this.saveLog('update', 'product', `Modified product ${id}`);
-    return this.findById(id);
+    return product;
   }
 
   /**
@@ -193,6 +215,19 @@ export class ProductRepositoryImplementation
     }
     const sql = productsQueries.delete.replace('@id', id);
     await this.homeManagementDbConnection.execute(sql);
+
+    const products: {
+      entities: ProductI[];
+      total: number;
+    } = await this.cacheManager.get('products');
+    if (products) {
+      const index = products.entities.findIndex(
+        (p: ProductI) => p.productID.toString() === id,
+      );
+      products.entities.splice(index, 1);
+      await this.cacheManager.set('products', products);
+    }
+
     await this.saveLog('delete', 'product', `Deleted product ${id}`);
   }
 

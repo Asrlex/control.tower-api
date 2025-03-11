@@ -40,8 +40,8 @@ export class RecipeRepositoryImplementation
     entities: RecipeDetailI[];
     total: number;
   }> {
+    const cacheKey = 'recipes';
     if (this.cacheManager) {
-      const cacheKey = 'recipes';
       const cachedRecipes: {
         entities: RecipeDetailI[];
         total: number;
@@ -55,7 +55,6 @@ export class RecipeRepositoryImplementation
     const entities: RecipeDetailI[] = this.resultToRecipe(result);
     const total = result[0] ? parseInt(result[0].total, 10) : 0;
     if (this.cacheManager) {
-      const cacheKey = 'recipes';
       await this.cacheManager.set(cacheKey, {
         entities,
         total,
@@ -156,21 +155,30 @@ export class RecipeRepositoryImplementation
     const recipeID = responseRecipe[0].id;
 
     if (dto.ingredients) {
-      dto.ingredients.forEach((ingredient) => {
+      dto.ingredients.forEach(async (ingredient) => {
         ingredient.recipeID = recipeID;
-        this.createIngredient(ingredient);
+        await this.createIngredient(ingredient);
       });
     }
 
     if (dto.steps) {
-      dto.steps.forEach((step) => {
+      dto.steps.forEach(async (step) => {
         step.recipeID = recipeID;
-        this.createStep(step);
+        await this.createStep(step);
       });
     }
 
+    const newRecipe: RecipeDetailI = await this.findById(recipeID);
+
+    const recipes: { entities: RecipeDetailI[]; total: number } =
+      await this.cacheManager.get('recipes');
+    if (recipes) {
+      recipes.entities.push(newRecipe);
+      await this.cacheManager.set('recipes', recipes);
+    }
+
     await this.saveLog('insert', 'recipe', `Created recipe ${recipeID}`);
-    return this.findById(recipeID);
+    return newRecipe;
   }
 
   /**
@@ -227,9 +235,22 @@ export class RecipeRepositoryImplementation
       .replace('@description', dto.recipeDescription)
       .replace('@id', id);
     await this.homeManagementDbConnection.execute(sqlRecipe);
+    const editedRecipe = await this.findById(id);
+
+    const recipes: {
+      entities: RecipeDetailI[];
+      total: number;
+    } = await this.cacheManager.get('recipes');
+    if (recipes) {
+      const index = recipes.entities.findIndex(
+        (r: RecipeDetailI) => r.recipeID.toString() === id,
+      );
+      recipes.entities[index] = editedRecipe;
+      await this.cacheManager.set('recipes', recipes);
+    }
 
     await this.saveLog('update', 'recipe', `Modified recipe ${id}`);
-    return this.findById(id);
+    return editedRecipe;
   }
 
   /**
@@ -297,6 +318,19 @@ export class RecipeRepositoryImplementation
     }
     const sql = recipesQueries.delete.replace('@id', id);
     await this.homeManagementDbConnection.execute(sql);
+
+    const recipes: {
+      entities: RecipeDetailI[];
+      total: number;
+    } = await this.cacheManager.get('recipes');
+    if (recipes) {
+      const index = recipes.entities.findIndex(
+        (r: RecipeDetailI) => r.recipeID.toString() === id,
+      );
+      recipes.entities.splice(index, 1);
+      await this.cacheManager.set('recipes', recipes);
+    }
+
     await this.saveLog('delete', 'recipe', `Deleted recipe ${id}`);
   }
 

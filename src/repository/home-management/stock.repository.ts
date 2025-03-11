@@ -40,8 +40,8 @@ export class StockProductRepositoryImplementation
     entities: StockProductI[];
     total: number;
   }> {
+    const cacheKey = 'stock';
     if (this.cacheManager) {
-      const cacheKey = 'stock';
       const cachedStock: {
         entities: StockProductI[];
         total: number;
@@ -55,7 +55,6 @@ export class StockProductRepositoryImplementation
     const entities: StockProductI[] = this.resultToProduct(result);
     const total = result[0] ? parseInt(result[0].total, 10) : 0;
     if (this.cacheManager) {
-      const cacheKey = 'products';
       await this.cacheManager.set(cacheKey, { entities, total });
     }
     return {
@@ -74,7 +73,7 @@ export class StockProductRepositoryImplementation
     searchCriteria: any,
   ): Promise<{ entities: StockProductI[]; total: number }> {
     let filters = '';
-    let sort: SortI = { field: 'customerName', order: 'DESC' };
+    let sort: SortI = { field: 'productName', order: 'DESC' };
     if (searchCriteria) {
       const sqlFilters = this.filterstoSQL(searchCriteria);
       filters = this.addSearchToFilters(
@@ -123,10 +122,18 @@ export class StockProductRepositoryImplementation
     );
     const responseProduct =
       await this.homeManagementDbConnection.execute(sqlProduct);
-    const customerID = responseProduct[0].id;
+    const productID = responseProduct[0].id;
+    const newStockProduct = await this.findById(productID);
 
-    await this.saveLog('insert', 'product', `Created product ${customerID}`);
-    return this.findById(customerID);
+    const stock: { entities: StockProductI[]; total: number } =
+      await this.cacheManager.get('stock');
+    if (stock) {
+      stock.entities.push(newStockProduct);
+      await this.cacheManager.set('stock', stock);
+    }
+
+    await this.saveLog('insert', 'product', `Created product ${productID}`);
+    return newStockProduct;
   }
 
   /**

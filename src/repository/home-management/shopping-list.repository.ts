@@ -40,8 +40,8 @@ export class ShoppingListProductRepositoryImplementation
     entities: ShoppingListProductI[];
     total: number;
   }> {
+    const cacheKey = 'shopping-list';
     if (this.cacheManager) {
-      const cacheKey = 'shopping-list';
       const cachedShoppingList: {
         entities: ShoppingListProductI[];
         total: number;
@@ -55,7 +55,6 @@ export class ShoppingListProductRepositoryImplementation
     const entities: ShoppingListProductI[] = this.resultToProduct(result);
     const total = result[0] ? parseInt(result[0].total, 10) : 0;
     if (this.cacheManager) {
-      const cacheKey = 'shopping-list';
       await this.cacheManager.set(cacheKey, { entities, total });
     }
     return {
@@ -127,13 +126,24 @@ export class ShoppingListProductRepositoryImplementation
     const responseProduct =
       await this.homeManagementDbConnection.execute(sqlProduct);
     const productID = responseProduct[0].id;
+    const newShoppingListProduct = await this.findById(productID);
+
+    const shoppingList: {
+      entities: ShoppingListProductI[];
+      total: number;
+    } = await this.cacheManager.get('shopping-list');
+    if (shoppingList) {
+      shoppingList.entities.push(newShoppingListProduct);
+      shoppingList.total += 1;
+      await this.cacheManager.set('shopping-list', shoppingList);
+    }
 
     await this.saveLog(
       'insert',
       'shopping_list',
       `Created product ${productID}`,
     );
-    return this.findById(productID);
+    return newShoppingListProduct;
   }
 
   /**
@@ -159,9 +169,22 @@ export class ShoppingListProductRepositoryImplementation
       .replace('@product_id', dto.shoppingListProductID.toString())
       .replace('@id', id);
     await this.homeManagementDbConnection.execute(sqlProduct);
+    const editedProduct = await this.findById(id);
+
+    const shoppingList: {
+      entities: ShoppingListProductI[];
+      total: number;
+    } = await this.cacheManager.get('shopping-list');
+    if (shoppingList) {
+      const index = shoppingList.entities.findIndex(
+        (p: ShoppingListProductI) => p.shoppingListProductID.toString() === id,
+      );
+      shoppingList.entities[index] = editedProduct;
+      await this.cacheManager.set('shopping-list', shoppingList);
+    }
 
     await this.saveLog('update', 'shopping_list', `Modified product ${id}`);
-    return this.findById(id);
+    return editedProduct;
   }
 
   /**
@@ -222,6 +245,20 @@ export class ShoppingListProductRepositoryImplementation
     }
     const sql = shoppingListQueries.delete.replace('@id', id);
     await this.homeManagementDbConnection.execute(sql);
+
+    const shoppingList: {
+      entities: ShoppingListProductI[];
+      total: number;
+    } = await this.cacheManager.get('shopping-list');
+    if (shoppingList) {
+      const index = shoppingList.entities.findIndex(
+        (p: ShoppingListProductI) => p.shoppingListProductID.toString() === id,
+      );
+      shoppingList.entities.splice(index, 1);
+      shoppingList.total -= 1;
+      await this.cacheManager.set('shopping-list', shoppingList);
+    }
+
     await this.saveLog('delete', 'shopping_list', `Deleted product ${id}`);
   }
 
