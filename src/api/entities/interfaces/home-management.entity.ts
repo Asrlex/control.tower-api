@@ -63,11 +63,13 @@ export interface RecipeStepI {
   recipeStepName: string;
   recipeStepDescription: string;
   recipeStepOrder: number;
+  recipeStepIsOptional: boolean;
 }
 
 export interface RecipeIngredientI {
   recipeIngredientID: number;
   recipeIngredientAmount: number;
   recipeIngredientUnit: string;
+  recipeIngredientIsOptional: boolean;
   product: ProductI;
 }

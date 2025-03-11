@@ -375,6 +375,9 @@ export const tagsQueries = {
   deleteTaskTag: generateQuery(baseQueries.specificHardDelete, [
     { key: '@DeleteTable', value: taskTagsTable },
   ]),
+  deleteRecipeTag: generateQuery(baseQueries.specificHardDelete, [
+    { key: '@DeleteTable', value: recipeTagsTable },
+  ]),
 };
 
 // ******************************************************
@@ -461,12 +464,14 @@ const recipeSelectRoot = `
   ri.id as ingredientID,
   ri.amount as ingredientAmount,
   ri.unit as ingredientUnit,
+  ri.optional as ingredientOptional,
   p.id as productID,
   p.name as productName,
   rs.id as stepID,
   rs.name as stepName,
   rs.description as stepDescription,
   rs.step_order as stepOrder,
+  rs.optional as stepOptional,
   tg.id as tagID,
   tg.name as tagName,
   tg.type as tagType

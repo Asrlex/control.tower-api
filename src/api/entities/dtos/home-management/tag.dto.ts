@@ -17,8 +17,8 @@ export class GetTagDto {
 }
 
 export class CreateItemTagDto {
-  @IsString()
+  @IsNumber()
   tagID: string;
-  @IsString()
+  @IsNumber()
   itemID: string;
 }

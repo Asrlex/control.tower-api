@@ -152,12 +152,12 @@ export class TagController {
   @Post('item')
   @UsePipes(dtoValidator())
   @ApiOperation({
-    summary: 'Create a new tag',
+    summary: 'Create a new tag association with an item',
   })
-  @ApiBody({ description: 'Tag data', type: CreateTagDto })
+  @ApiBody({ description: 'Tag data', type: CreateItemTagDto })
   @ApiResponse({
     status: 200,
-    description: 'Tag created successfully',
+    description: 'Association created successfully',
   })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
@@ -195,12 +195,12 @@ export class TagController {
   @Delete('item')
   @UsePipes(dtoValidator())
   @ApiOperation({
-    summary: 'Delete an existing tag',
+    summary: 'Delete an existing tag association with an item',
   })
-  @ApiParam({ name: 'id', description: 'Tag ID' })
+  @ApiBody({ description: 'Tag data', type: CreateItemTagDto })
   @ApiResponse({
     status: 200,
-    description: 'Tag deleted successfully',
+    description: 'Association deleted successfully',
   })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })

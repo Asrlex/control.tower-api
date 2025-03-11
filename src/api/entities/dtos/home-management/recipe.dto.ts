@@ -1,4 +1,10 @@
-import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class GetRecipeDto {
   @IsNumber()
@@ -13,6 +19,8 @@ export class GetRecipeDto {
   ingredientAmount: number;
   @IsString()
   ingredientUnit: string;
+  @IsBoolean()
+  ingredientIsOptional: boolean;
   @IsNumber()
   productID: number;
   @IsString()
@@ -25,6 +33,8 @@ export class GetRecipeDto {
   stepDescription: string;
   @IsNumber()
   stepOrder: number;
+  @IsBoolean()
+  stepIsOptional: boolean;
   @IsNumber()
   tagID: number;
   @IsString()
@@ -62,6 +72,8 @@ export class CreateIngredientDto {
   recipeIngredientAmount: number;
   @IsString()
   recipeIngredientUnit: string;
+  @IsBoolean()
+  recipeIngredientIsOptional: boolean;
 }
 
 export class CreateStepDto {
@@ -76,4 +88,6 @@ export class CreateStepDto {
   recipeStepDescription: string;
   @IsNumber()
   recipeStepOrder: number;
+  @IsBoolean()
+  recipeStepIsOptional: boolean;
 }
