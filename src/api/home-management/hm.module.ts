@@ -22,13 +22,11 @@ import { TAG_REPOSITORY } from '@/repository/home-management/tag.repository.inte
 import { RecipeModule } from './recipes/recipes.module';
 import { RECIPE_REPOSITORY } from '@/repository/home-management/recipes.repository.interface';
 import { RecipeRepositoryImplementation } from '@/repository/home-management/recipes.repository';
-import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
     DatabaseModule,
     ProductModule,
-    CacheModule.register(),
     forwardRef(() => StockProductModule),
     forwardRef(() => ShoppingListProductModule),
     StoreModule,

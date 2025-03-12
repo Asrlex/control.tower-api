@@ -47,6 +47,7 @@ export class StockProductRepositoryImplementation
         total: number;
       } = await this.cacheManager.get(cacheKey);
       if (cachedStock) {
+        this.logger.log('Stock cache hit');
         return cachedStock;
       }
     }

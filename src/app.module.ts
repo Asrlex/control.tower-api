@@ -34,7 +34,7 @@ import { CacheModule } from '@nestjs/cache-manager';
     ]),
     CacheModule.register({
       isGlobal: true,
-      ttl: 5,
+      ttl: 5000,
       max: 10,
     }),
     AuthModule,

@@ -47,6 +47,7 @@ export class RecipeRepositoryImplementation
         total: number;
       } = await this.cacheManager.get(cacheKey);
       if (cachedRecipes) {
+        this.logger.log('Recipes cache hit');
         return cachedRecipes;
       }
     }

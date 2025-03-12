@@ -41,6 +41,7 @@ export class ProductRepositoryImplementation
         total: number;
       } = await this.cacheManager.get(cacheKey);
       if (cachedProducts) {
+        this.logger.log('Products cache hit');
         return cachedProducts;
       }
     }

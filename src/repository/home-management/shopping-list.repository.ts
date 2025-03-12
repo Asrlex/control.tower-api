@@ -47,6 +47,7 @@ export class ShoppingListProductRepositoryImplementation
         total: number;
       } = await this.cacheManager.get(cacheKey);
       if (cachedShoppingList) {
+        this.logger.log('Shopping list cache hit');
         return cachedShoppingList;
       }
     }
