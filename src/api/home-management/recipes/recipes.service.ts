@@ -7,6 +7,7 @@ import { SearchCriteriaI } from '@/api/entities/interfaces/api.entity';
 import {
   RecipeDetailI,
   RecipeIngredientI,
+  RecipeNameI,
   RecipeStepI,
 } from '@/api/entities/interfaces/home-management.entity';
 import {
@@ -42,6 +43,14 @@ export class RecipeService {
     total: number;
   }> {
     return await this.recipeRepository.findAll();
+  }
+
+  /**
+   * Método para obtener todos los nombres de las recetas
+   * @returns string - todos los nombres de las recetas
+   */
+  async getAllRecipeNames(): Promise<RecipeNameI[]> {
+    return await this.recipeRepository.findAllNames();
   }
 
   /**

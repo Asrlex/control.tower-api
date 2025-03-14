@@ -42,10 +42,22 @@ export interface TaskI {
   tags: TagI[];
 }
 
+export interface HouseTaskI {
+  houseTaskID: number;
+  houseTaskName: string;
+  houseTaskDate: string;
+}
+
 export interface RecipeDetailI {
   recipeID: number;
   recipeName: string;
   recipeDescription: string;
+  tags: TagI[];
+}
+
+export interface RecipeNameI {
+  recipeID: number;
+  recipeName: string;
   tags: TagI[];
 }
 

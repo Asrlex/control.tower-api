@@ -64,6 +64,23 @@ export class RecipeController {
     return formattedResponse;
   }
 
+  @Get('names')
+  @ApiOperation({ summary: 'Get all recipe names' })
+  @ApiResponse({
+    status: 200,
+    description: 'Names retrieved successfully',
+  })
+  @ApiResponse({ status: 400, description: 'Bad Request' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  @ApiResponse({ status: 404, description: 'Not Found' })
+  async getAllRecipeNames() {
+    this.logger.debug('GET /recipes/names');
+    const response = await this.recipeService.getAllRecipeNames();
+    const formattedResponse = formatResponse(response);
+    return formattedResponse;
+  }
+
   @Get('id/:id')
   @ApiOperation({
     summary: 'Get a recipe by ID',

@@ -4,10 +4,15 @@ import { SortI } from 'src/api/entities/interfaces/api.entity';
 import { BaseRepository } from 'src/repository/base-repository';
 import { plainToInstance } from 'class-transformer';
 import { TaskRepository } from './task.repository.interface';
-import { TaskI } from '@/api/entities/interfaces/home-management.entity';
+import {
+  HouseTaskI,
+  TaskI,
+} from '@/api/entities/interfaces/home-management.entity';
 import { tasksQueries } from '@/db/queries/home-management.queries';
 import {
+  CreateHouseTaskDto,
   CreateTaskDto,
+  GetHouseTaskDto,
   GetTaskDto,
 } from '@/api/entities/dtos/home-management/task.dto';
 
@@ -37,6 +42,27 @@ export class TaskRepositoryImplementation
     return {
       entities,
       total: result[0] ? parseInt(result[0].total, 10) : 0,
+    };
+  }
+
+  /**
+   * Método para obtener todas las tareas de la casa
+   * @returns string - todas las tareas de la casa
+   */
+  async findAllHouseTasks(): Promise<{
+    entities: HouseTaskI[];
+    total: number;
+  }> {
+    const sql = tasksQueries.getAllHouseTasks;
+    const result = await this.homeManagementDbConnection.execute(sql);
+    const entities: HouseTaskI[] = result.map((record: GetHouseTaskDto) => ({
+      houseTaskID: record.houseTaskID,
+      houseTaskName: record.houseTaskName,
+      houseTaskDate: record.houseTaskDate,
+    }));
+    return {
+      entities,
+      total: result.length,
     };
   }
 
@@ -102,6 +128,30 @@ export class TaskRepositoryImplementation
 
     await this.saveLog('insert', 'task', `Created task ${taskID}`);
     return this.findById(taskID);
+  }
+
+  /**
+   * Metodo para crear una nueva tarea de casa
+   * @returns string - tarea creada
+   */
+  async createHouseTask(dto: CreateHouseTaskDto): Promise<HouseTaskI> {
+    const sqlTask = tasksQueries.createHouseTask.replace(
+      '@InsertValues',
+      `'${dto.houseTaskName}'`,
+    );
+    const responseTask = await this.homeManagementDbConnection.execute(sqlTask);
+    const task: HouseTaskI = {
+      houseTaskID: responseTask[0].id,
+      houseTaskName: responseTask[0].name,
+      houseTaskDate: responseTask[0].date,
+    };
+
+    await this.saveLog(
+      'insert',
+      'house-task',
+      `Created task ${task.houseTaskID}`,
+    );
+    return task;
   }
 
   /**

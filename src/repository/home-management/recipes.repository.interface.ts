@@ -2,6 +2,7 @@ import { GenericRepository } from 'src/repository/generic-repository.interface';
 import {
   RecipeDetailI,
   RecipeIngredientI,
+  RecipeNameI,
   RecipeStepI,
 } from '@/api/entities/interfaces/home-management.entity';
 import {
@@ -22,4 +23,5 @@ export interface RecipeRepository
   modifyStep(step: CreateStepDto): Promise<RecipeStepI>;
   deleteIngredient(ingredientID: string): Promise<void>;
   deleteStep(stepID: string): Promise<void>;
+  findAllNames(): Promise<RecipeNameI[]>;
 }

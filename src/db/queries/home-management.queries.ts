@@ -6,6 +6,7 @@ const shoppingListTable = 'shopping_list';
 const productTagsTable = 'product_tag';
 const tagsTable = 'tag';
 const tasksTable = 'task';
+const houseTasksTable = 'house_task';
 const taskTagsTable = 'task_tag';
 const orderTable = 'list_order';
 const recipesTable = 'recipe';
@@ -299,7 +300,7 @@ export const storesQueries = {
     { key: '@UpdateFields', value: `name = '@name'` },
     { key: '@UpdateId', value: 'id' },
   ]),
-  delete: generateQuery(baseQueries.delete, [
+  delete: generateQuery(baseQueries.hardDelete, [
     { key: '@DeleteTable', value: storesTable },
   ]),
 };
@@ -405,6 +406,21 @@ export const tasksQueries = {
     { key: '@SelectFields', value: tasksSelectRoot },
     { key: '@SelectTables', value: `${tasksTable} t ${tasksJoin}` },
   ]),
+  getAllHouseTasks: `
+    WITH UniqueValues AS (
+      SELECT DISTINCT houseTaskID
+      FROM ${houseTasksTable}
+    )
+    SELECT
+      ai.*,
+      (SELECT COUNT(*) FROM UniqueValues) AS total
+    FROM (
+      select
+        id as houseTaskID, name as houseTaskName, date as houseTaskDate
+      from ${houseTasksTable}
+      order by date desc
+    ) ai
+  `,
   getOne: generateQuery(baseQueries.getById, [
     { key: '@SelectFields', value: tasksSelectRoot },
     { key: '@SelectTables', value: `${tasksTable} t ${tasksJoin}` },
@@ -433,6 +449,11 @@ export const tasksQueries = {
     { key: '@InsertFields', value: 'title, description' },
     { key: '@InsertOutput', value: 'RETURNING id' },
   ]),
+  createHouseTask: generateQuery(baseQueries.insertsqlite, [
+    { key: '@InsertTable', value: houseTasksTable },
+    { key: '@InsertFields', value: 'name' },
+    { key: '@InsertOutput', value: 'RETURNING id, name, date' },
+  ]),
   update: generateQuery(baseQueries.update, [
     { key: '@UpdateTable', value: tasksTable },
     {
@@ -449,7 +470,7 @@ export const tasksQueries = {
     },
     { key: '@UpdateId', value: 'id' },
   ]),
-  delete: generateQuery(baseQueries.delete, [
+  delete: generateQuery(baseQueries.hardDelete, [
     { key: '@DeleteTable', value: tasksTable },
   ]),
 };
@@ -504,6 +525,18 @@ export const recipesQueries = {
     { key: '@KeyParam', value: 'recipeID' },
     { key: '@SelectFields', value: recipeSelectRoot },
     { key: '@SelectTables', value: `${recipesTable} r ${recipeJoin}` },
+  ]),
+  getAllNames: generateQuery(baseQueries.getAll, [
+    { key: '@KeyParam', value: 'recipeID' },
+    {
+      key: '@SelectFields',
+      value:
+        'r.id as recipeID, r.name as recipeName, tg.id as tagID, tg.name as tagName, tg.type as tagType',
+    },
+    {
+      key: '@SelectTables',
+      value: `${recipesTable} r LEFT JOIN ${recipeTagsTable} tt ON tt.recipe_id = r.id LEFT JOIN ${tagsTable} tg ON tg.id = tt.tag_id`,
+    },
   ]),
   getOne: generateQuery(baseQueries.getById, [
     { key: '@SelectFields', value: recipeSelectRoot },
@@ -580,7 +613,7 @@ export const recipesQueries = {
     },
     { key: '@UpdateId', value: 'id' },
   ]),
-  delete: generateQuery(baseQueries.delete, [
+  delete: generateQuery(baseQueries.hardDelete, [
     { key: '@DeleteTable', value: recipesTable },
   ]),
   deleteIngredient: generateQuery(baseQueries.specificHardDelete, [

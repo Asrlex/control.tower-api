@@ -14,6 +14,7 @@ import { recipesQueries } from '@/db/queries/home-management.queries';
 import {
   RecipeDetailI,
   RecipeIngredientI,
+  RecipeNameI,
   RecipeStepI,
 } from '@/api/entities/interfaces/home-management.entity';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
@@ -68,6 +69,17 @@ export class RecipeRepositoryImplementation
   }
 
   /**
+   * Método para obtener todos los nombres de las recetas
+   * @returns string - todos los nombres de las recetas
+   */
+  async findAllNames(): Promise<RecipeNameI[]> {
+    const sql = recipesQueries.getAllNames;
+    const result = await this.homeManagementDbConnection.execute(sql);
+    const entities: RecipeNameI[] = this.resultToRecipeName(result);
+    return entities;
+  }
+
+  /**
    * Método para obtener lista de recetas filtradas
    * @returns string - lista de recetas filtradas
    */
@@ -108,6 +120,14 @@ export class RecipeRepositoryImplementation
    * @returns string
    */
   async findById(id: string): Promise<RecipeDetailI | null> {
+    const cacheKey = `recipe-${id}`;
+    if (this.cacheManager) {
+      const cachedRecipe: RecipeDetailI = await this.cacheManager.get(cacheKey);
+      if (cachedRecipe) {
+        this.logger.log(`Recipe ${id} cache hit`);
+        return cachedRecipe;
+      }
+    }
     const sql = recipesQueries.getOne.replace('@id', id);
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: RecipeDetailI[] = this.resultToRecipe(result);
@@ -511,6 +531,41 @@ export class RecipeRepositoryImplementation
       }
     });
     return Array.from(mappedStep.values());
+  }
+
+  /**
+   * Método para convertir el resultado de la consulta a un array de nombres de recetas
+   * @param result - resultado de la consulta
+   * @returns array de nombres de recetas
+   */
+  private resultToRecipeName(result: GetRecipeDto[]): RecipeNameI[] {
+    const mappedRecipe: Map<number, RecipeNameI> = new Map();
+    result.forEach((record: GetRecipeDto) => {
+      let recipe: RecipeNameI;
+      if (mappedRecipe.has(record.recipeID)) {
+        recipe = mappedRecipe.get(record.recipeID);
+      } else {
+        recipe = {
+          recipeID: record.recipeID,
+          recipeName: record.recipeName,
+          tags: [],
+        };
+        mappedRecipe.set(record.recipeID, recipe);
+      }
+
+      if (
+        record.tagID &&
+        !recipe.tags.some((tag) => tag.tagID === record.tagID)
+      ) {
+        recipe.tags.push({
+          tagID: record.tagID,
+          tagName: record.tagName,
+          tagType: record.tagType,
+        });
+      }
+    });
+
+    return Array.from(mappedRecipe.values());
   }
 
   /**

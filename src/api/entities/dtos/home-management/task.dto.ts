@@ -35,3 +35,20 @@ export class GetTaskDto {
   @IsString()
   taskTagType: string;
 }
+
+export class CreateHouseTaskDto {
+  @IsNumber()
+  @IsOptional()
+  houseTaskID: number;
+  @IsString()
+  houseTaskName: string;
+}
+
+export class GetHouseTaskDto {
+  @IsNumber()
+  houseTaskID: number;
+  @IsString()
+  houseTaskName: string;
+  @IsString()
+  houseTaskDate: string;
+}

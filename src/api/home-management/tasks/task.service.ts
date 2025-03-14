@@ -1,6 +1,12 @@
-import { CreateTaskDto } from '@/api/entities/dtos/home-management/task.dto';
+import {
+  CreateHouseTaskDto,
+  CreateTaskDto,
+} from '@/api/entities/dtos/home-management/task.dto';
 import { SearchCriteriaI } from '@/api/entities/interfaces/api.entity';
-import { TaskI } from '@/api/entities/interfaces/home-management.entity';
+import {
+  HouseTaskI,
+  TaskI,
+} from '@/api/entities/interfaces/home-management.entity';
 import {
   TASK_REPOSITORY,
   TaskRepository,
@@ -15,8 +21,8 @@ export class TaskService {
   ) {}
 
   /**
-   * Método para verificar si el endpoint de tareas esta funcionando
-   * @returns string - mensaje indicando que el endpoint de tareas esta funcionando
+   * Método para verificar si el endpoint de tareas esta funacionando
+   * @returns string - mensaje indicando que el endpoint de tareas esta funacionando
    */
   async status() {
     return {
@@ -37,6 +43,14 @@ export class TaskService {
   }
 
   /**
+   * Método para obtener todas las tareas de la casa
+   * @returns string - todas las tareas de la casa
+   */
+  async getAllHouseTasks(): Promise<{ entities: HouseTaskI[]; total: number }> {
+    return await this.taskRepository.findAllHouseTasks();
+  }
+
+  /**
    * Método para obtener lista de tareas filtrados
    * @returns string - lista de tareas filtrados
    */
@@ -52,8 +66,8 @@ export class TaskService {
   }
 
   /**
-   * Método para obtener un tarea por su id
-   * @param id - id del tarea
+   * Método para obtener una tarea por su id
+   * @param id - id de la tarea
    * @returns string
    */
   async getTaskById(id: string): Promise<TaskI> {
@@ -61,7 +75,7 @@ export class TaskService {
   }
 
   /**
-   * Metodo para crear un nuevo tarea
+   * Metodo para crear una nueva tarea
    * @returns string - tarea creada
    */
   async createTask(dto: CreateTaskDto): Promise<TaskI> {
@@ -69,8 +83,16 @@ export class TaskService {
   }
 
   /**
-   * Método para actualizar un tarea
-   * @param id - id del tarea
+   * Metodo para crear una nueva tarea
+   * @returns string - tarea creada
+   */
+  async createHouseTask(dto: CreateHouseTaskDto): Promise<HouseTaskI> {
+    return await this.taskRepository.createHouseTask(dto);
+  }
+
+  /**
+   * Método para actualizar una tarea
+   * @param id - id de la tarea
    * @param customer - tarea
    * @returns string - tarea actualizada
    */
@@ -79,8 +101,8 @@ export class TaskService {
   }
 
   /**
-   * Método para actualizar un tarea completada
-   * @param id - id del tarea
+   * Método para actualizar una tarea completada
+   * @param id - id de la tarea
    * @param customer - tarea
    * @returns string - tarea actualizada
    */
@@ -89,8 +111,8 @@ export class TaskService {
   }
 
   /**
-   * Método para eliminar un tarea
-   * @param id - id del tarea
+   * Método para eliminar una tarea
+   * @param id - id de la tarea
    * @returns null - tarea eliminada
    */
   async deleteTask(id: string) {

@@ -26,7 +26,10 @@ import {
 } from '@nestjs/swagger';
 import { GlobalApiKeyGuard } from '@/api/auth/guards/global-api-key.guard';
 import { TaskService } from './task.service';
-import { CreateTaskDto } from '@/api/entities/dtos/home-management/task.dto';
+import {
+  CreateHouseTaskDto,
+  CreateTaskDto,
+} from '@/api/entities/dtos/home-management/task.dto';
 
 @ApiTags('Tasks')
 @Controller()
@@ -55,6 +58,25 @@ export class TaskController {
   async getAllTasks() {
     this.logger.debug('GET /tasks/all');
     const response = await this.taskService.getAllTasks();
+    const formattedResponse = formatResponse(response.entities, {
+      total: response.total,
+    });
+    return formattedResponse;
+  }
+
+  @Get('home')
+  @ApiOperation({ summary: 'Get all house tasks' })
+  @ApiResponse({
+    status: 200,
+    description: 'House task(s) retrieved successfully',
+  })
+  @ApiResponse({ status: 400, description: 'Bad Request' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  @ApiResponse({ status: 404, description: 'Not Found' })
+  async getAllHouseTasks() {
+    this.logger.debug('GET /tasks/home');
+    const response = await this.taskService.getAllHouseTasks();
     const formattedResponse = formatResponse(response.entities, {
       total: response.total,
     });
@@ -124,10 +146,10 @@ export class TaskController {
     return formattedResponse;
   }
 
-  @Post('')
+  @Post('home')
   @UsePipes(dtoValidator())
   @ApiOperation({
-    summary: 'Create a new product',
+    summary: 'Create a new house task',
   })
   @ApiBody({ description: 'Task data', type: CreateTaskDto })
   @ApiResponse({
@@ -138,9 +160,32 @@ export class TaskController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiResponse({ status: 404, description: 'Not Found' })
-  async createTask(@Body() product: CreateTaskDto) {
+  async createHouseTask(@Body() task: CreateHouseTaskDto) {
+    this.logger.debug('POST /tasks/home');
+    const response = await this.taskService.createHouseTask(task);
+    const formattedResponse = formatResponse(response, {
+      id: response.houseTaskID,
+    });
+    return formattedResponse;
+  }
+
+  @Post('')
+  @UsePipes(dtoValidator())
+  @ApiOperation({
+    summary: 'Create a new task',
+  })
+  @ApiBody({ description: 'Task data', type: CreateTaskDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Task created successfully',
+  })
+  @ApiResponse({ status: 400, description: 'Bad Request' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  @ApiResponse({ status: 404, description: 'Not Found' })
+  async createTask(@Body() task: CreateTaskDto) {
     this.logger.debug('POST /tasks');
-    const response = await this.taskService.createTask(product);
+    const response = await this.taskService.createTask(task);
     const formattedResponse = formatResponse(response, {
       id: response.taskID,
     });
@@ -150,7 +195,7 @@ export class TaskController {
   @Put(':id')
   @UsePipes(dtoValidator())
   @ApiOperation({
-    summary: 'Update an existing product',
+    summary: 'Update an existing task',
   })
   @ApiParam({ name: 'id', description: 'Task ID' })
   @ApiBody({ description: 'Task data', type: CreateTaskDto })
@@ -162,16 +207,16 @@ export class TaskController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiResponse({ status: 404, description: 'Not Found' })
-  async updateTask(@Param('id') id: string, @Body() product: CreateTaskDto) {
+  async updateTask(@Param('id') id: string, @Body() task: CreateTaskDto) {
     this.logger.debug('PUT /tasks/:id');
-    const response = await this.taskService.updateTask(id, product);
+    const response = await this.taskService.updateTask(id, task);
     const formattedResponse = formatResponse(response, { id });
     return formattedResponse;
   }
 
   @Patch(':id')
   @ApiOperation({
-    summary: 'Update an existing product',
+    summary: 'Update an existing task',
   })
   @ApiParam({ name: 'id', description: 'Task ID' })
   @ApiQuery({
@@ -202,7 +247,7 @@ export class TaskController {
 
   @Delete(':id')
   @ApiOperation({
-    summary: 'Delete an existing product',
+    summary: 'Delete an existing task',
   })
   @ApiParam({ name: 'id', description: 'Task ID' })
   @ApiResponse({
