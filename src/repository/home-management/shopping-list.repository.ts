@@ -288,8 +288,8 @@ export class ShoppingListProductRepositoryImplementation
     const mappedProducts: Map<number, ShoppingListProductI> = new Map();
     result.forEach((record: GetShoppingListProductDto) => {
       let product: ShoppingListProductI;
-      if (mappedProducts.has(record.productID)) {
-        product = mappedProducts.get(record.productID);
+      if (mappedProducts.has(record.shoppingListProductID)) {
+        product = mappedProducts.get(record.shoppingListProductID);
       } else {
         product = {
           shoppingListProductID: record.shoppingListProductID,
@@ -307,15 +307,15 @@ export class ShoppingListProductRepositoryImplementation
             storeName: record.storeName,
           },
         };
-        mappedProducts.set(record.productID, product);
+        mappedProducts.set(record.shoppingListProductID, product);
+      }
 
-        if (record.tagID) {
-          product.product.tags.push({
-            tagID: record.tagID,
-            tagName: record.tagName,
-            tagType: record.tagType,
-          });
-        }
+      if (record.tagID) {
+        product.product.tags.push({
+          tagID: record.tagID,
+          tagName: record.tagName,
+          tagType: record.tagType,
+        });
       }
     });
     return Array.from(mappedProducts.values());

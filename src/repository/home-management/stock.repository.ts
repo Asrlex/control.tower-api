@@ -248,7 +248,7 @@ export class StockProductRepositoryImplementation
     result.forEach((record: GetStockProductDto) => {
       let product: StockProductI;
       if (mappedProducts.has(record.stockProductID)) {
-        product = mappedProducts.get(record.productID);
+        product = mappedProducts.get(record.stockProductID);
       } else {
         product = {
           stockProductID: record.stockProductID,
@@ -263,15 +263,15 @@ export class StockProductRepositoryImplementation
           },
         };
 
-        mappedProducts.set(record.productID, product);
+        mappedProducts.set(record.stockProductID, product);
+      }
 
-        if (record.tagID) {
-          product.product.tags.push({
-            tagID: record.tagID,
-            tagName: record.tagName,
-            tagType: record.tagType,
-          });
-        }
+      if (record.tagID) {
+        product.product.tags.push({
+          tagID: record.tagID,
+          tagName: record.tagName,
+          tagType: record.tagType,
+        });
       }
     });
     return Array.from(mappedProducts.values());

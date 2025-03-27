@@ -165,7 +165,10 @@ export class TagController {
   @ApiResponse({ status: 404, description: 'Not Found' })
   async createItemTag(@Body() tag: CreateItemTagDto) {
     this.logger.debug('POST /tags');
-    await this.tagService.createItemTag(tag.itemID, tag.tagID.toString());
+    await this.tagService.createItemTag(
+      tag.tagID.toString(),
+      tag.itemID.toString(),
+    );
     const formattedResponse = formatResponse(null);
     return formattedResponse;
   }
@@ -208,7 +211,10 @@ export class TagController {
   @ApiResponse({ status: 404, description: 'Not Found' })
   async deleteItemTag(@Body() tag: CreateItemTagDto) {
     this.logger.debug('DELETE /tags/item');
-    await this.tagService.deleteItemTag(tag.itemID, tag.tagID.toString());
+    await this.tagService.deleteItemTag(
+      tag.itemID.toString(),
+      tag.tagID.toString(),
+    );
     const formattedResponse = formatResponse(null);
     return formattedResponse;
   }

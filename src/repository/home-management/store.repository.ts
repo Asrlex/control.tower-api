@@ -33,7 +33,7 @@ export class StoreRepositoryImplementation
   }> {
     const sql = storesQueries.getAll;
     const result = await this.homeManagementDbConnection.execute(sql);
-    const entities: StoreI[] = this.resultToProduct(result);
+    const entities: StoreI[] = this.resultToStore(result);
     return {
       entities,
       total: result[0] ? parseInt(result[0].total, 10) : 0,
@@ -68,7 +68,7 @@ export class StoreRepositoryImplementation
       .replace('@start', offset.toString())
       .replace('@end', limit.toString());
     const result = await this.homeManagementDbConnection.execute(sql);
-    const entities: StoreI[] = this.resultToProduct(result);
+    const entities: StoreI[] = this.resultToStore(result);
     return {
       entities,
       total: result[0] ? parseInt(result[0].total, 10) : 0,
@@ -83,7 +83,7 @@ export class StoreRepositoryImplementation
   async findById(id: string): Promise<StoreI | null> {
     const sql = storesQueries.getOne.replace('@id', id);
     const result = await this.homeManagementDbConnection.execute(sql);
-    const entities: StoreI[] = this.resultToProduct(result);
+    const entities: StoreI[] = this.resultToStore(result);
     return entities.length > 0 ? entities[0] : null;
   }
 
@@ -161,21 +161,21 @@ export class StoreRepositoryImplementation
    * @param result - resultado de la consulta
    * @returns array de tiendas
    */
-  private resultToProduct(result: GetStoreDto[]): StoreI[] {
-    const mappedProducts: Map<number, StoreI> = new Map();
+  private resultToStore(result: GetStoreDto[]): StoreI[] {
+    const mappedStores: Map<number, StoreI> = new Map();
     result.forEach((record: GetStoreDto) => {
       let store: StoreI;
-      if (mappedProducts.has(record.storeID)) {
-        store = mappedProducts.get(record.storeID);
+      if (mappedStores.has(record.storeID)) {
+        store = mappedStores.get(record.storeID);
       } else {
         store = {
           storeID: record.storeID,
           storeName: record.storeName,
         };
-        mappedProducts.set(record.storeID, store);
+        mappedStores.set(record.storeID, store);
       }
     });
-    return Array.from(mappedProducts.values());
+    return Array.from(mappedStores.values());
   }
 
   /**
