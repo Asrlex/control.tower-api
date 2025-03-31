@@ -7,9 +7,14 @@ import { StockProductRepositoryImplementation } from '@/repository/home-manageme
 import { ShoppingListProductModule } from '../shopping-list/shopping-list.module';
 import { SHOPPING_LIST_PRODUCT_REPOSITORY } from '@/repository/home-management/shopping-list.repository.interface';
 import { ShoppingListProductRepositoryImplementation } from '@/repository/home-management/shopping-list.repository';
+import { AuthModule } from '@/api/auth/auth.module';
 
 @Module({
-  imports: [DatabaseModule, forwardRef(() => ShoppingListProductModule)],
+  imports: [
+    DatabaseModule,
+    forwardRef(() => ShoppingListProductModule),
+    AuthModule,
+  ],
   controllers: [StockProductController],
   providers: [
     {

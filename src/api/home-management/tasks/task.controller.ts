@@ -30,10 +30,12 @@ import {
   CreateHouseTaskDto,
   CreateTaskDto,
 } from '@/api/entities/dtos/home-management/task.dto';
+import { JwtAuthGuard } from '@/api/auth/guards/jwt-auth.guard';
 
 @ApiTags('Tasks')
 @Controller()
-@UseGuards(new GlobalApiKeyGuard())
+@UseGuards(GlobalApiKeyGuard)
+@UseGuards(JwtAuthGuard)
 export class TaskController {
   constructor(
     private readonly logger: Logger,

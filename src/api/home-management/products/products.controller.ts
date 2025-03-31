@@ -26,10 +26,12 @@ import {
 import { GlobalApiKeyGuard } from '@/api/auth/guards/global-api-key.guard';
 import { ProductService } from './products.service';
 import { CreateProductDto } from '@/api/entities/dtos/home-management/product.dto';
+import { JwtAuthGuard } from '@/api/auth/guards/jwt-auth.guard';
 
 @ApiTags('Products')
 @Controller()
-@UseGuards(new GlobalApiKeyGuard())
+@UseGuards(GlobalApiKeyGuard)
+@UseGuards(JwtAuthGuard)
 export class ProductController {
   constructor(
     private readonly logger: Logger,
@@ -62,7 +64,7 @@ export class ProductController {
 
   @Get('id/:id')
   @ApiOperation({
-    summary: 'Get a products by ID',
+    summary: 'Get product by ID',
   })
   @ApiParam({ name: 'id', description: 'Product ID' })
   @ApiResponse({

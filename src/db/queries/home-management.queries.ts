@@ -13,7 +13,8 @@ const recipesTable = 'recipe';
 const recipeTagsTable = 'recipe_tag';
 const recipeIngredientsTable = 'recipe_ingredient';
 const recipeStepsTable = 'recipe_step';
-// const usersTable = 'user';
+const settingsTable = 'settings';
+const usersTable = 'user';
 // const notesTable = 'note';
 // const expensesTable = 'expenses';
 // const expenseCategoriesTable = 'expense_category';
@@ -621,5 +622,87 @@ export const recipesQueries = {
   ]),
   deleteStep: generateQuery(baseQueries.specificHardDelete, [
     { key: '@DeleteTable', value: recipeStepsTable },
+  ]),
+};
+
+// ******************************************************
+// SETTINGS
+// ******************************************************
+const settingsSelectRoot = `
+  s.id as settingsID,
+  s.settings as settings,
+  s.user_id as settingsUserID,
+  s.created_at as settingsCreatedAt,
+  s.last_modified_at as settingsUpdatedAt
+`;
+export const settingsQueries = {
+  getAll: generateQuery(baseQueries.getAll, [
+    { key: '@KeyParam', value: 'settingsID' },
+    { key: '@SelectFields', value: settingsSelectRoot },
+    { key: '@SelectTables', value: `${settingsTable} s` },
+  ]),
+  getOne: generateQuery(baseQueries.getById, [
+    { key: '@SelectFields', value: settingsSelectRoot },
+    { key: '@SelectTables', value: `${settingsTable} s` },
+    { key: '@SelectId', value: `s.user_id` },
+  ]),
+  create: generateQuery(baseQueries.insertsqlite, [
+    { key: '@InsertTable', value: settingsTable },
+    { key: '@InsertFields', value: 'settings, user_id' },
+    { key: '@InsertOutput', value: 'RETURNING id' },
+  ]),
+  update: generateQuery(baseQueries.update, [
+    { key: '@UpdateTable', value: settingsTable },
+    { key: '@UpdateFields', value: `settings = '@settings'` },
+    { key: '@UpdateId', value: 'user_id' },
+  ]),
+  delete: generateQuery(baseQueries.specificHardDelete, [
+    { key: '@DeleteTable', value: settingsTable },
+    { key: '@DeleteFields', value: `user_id = '@id'` },
+  ]),
+};
+
+// ******************************************************
+// USERS
+// ******************************************************
+const usersSelectRoot = `
+  u.id as userID,
+  u.username as userUsername,
+  u.email as userEmail,
+  u.password as userPassword,
+  u.created_at as userCreatedAt,
+  u.last_modified_at as userUpdatedAt
+`;
+export const usersQueries = {
+  getAll: generateQuery(baseQueries.getAll, [
+    { key: '@KeyParam', value: 'userID' },
+    { key: '@SelectFields', value: usersSelectRoot },
+    { key: '@SelectTables', value: `${usersTable} u` },
+  ]),
+  getOne: generateQuery(baseQueries.getById, [
+    { key: '@SelectFields', value: usersSelectRoot },
+    { key: '@SelectTables', value: `${usersTable} u` },
+    { key: '@SelectId', value: `u.id` },
+  ]),
+  getOneByEmail: generateQuery(baseQueries.getById, [
+    { key: '@SelectFields', value: usersSelectRoot },
+    { key: '@SelectTables', value: `${usersTable} u` },
+    { key: '@SelectId', value: `u.email` },
+  ]),
+  create: generateQuery(baseQueries.insertsqlite, [
+    { key: '@InsertTable', value: usersTable },
+    { key: '@InsertFields', value: 'email, password' },
+    { key: '@InsertOutput', value: 'RETURNING id' },
+  ]),
+  update: generateQuery(baseQueries.update, [
+    { key: '@UpdateTable', value: usersTable },
+    {
+      key: '@UpdateFields',
+      value: `email = '@email', password = '@password'`,
+    },
+    { key: '@UpdateId', value: 'id' },
+  ]),
+  delete: generateQuery(baseQueries.hardDelete, [
+    { key: '@DeleteTable', value: usersTable },
   ]),
 };

@@ -30,10 +30,12 @@ import {
   CreateStepDto,
 } from '@/api/entities/dtos/home-management/recipe.dto';
 import { RecipeService } from './recipes.service';
+import { JwtAuthGuard } from '@/api/auth/guards/jwt-auth.guard';
 
 @ApiTags('Recipes')
 @Controller()
-@UseGuards(new GlobalApiKeyGuard())
+@UseGuards(GlobalApiKeyGuard)
+@UseGuards(JwtAuthGuard)
 export class RecipeController {
   constructor(
     private readonly logger: Logger,

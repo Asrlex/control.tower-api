@@ -29,10 +29,12 @@ import {
   CreateItemTagDto,
   CreateTagDto,
 } from '@/api/entities/dtos/home-management/tag.dto';
+import { JwtAuthGuard } from '@/api/auth/guards/jwt-auth.guard';
 
 @ApiTags('Tags')
 @Controller()
-@UseGuards(new GlobalApiKeyGuard())
+@UseGuards(GlobalApiKeyGuard)
+@UseGuards(JwtAuthGuard)
 export class TagController {
   constructor(
     private readonly logger: Logger,

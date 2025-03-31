@@ -4,9 +4,10 @@ import { ProductController } from './products.controller';
 import { PRODUCT_REPOSITORY } from '@/repository/home-management/products.repository.interface';
 import { ProductRepositoryImplementation } from '@/repository/home-management/products.repository';
 import { ProductService } from './products.service';
+import { AuthModule } from '@/api/auth/auth.module';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, AuthModule],
   controllers: [ProductController],
   providers: [
     {

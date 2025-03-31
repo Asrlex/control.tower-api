@@ -4,9 +4,10 @@ import { TagRepositoryImplementation } from '@/repository/home-management/tag.re
 import { TagController } from './tags.controller';
 import { TagService } from './tags.service';
 import { TAG_REPOSITORY } from '@/repository/home-management/tag.repository.interface';
+import { AuthModule } from '@/api/auth/auth.module';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, AuthModule],
   controllers: [TagController],
   providers: [
     {

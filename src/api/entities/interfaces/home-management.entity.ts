@@ -85,3 +85,20 @@ export interface RecipeIngredientI {
   recipeIngredientIsOptional: boolean;
   product: ProductI;
 }
+
+export interface SettingsI {
+  settingsID: number;
+  settings: string;
+  settingsUserID: number;
+  settingsDateCreated: string;
+  settingsLastModified: string;
+}
+
+export interface UserI {
+  userID: number;
+  userEmail: string;
+  userPassword: string;
+  userDateCreated: string;
+  userLastModified: string;
+  userLastLogin: string;
+}

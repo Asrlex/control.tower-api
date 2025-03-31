@@ -4,9 +4,10 @@ import { RecipeRepositoryImplementation } from '@/repository/home-management/rec
 import { RECIPE_REPOSITORY } from '@/repository/home-management/recipes.repository.interface';
 import { RecipeController } from './recipes.controller';
 import { RecipeService } from './recipes.service';
+import { AuthModule } from '@/api/auth/auth.module';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, AuthModule],
   controllers: [RecipeController],
   providers: [
     {

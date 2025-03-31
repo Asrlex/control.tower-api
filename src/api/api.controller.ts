@@ -44,22 +44,6 @@ export class ApiController {
   }
 
   /**
-   * Método para probar la implementación de autorización
-   * @returns Retorna un mensaje de control de la API
-   */
-  @Get('auth')
-  @ApiOperation({ summary: 'Test auth' })
-  @ApiResponse({ status: 200, description: 'Test auth' })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
-  testAuth(): { status: string } {
-    this.logger.debug('GET control/auth');
-    return { status: 'Authorized' };
-  }
-
-  /**
    * Método para enviar un mensaje a Kafka
    * @returns Retorna un mensaje de control de la API
    * @example POST control/message

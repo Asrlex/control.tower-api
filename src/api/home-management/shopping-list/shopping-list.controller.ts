@@ -26,10 +26,12 @@ import {
 import { GlobalApiKeyGuard } from '@/api/auth/guards/global-api-key.guard';
 import { ShoppingListProductService } from './shopping-list.service';
 import { CreateShoppingListProductDto } from '@/api/entities/dtos/home-management/shopping-list.dto';
+import { JwtAuthGuard } from '@/api/auth/guards/jwt-auth.guard';
 
 @ApiTags('Shopping List Products')
 @Controller()
-@UseGuards(new GlobalApiKeyGuard())
+@UseGuards(GlobalApiKeyGuard)
+@UseGuards(JwtAuthGuard)
 export class ShoppingListProductController {
   constructor(
     private readonly logger: Logger,

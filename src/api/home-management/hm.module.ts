@@ -22,6 +22,9 @@ import { TAG_REPOSITORY } from '@/repository/home-management/tag.repository.inte
 import { RecipeModule } from './recipes/recipes.module';
 import { RECIPE_REPOSITORY } from '@/repository/home-management/recipes.repository.interface';
 import { RecipeRepositoryImplementation } from '@/repository/home-management/recipes.repository';
+import { SettingsModule } from './settings/settings.module';
+import { SETTINGS_REPOSITORY } from '@/repository/home-management/settings.repository.interface';
+import { SettingsRepositoryImplementation } from '@/repository/home-management/settings.repository';
 
 @Module({
   imports: [
@@ -33,6 +36,7 @@ import { RecipeRepositoryImplementation } from '@/repository/home-management/rec
     TaskModule,
     TagModule,
     RecipeModule,
+    SettingsModule,
     RouterModule.register([
       {
         path: 'home-management',
@@ -65,6 +69,10 @@ import { RecipeRepositoryImplementation } from '@/repository/home-management/rec
           {
             path: 'recipes',
             module: RecipeModule,
+          },
+          {
+            path: 'settings',
+            module: SettingsModule,
           },
         ],
       },
@@ -100,6 +108,10 @@ import { RecipeRepositoryImplementation } from '@/repository/home-management/rec
     {
       provide: RECIPE_REPOSITORY,
       useClass: RecipeRepositoryImplementation,
+    },
+    {
+      provide: SETTINGS_REPOSITORY,
+      useClass: SettingsRepositoryImplementation,
     },
   ],
 })

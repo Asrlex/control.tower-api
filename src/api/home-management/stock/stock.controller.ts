@@ -26,10 +26,12 @@ import {
 import { GlobalApiKeyGuard } from '@/api/auth/guards/global-api-key.guard';
 import { StockProductService } from './stock.service';
 import { CreateStockProductDto } from '@/api/entities/dtos/home-management/stock-product.dto';
+import { JwtAuthGuard } from '@/api/auth/guards/jwt-auth.guard';
 
 @ApiTags('Stock Products')
 @Controller()
-@UseGuards(new GlobalApiKeyGuard())
+@UseGuards(GlobalApiKeyGuard)
+@UseGuards(JwtAuthGuard)
 export class StockProductController {
   constructor(
     private readonly logger: Logger,
