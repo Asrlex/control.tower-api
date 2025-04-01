@@ -214,8 +214,8 @@ export class TagController {
   async deleteItemTag(@Body() tag: CreateItemTagDto) {
     this.logger.debug('DELETE /tags/item');
     await this.tagService.deleteItemTag(
-      tag.itemID.toString(),
       tag.tagID.toString(),
+      tag.itemID.toString(),
     );
     const formattedResponse = formatResponse(null);
     return formattedResponse;

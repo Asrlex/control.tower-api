@@ -2,6 +2,7 @@ import {
   IsArray,
   IsBoolean,
   IsNumber,
+  IsObject,
   IsOptional,
   IsString,
 } from 'class-validator';
@@ -66,8 +67,11 @@ export class CreateIngredientDto {
   recipeIngredientID: number;
   @IsNumber()
   recipeID: number;
-  @IsNumber()
-  productID: number;
+  @IsObject()
+  productID: {
+    value: number;
+    label: string;
+  };
   @IsNumber()
   recipeIngredientAmount: number;
   @IsString()

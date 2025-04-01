@@ -178,6 +178,7 @@ export class TagRepositoryImplementation
    * @returns null - etiqueta eliminado
    */
   async deleteItemTag(tagID: string, itemID: string) {
+    console.log('deleteItemTag', tagID, itemID);
     const originalTag = await this.findById(tagID);
     if (!originalTag) {
       throw new NotFoundException('Tag not found');

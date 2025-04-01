@@ -174,7 +174,6 @@ export class RecipeRepositoryImplementation
     const responseRecipe =
       await this.homeManagementDbConnection.execute(sqlRecipe);
     const recipeID = responseRecipe[0].id;
-
     if (dto.ingredients) {
       dto.ingredients.forEach(async (ingredient) => {
         ingredient.recipeID = recipeID;
@@ -210,7 +209,7 @@ export class RecipeRepositoryImplementation
   async createIngredient(dto: CreateIngredientDto): Promise<RecipeIngredientI> {
     const sqlIngredient = recipesQueries.createIngredient.replace(
       '@InsertValues',
-      `'${dto.recipeID}', '${dto.productID}', '${dto.recipeIngredientAmount}', '${dto.recipeIngredientUnit}'`,
+      `'${dto.recipeID}', '${dto.productID.value}', '${dto.recipeIngredientAmount}', '${dto.recipeIngredientUnit}'`,
     );
     const response =
       await this.homeManagementDbConnection.execute(sqlIngredient);
@@ -224,6 +223,11 @@ export class RecipeRepositoryImplementation
     return this.findIngredientByID(ingredientID);
   }
 
+  /**
+   * Método para añadir un paso a una receta
+   * @param dto - DTO del paso
+   * @returns string - paso añadido
+   */
   async createStep(dto: CreateStepDto): Promise<RecipeStepI> {
     const sqlStep = recipesQueries.createStep.replace(
       '@InsertValues',
