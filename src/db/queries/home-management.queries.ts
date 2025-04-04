@@ -15,9 +15,9 @@ const recipeIngredientsTable = 'recipe_ingredient';
 const recipeStepsTable = 'recipe_step';
 const settingsTable = 'settings';
 const usersTable = 'user';
+const expensesTable = 'expenses';
+const expenseCategoriesTable = 'expense_category';
 // const notesTable = 'note';
-// const expensesTable = 'expenses';
-// const expenseCategoriesTable = 'expense_category';
 
 // ******************************************************
 // PRODUCTS
@@ -704,5 +704,79 @@ export const usersQueries = {
   ]),
   delete: generateQuery(baseQueries.hardDelete, [
     { key: '@DeleteTable', value: usersTable },
+  ]),
+};
+
+// ******************************************************
+// EXPENSES
+// ******************************************************
+const expensesSelectRoot = `
+  e.id as expenseID,
+  e.amount as expenseAmount,
+  e.description as expenseDescription,
+  e.date as expenseDate,
+  ec.id as categoryID,
+  ec.name as categoryName
+`;
+const expensesJoin = `
+  LEFT JOIN ${expenseCategoriesTable} ec ON ec.id = e.category_id
+`;
+export const expensesQueries = {
+  getAll: generateQuery(baseQueries.getAll, [
+    { key: '@KeyParam', value: 'expenseID' },
+    { key: '@SelectFields', value: expensesSelectRoot },
+    { key: '@SelectTables', value: `${expensesTable} e ${expensesJoin}` },
+  ]),
+  getAllCategories: generateQuery(baseQueries.getAll, [
+    { key: '@KeyParam', value: 'categoryID' },
+    {
+      key: '@SelectFields',
+      value: 'ec.id as categoryID, ec.name as categoryName',
+    },
+    { key: '@SelectTables', value: `${expenseCategoriesTable} ec` },
+  ]),
+  getOne: generateQuery(baseQueries.getById, [
+    { key: '@SelectFields', value: expensesSelectRoot },
+    { key: '@SelectTables', value: `${expensesTable} e ${expensesJoin}` },
+    { key: '@SelectId', value: `e.id` },
+  ]),
+  get: generateQuery(baseQueries.search, [
+    {
+      key: '@KeyParam',
+      value: 'expenseID',
+    },
+    {
+      key: '@IncludedItemsTable',
+      value: `${expensesTable} e ${expensesJoin}`,
+    },
+    {
+      key: '@SelectFields',
+      value: `${expensesSelectRoot}`,
+    },
+    {
+      key: '@FilterJoins',
+      value: `fr.expenseID = ai.expenseID`,
+    },
+  ]),
+  create: generateQuery(baseQueries.insertsqlite, [
+    { key: '@InsertTable', value: expensesTable },
+    { key: '@InsertFields', value: 'amount, description, date, category_id' },
+    { key: '@InsertOutput', value: 'RETURNING id' },
+  ]),
+  update: generateQuery(baseQueries.update, [
+    { key: '@UpdateTable', value: expensesTable },
+    {
+      key: '@UpdateFields',
+      value: `amount = '@amount', description = '@description', date = '@date'`,
+    },
+    { key: '@UpdateId', value: 'id' },
+  ]),
+  delete: generateQuery(baseQueries.hardDelete, [
+    { key: '@DeleteTable', value: expensesTable },
+  ]),
+  deleteCategory: generateQuery(baseQueries.specificHardDelete, [
+    { key: '@DeleteTable', value: expensesTable },
+    { key: '@DeleteFields', value: `category_id = @category_id` },
+    { key: '@DeleteId', value: `id = @id` },
   ]),
 };

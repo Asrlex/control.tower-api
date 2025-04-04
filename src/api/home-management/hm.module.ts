@@ -25,6 +25,7 @@ import { RecipeRepositoryImplementation } from '@/repository/home-management/rec
 import { SettingsModule } from './settings/settings.module';
 import { SETTINGS_REPOSITORY } from '@/repository/home-management/settings.repository.interface';
 import { SettingsRepositoryImplementation } from '@/repository/home-management/settings.repository';
+import { ExpenseModule } from './expenses/expenses.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { SettingsRepositoryImplementation } from '@/repository/home-management/s
     TagModule,
     RecipeModule,
     SettingsModule,
+    ExpenseModule,
     RouterModule.register([
       {
         path: 'home-management',
@@ -73,6 +75,10 @@ import { SettingsRepositoryImplementation } from '@/repository/home-management/s
           {
             path: 'settings',
             module: SettingsModule,
+          },
+          {
+            path: 'expenses',
+            module: ExpenseModule,
           },
         ],
       },

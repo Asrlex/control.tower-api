@@ -102,3 +102,17 @@ export interface UserI {
   userLastModified: string;
   userLastLogin: string;
 }
+
+export interface ExpenseI {
+  expenseID: number;
+  expenseAmount: number;
+  expenseDate: string;
+  expenseDescription: string;
+  categoryID: number;
+  categoryName: string;
+}
+
+export interface ExpenseCategoryI {
+  categoryID: number;
+  categoryName: string;
+}
