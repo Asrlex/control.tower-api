@@ -26,6 +26,10 @@ import { ValidateSearchCriteriaPipe } from '@/common/pipes/search.pipe';
 import { SearchCriteriaI } from '@/api/entities/interfaces/api.entity';
 import { CreateExpenseDto } from '@/api/entities/dtos/home-management/expense.dto';
 import { ExpenseService } from './expenses.service';
+import {
+  SuccessCodes,
+  ErrorCodes,
+} from '@/api/entities/enums/response-codes.enum';
 
 @ApiTags('Expenses')
 @Controller()
@@ -45,13 +49,13 @@ export class ExpenseController {
   @Get('all')
   @ApiOperation({ summary: 'Get all expenses' })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Expense(s) retrieved successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getAllExpenses() {
     this.logger.debug('GET /expenses/all');
     const response = await this.expenseService.getAllExpenses();
@@ -64,13 +68,13 @@ export class ExpenseController {
   @Get('all/categories')
   @ApiOperation({ summary: 'Get all expense categories' })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Expense(s) retrieved successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getAllExpenseCategories() {
     this.logger.debug('GET /expenses/all/categories');
     const response = await this.expenseService.getAllExpenseCategories();
@@ -84,13 +88,13 @@ export class ExpenseController {
   })
   @ApiParam({ name: 'id', description: 'Expense ID' })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Expense(s) retrieved successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getExpenseById(id: string) {
     this.logger.debug(`GET /expenses/id/${id}`);
     const response = await this.expenseService.getExpenseById(id);
@@ -108,13 +112,13 @@ export class ExpenseController {
     required: false,
   })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Expense(s) retrieved successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getExpenses(
     @Query('page', new ValidatePaginationPipe()) page: number = 0,
     @Query('limit', new ValidatePaginationPipe()) limit: number = 50,
@@ -143,13 +147,13 @@ export class ExpenseController {
   @ApiOperation({ summary: 'Create expense' })
   @ApiBody({ description: 'Expense data', type: CreateExpenseDto })
   @ApiResponse({
-    status: 201,
+    status: SuccessCodes.Created,
     description: 'Expense created successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async createExpense(@Body() dto: CreateExpenseDto) {
     this.logger.debug('POST /expenses');
     const response = await this.expenseService.createExpense(dto);
@@ -166,13 +170,13 @@ export class ExpenseController {
   @ApiParam({ name: 'id', description: 'Expense ID' })
   @ApiBody({ description: 'Expense data', type: CreateExpenseDto })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Expense updated successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async updateExpense(@Param('id') id: string, @Body() dto: CreateExpenseDto) {
     this.logger.debug(`PUT /expenses/${id}`);
     const response = await this.expenseService.updateExpense(id, dto);
@@ -186,13 +190,13 @@ export class ExpenseController {
   })
   @ApiParam({ name: 'id', description: 'Expense ID' })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.NoContent,
     description: 'Expense deleted successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async deleteExpense(@Param('id') id: string) {
     this.logger.debug(`DELETE /expenses/${id}`);
     const response = await this.expenseService.deleteExpense(id);

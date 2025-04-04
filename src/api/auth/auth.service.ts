@@ -10,6 +10,7 @@ import { CreateUserDto } from '../entities/dtos/home-management/user.dto';
 import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { SuccessCodes } from '../entities/enums/response-codes.enum';
 
 @Injectable()
 export class AuthService {
@@ -26,7 +27,7 @@ export class AuthService {
    */
   async status() {
     return {
-      statusCode: 200,
+      statusCode: SuccessCodes.Ok,
       message: 'Auth endpoint is working',
     };
   }

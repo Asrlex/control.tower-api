@@ -30,6 +30,10 @@ import {
   CreateTagDto,
 } from '@/api/entities/dtos/home-management/tag.dto';
 import { JwtAuthGuard } from '@/api/auth/guards/jwt-auth.guard';
+import {
+  SuccessCodes,
+  ErrorCodes,
+} from '@/api/entities/enums/response-codes.enum';
 
 @ApiTags('Tags')
 @Controller()
@@ -49,13 +53,13 @@ export class TagController {
   @Get('all')
   @ApiOperation({ summary: 'Get all tags' })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Tag(s) retrieved successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getAllTags() {
     this.logger.debug('GET /tags/all');
     const response = await this.tagService.getAllTags();
@@ -71,13 +75,13 @@ export class TagController {
   })
   @ApiParam({ name: 'id', description: 'Tag ID' })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Tag(s) retrieved successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getTagById(@Param('id') id: string) {
     this.logger.debug('GET /tags/id/:id');
     const response = await this.tagService.getTagById(id);
@@ -97,13 +101,13 @@ export class TagController {
     required: false,
   })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Tag(s) retrieved successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getTags(
     @Query('page', new ValidatePaginationPipe()) page: number = 0,
     @Query('limit', new ValidatePaginationPipe()) limit: number = 50,
@@ -135,13 +139,13 @@ export class TagController {
   })
   @ApiBody({ description: 'Tag data', type: CreateTagDto })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Created,
     description: 'Tag created successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async createTag(@Body() tag: CreateTagDto) {
     this.logger.debug('POST /tags');
     const response = await this.tagService.createTag(tag);
@@ -158,13 +162,13 @@ export class TagController {
   })
   @ApiBody({ description: 'Tag data', type: CreateItemTagDto })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Created,
     description: 'Association created successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async createItemTag(@Body() tag: CreateItemTagDto) {
     this.logger.debug('POST /tags');
     await this.tagService.createItemTag(
@@ -183,13 +187,13 @@ export class TagController {
   @ApiParam({ name: 'id', description: 'Tag ID' })
   @ApiBody({ description: 'Tag data', type: CreateTagDto })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Tag updated successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async updateTag(@Param('id') id: string, @Body() tag: CreateTagDto) {
     this.logger.debug('PUT /tags/:id');
     const response = await this.tagService.updateTag(id, tag);
@@ -204,13 +208,13 @@ export class TagController {
   })
   @ApiBody({ description: 'Tag data', type: CreateItemTagDto })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.NoContent,
     description: 'Association deleted successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async deleteItemTag(@Body() tag: CreateItemTagDto) {
     this.logger.debug('DELETE /tags/item');
     await this.tagService.deleteItemTag(
@@ -227,13 +231,13 @@ export class TagController {
   })
   @ApiParam({ name: 'id', description: 'Tag ID' })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.NoContent,
     description: 'Tag deleted successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async deleteTag(@Param('id') id: string) {
     this.logger.debug('DELETE /tags/:id');
     await this.tagService.deleteTag(id);

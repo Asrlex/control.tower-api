@@ -1,4 +1,5 @@
 import { CreateExpenseDto } from '@/api/entities/dtos/home-management/expense.dto';
+import { SuccessCodes } from '@/api/entities/enums/response-codes.enum';
 import { SearchCriteriaI } from '@/api/entities/interfaces/api.entity';
 import {
   ExpenseCategoryI,
@@ -23,7 +24,7 @@ export class ExpenseService {
    */
   async status() {
     return {
-      statusCode: 200,
+      statusCode: SuccessCodes.Ok,
       message: 'Expense endpoint is working',
     };
   }

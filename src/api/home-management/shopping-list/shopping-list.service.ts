@@ -1,4 +1,5 @@
 import { CreateShoppingListProductDto } from '@/api/entities/dtos/home-management/shopping-list.dto';
+import { SuccessCodes } from '@/api/entities/enums/response-codes.enum';
 import { SearchCriteriaI } from '@/api/entities/interfaces/api.entity';
 import {
   ShoppingListProductI,
@@ -23,7 +24,7 @@ export class ShoppingListProductService {
    */
   async status() {
     return {
-      statusCode: 200,
+      statusCode: SuccessCodes.Ok,
       message: 'Product endpoint is working',
     };
   }

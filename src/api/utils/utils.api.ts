@@ -10,6 +10,10 @@ import {
   ValidationError,
   ValidationPipe,
 } from '@nestjs/common';
+import {
+  ErrorCodes,
+  SuccessCodes,
+} from '../entities/enums/response-codes.enum';
 
 /**
  * Formatear la respuesta de la API
@@ -37,7 +41,7 @@ export const formatResponse = (
 
   if (options?.error) {
     const errorResponse = {
-      statusCode: options.error.statusCode || 500,
+      statusCode: options.error.statusCode || ErrorCodes.InternalServerError,
       data: {
         name: options.error.name,
         message: options.error.message,
@@ -48,28 +52,28 @@ export const formatResponse = (
 
     switch (options.error.name) {
       case 'UnauthorizedException':
-        errorResponse.statusCode = 401;
+        errorResponse.statusCode = ErrorCodes.Unauthorized;
         errorResponse.data.trace = null;
         break;
       case 'NotFoundException':
-        errorResponse.statusCode = 404;
+        errorResponse.statusCode = ErrorCodes.NotFound;
         errorResponse.data.trace = null;
         break;
       case 'BadRequestException':
-        errorResponse.statusCode = 400;
+        errorResponse.statusCode = ErrorCodes.BadRequest;
         errorResponse.data.validationErrors = isDev
           ? options.error.response.errors
           : undefined;
         break;
       case 'ForbiddenException':
-        errorResponse.statusCode = 403;
+        errorResponse.statusCode = ErrorCodes.Forbidden;
         break;
       case 'DatabaseQueryException':
-        errorResponse.statusCode = 500;
+        errorResponse.statusCode = ErrorCodes.InternalServerError;
         errorResponse.data.trace = isDev ? options.error.toObject() : undefined;
         break;
       default:
-        errorResponse.statusCode = 500;
+        errorResponse.statusCode = ErrorCodes.InternalServerError;
         break;
     }
 
@@ -91,7 +95,7 @@ export const formatResponse = (
       : undefined;
 
   return {
-    statusCode: options?.statusCode || 200,
+    statusCode: options?.statusCode || SuccessCodes.Ok,
     data,
     pagination,
     id: options?.id,

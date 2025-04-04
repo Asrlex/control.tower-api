@@ -1,3 +1,4 @@
+import { ErrorCodes } from '@/api/entities/enums/response-codes.enum';
 import {
   ArgumentsHost,
   Catch,
@@ -18,7 +19,9 @@ export class ErrorWrapperFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
     const status =
-      exception instanceof HttpException ? exception.getStatus() : 500;
+      exception instanceof HttpException
+        ? exception.getStatus()
+        : ErrorCodes.InternalServerError;
 
     const formattedError = formatResponse(null, {
       error: exception,

@@ -1,4 +1,5 @@
 import { CreateStoreDto } from '@/api/entities/dtos/home-management/store.dto';
+import { SuccessCodes } from '@/api/entities/enums/response-codes.enum';
 import { SearchCriteriaI } from '@/api/entities/interfaces/api.entity';
 import { StoreI } from '@/api/entities/interfaces/home-management.entity';
 import {
@@ -20,7 +21,7 @@ export class StoreService {
    */
   async status() {
     return {
-      statusCode: 200,
+      statusCode: SuccessCodes.Ok,
       message: 'Store endpoint is working',
     };
   }

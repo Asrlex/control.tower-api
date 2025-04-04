@@ -1,4 +1,5 @@
 import { CreateProductDto } from '@/api/entities/dtos/home-management/product.dto';
+import { SuccessCodes } from '@/api/entities/enums/response-codes.enum';
 import { SearchCriteriaI } from '@/api/entities/interfaces/api.entity';
 import { ProductI } from '@/api/entities/interfaces/home-management.entity';
 import {
@@ -20,7 +21,7 @@ export class ProductService {
    */
   async status() {
     return {
-      statusCode: 200,
+      statusCode: SuccessCodes.Ok,
       message: 'Product endpoint is working',
     };
   }

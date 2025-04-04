@@ -27,6 +27,10 @@ import { GlobalApiKeyGuard } from '@/api/auth/guards/global-api-key.guard';
 import { StockProductService } from './stock.service';
 import { CreateStockProductDto } from '@/api/entities/dtos/home-management/stock-product.dto';
 import { JwtAuthGuard } from '@/api/auth/guards/jwt-auth.guard';
+import {
+  SuccessCodes,
+  ErrorCodes,
+} from '@/api/entities/enums/response-codes.enum';
 
 @ApiTags('Stock Products')
 @Controller()
@@ -46,13 +50,13 @@ export class StockProductController {
   @Get('all')
   @ApiOperation({ summary: 'Get all products' })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Product(s) retrieved successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getAllProducts() {
     this.logger.debug('GET /stock-products/all');
     const response = await this.stockProductService.getAllProducts();
@@ -68,13 +72,13 @@ export class StockProductController {
   })
   @ApiParam({ name: 'id', description: 'Product ID' })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Product(s) retrieved successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getProductById(@Param('id') id: string) {
     this.logger.debug('GET /stock-products/id/:id');
     const response = await this.stockProductService.getProductById(id);
@@ -94,13 +98,13 @@ export class StockProductController {
     required: false,
   })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Product(s) retrieved successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getProducts(
     @Query('page', new ValidatePaginationPipe()) page: number = 0,
     @Query('limit', new ValidatePaginationPipe()) limit: number = 50,
@@ -132,13 +136,13 @@ export class StockProductController {
   })
   @ApiBody({ description: 'Product data', type: CreateStockProductDto })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Created,
     description: 'Product created successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async createProduct(@Body() product: CreateStockProductDto) {
     this.logger.debug('POST /stock-products');
     const response = await this.stockProductService.createProduct(product);
@@ -155,13 +159,13 @@ export class StockProductController {
   @ApiParam({ name: 'id', description: 'Product ID' })
   @ApiBody({ description: 'Product data', type: CreateStockProductDto })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Product updated successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async addProductToShoppingList(@Param('id') id: string) {
     this.logger.debug('PUT /stock-products/list/:id');
     const response =
@@ -177,13 +181,13 @@ export class StockProductController {
   @ApiParam({ name: 'id', description: 'Product ID' })
   @ApiQuery({ name: 'amount', description: 'New amount', type: 'number' })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Product updated successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async modifyAmount(@Param('id') id: string, @Query('amount') amount: number) {
     this.logger.debug('PUT /stock-products/amount/:id');
     const response = await this.stockProductService.modifyAmount(id, amount);
@@ -199,13 +203,13 @@ export class StockProductController {
   @ApiParam({ name: 'id', description: 'Product ID' })
   @ApiBody({ description: 'Product data', type: CreateStockProductDto })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Product updated successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async updateProduct(
     @Param('id') id: string,
     @Body() product: CreateStockProductDto,
@@ -222,13 +226,13 @@ export class StockProductController {
   })
   @ApiParam({ name: 'id', description: 'Product ID' })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.NoContent,
     description: 'Product deleted successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async deleteProduct(@Param('id') id: string) {
     this.logger.debug('DELETE /stock-products/:id');
     await this.stockProductService.deleteProduct(id);

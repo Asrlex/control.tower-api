@@ -1,4 +1,5 @@
 import { CreateStockProductDto } from '@/api/entities/dtos/home-management/stock-product.dto';
+import { SuccessCodes } from '@/api/entities/enums/response-codes.enum';
 import { SearchCriteriaI } from '@/api/entities/interfaces/api.entity';
 import {
   ShoppingListProductI,
@@ -23,7 +24,7 @@ export class StockProductService {
    */
   async status() {
     return {
-      statusCode: 200,
+      statusCode: SuccessCodes.Ok,
       message: 'Stock endpoint is working',
     };
   }

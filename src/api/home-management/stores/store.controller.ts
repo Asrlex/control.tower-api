@@ -27,6 +27,10 @@ import { GlobalApiKeyGuard } from '@/api/auth/guards/global-api-key.guard';
 import { StoreService } from './store.service';
 import { CreateStoreDto } from '@/api/entities/dtos/home-management/store.dto';
 import { JwtAuthGuard } from '@/api/auth/guards/jwt-auth.guard';
+import {
+  SuccessCodes,
+  ErrorCodes,
+} from '@/api/entities/enums/response-codes.enum';
 
 @ApiTags('Stores')
 @Controller()
@@ -46,13 +50,13 @@ export class StoreController {
   @Get('all')
   @ApiOperation({ summary: 'Get all products' })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Store(s) retrieved successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getAllStores() {
     this.logger.debug('GET /stores/all');
     const response = await this.storeService.getAllStores();
@@ -68,13 +72,13 @@ export class StoreController {
   })
   @ApiParam({ name: 'id', description: 'Store ID' })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Store(s) retrieved successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getStoreById(@Param('id') id: string) {
     this.logger.debug('GET /stores/id/:id');
     const response = await this.storeService.getStoreById(id);
@@ -94,13 +98,13 @@ export class StoreController {
     required: false,
   })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Store(s) retrieved successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getStores(
     @Query('page', new ValidatePaginationPipe()) page: number = 0,
     @Query('limit', new ValidatePaginationPipe()) limit: number = 50,
@@ -132,13 +136,13 @@ export class StoreController {
   })
   @ApiBody({ description: 'Store data', type: CreateStoreDto })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Created,
     description: 'Store created successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async createStore(@Body() product: CreateStoreDto) {
     this.logger.debug('POST /product');
     const response = await this.storeService.createStore(product);
@@ -156,13 +160,13 @@ export class StoreController {
   @ApiParam({ name: 'id', description: 'Store ID' })
   @ApiBody({ description: 'Store data', type: CreateStoreDto })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Store updated successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async updateStore(@Param('id') id: string, @Body() product: CreateStoreDto) {
     this.logger.debug('PUT /stores/:id');
     const response = await this.storeService.updateStore(id, product);
@@ -176,13 +180,13 @@ export class StoreController {
   })
   @ApiParam({ name: 'id', description: 'Store ID' })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.NoContent,
     description: 'Store deleted successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async deleteStore(@Param('id') id: string) {
     this.logger.debug('DELETE /stores/:id');
     await this.storeService.deleteStore(id);

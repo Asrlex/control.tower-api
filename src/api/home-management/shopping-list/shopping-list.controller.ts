@@ -27,6 +27,10 @@ import { GlobalApiKeyGuard } from '@/api/auth/guards/global-api-key.guard';
 import { ShoppingListProductService } from './shopping-list.service';
 import { CreateShoppingListProductDto } from '@/api/entities/dtos/home-management/shopping-list.dto';
 import { JwtAuthGuard } from '@/api/auth/guards/jwt-auth.guard';
+import {
+  SuccessCodes,
+  ErrorCodes,
+} from '@/api/entities/enums/response-codes.enum';
 
 @ApiTags('Shopping List Products')
 @Controller()
@@ -46,13 +50,13 @@ export class ShoppingListProductController {
   @Get('all')
   @ApiOperation({ summary: 'Get all products' })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Product(s) retrieved successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getAllProducts() {
     this.logger.debug('GET /shopping-list-products/all');
     const response = await this.shoppingListProductService.getAllProducts();
@@ -68,13 +72,13 @@ export class ShoppingListProductController {
   })
   @ApiParam({ name: 'id', description: 'Product ID' })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Product(s) retrieved successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getProductById(@Param('id') id: string) {
     this.logger.debug('GET /shopping-list-products/id/:id');
     const response = await this.shoppingListProductService.getProductById(id);
@@ -94,13 +98,13 @@ export class ShoppingListProductController {
     required: false,
   })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Product(s) retrieved successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getProducts(
     @Query('page', new ValidatePaginationPipe()) page: number = 0,
     @Query('limit', new ValidatePaginationPipe()) limit: number = 50,
@@ -132,13 +136,13 @@ export class ShoppingListProductController {
   })
   @ApiBody({ description: 'Product data', type: CreateShoppingListProductDto })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Created,
     description: 'Product created successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async createProduct(@Body() product: CreateShoppingListProductDto) {
     this.logger.debug('POST /product');
     const response =
@@ -155,13 +159,13 @@ export class ShoppingListProductController {
   })
   @ApiParam({ name: 'id', description: 'Product ID' })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Product bought successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async buyProduct(@Param('id') id: string) {
     this.logger.debug('PUT /shopping-list-products/buy/:id');
     const response = await this.shoppingListProductService.buyProduct(id);
@@ -176,13 +180,13 @@ export class ShoppingListProductController {
   @ApiParam({ name: 'id', description: 'Product ID' })
   @ApiQuery({ name: 'amount', description: 'New amount', type: 'number' })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Product updated successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async modifyAmount(@Param('id') id: string, @Query('amount') amount: number) {
     this.logger.debug('PUT /shopping-list-products/amount/:id');
     const response = await this.shoppingListProductService.modifyAmount(
@@ -201,13 +205,13 @@ export class ShoppingListProductController {
   @ApiParam({ name: 'id', description: 'Product ID' })
   @ApiBody({ description: 'Product data', type: CreateShoppingListProductDto })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Product updated successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async updateProduct(
     @Param('id') id: string,
     @Body() product: CreateShoppingListProductDto,
@@ -227,13 +231,13 @@ export class ShoppingListProductController {
   })
   @ApiParam({ name: 'id', description: 'Product ID' })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.NoContent,
     description: 'Product deleted successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async deleteProduct(@Param('id') id: string) {
     this.logger.debug('DELETE /shopping-list-products/:id');
     await this.shoppingListProductService.deleteProduct(id);

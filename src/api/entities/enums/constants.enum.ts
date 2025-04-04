@@ -1,0 +1,18 @@
+export enum SqlOperators {
+  EQUALS = '=',
+  NOT_EQUALS = '<>',
+  GREATER_THAN = '>',
+  GREATER_THAN_OR_EQUALS = '>=',
+  LESS_THAN = '<',
+  LESS_THAN_OR_EQUALS = '<=',
+  LIKE = 'like',
+  NOT_LIKE = 'not like',
+  IN = 'in',
+  NOT_IN = 'not in',
+  IS_NULL = 'is null',
+  IS_NOT_NULL = 'is not null',
+  BETWEEN = 'between',
+  NOT_BETWEEN = 'not between',
+  ASC = 'asc',
+  DESC = 'desc',
+}

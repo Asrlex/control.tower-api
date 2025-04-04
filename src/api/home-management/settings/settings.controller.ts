@@ -16,6 +16,10 @@ import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { dtoValidator, formatResponse } from '@/api/utils/utils.api';
 import { CreateSettingsDto } from '@/api/entities/dtos/home-management/settings.dto';
 import { JwtAuthGuard } from '@/api/auth/guards/jwt-auth.guard';
+import {
+  SuccessCodes,
+  ErrorCodes,
+} from '@/api/entities/enums/response-codes.enum';
 
 @ApiTags('Settingss')
 @Controller()
@@ -35,13 +39,13 @@ export class SettingsController {
   @Get('all')
   @ApiOperation({ summary: 'Get all settings' })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Settings retrieved successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getAllSettingss() {
     this.logger.debug('GET /settings/all');
     const response = await this.settingsService.getAllSettings();
@@ -57,13 +61,13 @@ export class SettingsController {
   })
   @ApiParam({ name: 'id', description: 'Setting ID' })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Setting(s) retrieved successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getSettingsById(@Param('id') id: string) {
     this.logger.debug('GET /settings/id/:id');
     const response = await this.settingsService.getSettingById(id);
@@ -77,13 +81,13 @@ export class SettingsController {
     summary: 'Create new user settings',
   })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Created,
     description: 'Settings created successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async createSettings(@Body() dto: CreateSettingsDto) {
     this.logger.debug('POST /settings/id/:id');
     const response = await this.settingsService.createSettings(dto);
@@ -100,13 +104,13 @@ export class SettingsController {
   })
   @ApiParam({ name: 'id', description: 'Setting ID' })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Setting(s) updated successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async updateSettings(
     @Param('id') id: string,
     @Body() dto: CreateSettingsDto,
@@ -123,13 +127,13 @@ export class SettingsController {
   })
   @ApiParam({ name: 'id', description: 'Setting ID' })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.NoContent,
     description: 'Setting(s) deleted successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async deleteSettings(@Param('id') id: string) {
     this.logger.debug('DELETE /settings/id/:id');
     const response = await this.settingsService.deleteSettings(id);

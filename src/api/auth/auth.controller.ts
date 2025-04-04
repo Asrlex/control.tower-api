@@ -14,6 +14,10 @@ import { formatResponse } from '../utils/utils.api';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { GlobalApiKeyGuard } from './guards/global-api-key.guard';
 import { Request } from 'express';
+import {
+  SuccessCodes,
+  ErrorCodes,
+} from '../entities/enums/response-codes.enum';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -37,14 +41,17 @@ export class AuthController {
     required: true,
   })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Created,
     description: 'User logged in successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
-  @ApiResponse({ status: 500, description: 'Internal Server Error' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
+  @ApiResponse({
+    status: ErrorCodes.InternalServerError,
+    description: 'Internal Server Error',
+  })
   async login(@Body() loginDto: CreateUserDto) {
     this.logger.log('POST /auth/login');
     const response = await this.authService.login(loginDto);
@@ -63,14 +70,17 @@ export class AuthController {
     required: true,
   })
   @ApiResponse({
-    status: 201,
+    status: SuccessCodes.Created,
     description: 'User signed up successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
-  @ApiResponse({ status: 500, description: 'Internal Server Error' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
+  @ApiResponse({
+    status: ErrorCodes.InternalServerError,
+    description: 'Internal Server Error',
+  })
   async signup(@Body() signupDto: CreateUserDto) {
     this.logger.log('POST /auth/signup');
     const response = await this.authService.signup(signupDto);
@@ -84,14 +94,17 @@ export class AuthController {
   @Get('me')
   @ApiOperation({ summary: 'Validate token' })
   @ApiResponse({
-    status: 200,
+    status: SuccessCodes.Ok,
     description: 'Token validated successfully',
   })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not Found' })
-  @ApiResponse({ status: 500, description: 'Internal Server Error' })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
+  @ApiResponse({
+    status: ErrorCodes.InternalServerError,
+    description: 'Internal Server Error',
+  })
   async validate(@Req() req: Request) {
     this.logger.log('GET /auth/me');
     const token = await this.authService.getTokenFromRequest(req);

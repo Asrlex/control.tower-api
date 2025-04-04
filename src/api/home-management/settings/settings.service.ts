@@ -1,4 +1,5 @@
 import { CreateSettingsDto } from '@/api/entities/dtos/home-management/settings.dto';
+import { SuccessCodes } from '@/api/entities/enums/response-codes.enum';
 import { SettingsI } from '@/api/entities/interfaces/home-management.entity';
 import {
   SETTINGS_REPOSITORY,
@@ -19,7 +20,7 @@ export class SettingService {
    */
   async status() {
     return {
-      statusCode: 200,
+      statusCode: SuccessCodes.Ok,
       message: 'Setting endpoint is working',
     };
   }

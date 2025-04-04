@@ -3,6 +3,7 @@ import {
   CreateRecipeDto,
   CreateStepDto,
 } from '@/api/entities/dtos/home-management/recipe.dto';
+import { SuccessCodes } from '@/api/entities/enums/response-codes.enum';
 import { SearchCriteriaI } from '@/api/entities/interfaces/api.entity';
 import {
   RecipeDetailI,
@@ -29,7 +30,7 @@ export class RecipeService {
    */
   async status() {
     return {
-      statusCode: 200,
+      statusCode: SuccessCodes.Ok,
       message: 'Recipe endpoint is working',
     };
   }
