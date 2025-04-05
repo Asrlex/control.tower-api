@@ -146,7 +146,7 @@ export class ProductRepositoryImplementation
     dto = this.prepareDTO(dto);
     const sqlProduct = productsQueries.create.replace(
       '@InsertValues',
-      `'${dto.stockProductName}', '${dto.stockProductUnit}'`,
+      `'${dto.productName}', '${dto.productUnit}'`,
     );
     const responseProduct =
       await this.homeManagementDbConnection.execute(sqlProduct);
@@ -182,8 +182,8 @@ export class ProductRepositoryImplementation
     dto = this.prepareDTO(dto);
 
     const sqlProduct = productsQueries.update
-      .replace('@name', dto.stockProductName)
-      .replace('@unit', dto.stockProductUnit)
+      .replace('@name', dto.productName)
+      .replace('@unit', dto.productUnit)
       .replace('@id', id);
     await this.homeManagementDbConnection.execute(sqlProduct);
     const product = await this.findById(id);
