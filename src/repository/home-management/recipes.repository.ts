@@ -393,6 +393,7 @@ export class RecipeRepositoryImplementation
       '@id',
       ingredientID.toString(),
     );
+    console.log('sql', sql);
     await this.homeManagementDbConnection.execute(sql);
 
     await this.saveLog(
