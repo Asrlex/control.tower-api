@@ -209,12 +209,12 @@ export class RecipeRepositoryImplementation
   async createIngredient(dto: CreateIngredientDto): Promise<RecipeIngredientI> {
     const sqlIngredient = recipesQueries.createIngredient.replace(
       '@InsertValues',
-      `'${dto.recipeID}', '${dto.productID.value}', '${dto.recipeIngredientAmount}', '${dto.recipeIngredientUnit}'`,
+      `'${dto.recipeID}', '${dto.product.productID}', '${dto.recipeIngredientAmount}', '${dto.recipeIngredientUnit}'`,
     );
     const response =
       await this.homeManagementDbConnection.execute(sqlIngredient);
     const ingredientID = response[0].id;
-
+    console.log('created ingredient', ingredientID);
     await this.saveLog(
       'insert',
       'ingredient',
@@ -260,7 +260,11 @@ export class RecipeRepositoryImplementation
       .replace('@description', dto.recipeDescription)
       .replace('@id', id);
     await this.homeManagementDbConnection.execute(sqlRecipe);
-    const editedRecipe = await this.findById(id);
+
+    await this.modifyIngredients(dto.ingredients, originalRecipe);
+    await this.modifySteps(dto.steps, originalRecipe);
+
+    const editedRecipe: RecipeDetailI = await this.findById(id);
 
     const recipes: {
       entities: RecipeDetailI[];
@@ -286,25 +290,32 @@ export class RecipeRepositoryImplementation
    * @param product - ingrediente
    * @returns string - ingrediente actualizado
    */
-  async modifyIngredient(dto: CreateIngredientDto): Promise<RecipeIngredientI> {
-    const originalIngredient = await this.findIngredientByID(
-      dto.recipeIngredientID.toString(),
+  async modifyIngredients(
+    dto: CreateIngredientDto[],
+    original: RecipeDetailI,
+  ): Promise<void> {
+    const originalIngredients = original.ingredients.map(
+      (ingredient) => ingredient.recipeIngredientID,
     );
-    if (!originalIngredient) {
-      throw new NotFoundException('Ingredient not found');
-    }
-    const sqlIngredient = recipesQueries.updateIngredient
-      .replace('@amount', dto.recipeIngredientAmount.toString())
-      .replace('@unit', dto.recipeIngredientUnit)
-      .replace('@id', dto.recipeIngredientID.toString());
-    await this.homeManagementDbConnection.execute(sqlIngredient);
-
-    await this.saveLog(
-      'update',
-      'ingredient',
-      `Modified ingredient ${dto.recipeID}`,
+    const newIngredients = dto.map(
+      (ingredient) => ingredient.recipeIngredientID,
     );
-    return this.findIngredientByID(dto.recipeID.toString());
+    const ingredientsToDelete = originalIngredients.filter(
+      (ingredient) => !newIngredients.includes(ingredient),
+    );
+    ingredientsToDelete.forEach(async (ingredient) => {
+      await this.deleteIngredient(ingredient.toString());
+    });
+    dto.forEach(async (ingredient) => {
+      if (!ingredient.recipeIngredientID) {
+        await this.createIngredient(ingredient);
+      } else {
+        const sql = recipesQueries.updateIngredient
+          .replace('@amount', ingredient.recipeIngredientAmount.toString())
+          .replace('@unit', ingredient.recipeIngredientUnit);
+        await this.homeManagementDbConnection.execute(sql);
+      }
+    });
   }
 
   /**
@@ -315,20 +326,31 @@ export class RecipeRepositoryImplementation
    * @param product - paso
    * @returns string - paso actualizado
    */
-  async modifyStep(dto: CreateStepDto): Promise<RecipeStepI> {
-    const originalStep = await this.findStepByID(dto.recipeStepID.toString());
-    if (!originalStep) {
-      throw new NotFoundException('Step not found');
-    }
-    const sqlStep = recipesQueries.updateStep
-      .replace('@name', dto.recipeStepName)
-      .replace('@description', dto.recipeStepDescription)
-      .replace('@order', dto.recipeStepOrder.toString())
-      .replace('@id', dto.recipeStepID.toString());
-    await this.homeManagementDbConnection.execute(sqlStep);
-
-    await this.saveLog('update', 'step', `Modified step ${dto.recipeID}`);
-    return this.findStepByID(dto.recipeID.toString());
+  async modifySteps(
+    dto: CreateStepDto[],
+    original: RecipeDetailI,
+  ): Promise<void> {
+    console.log('steps DTO', dto);
+    const originalSteps = original.steps.map((step) => step.recipeStepID);
+    const newSteps = dto.map((step) => step.recipeStepID);
+    const stepsToDelete = originalSteps.filter(
+      (step) => !newSteps.includes(step),
+    );
+    stepsToDelete.forEach(async (step) => {
+      await this.deleteStep(step.toString());
+    });
+    dto.forEach(async (step) => {
+      if (!step.recipeStepID) {
+        await this.createStep(step);
+      } else {
+        const sql = recipesQueries.updateStep
+          .replace('@name', step.recipeStepName)
+          .replace('@description', step.recipeStepDescription)
+          .replace('@order', step.recipeStepOrder.toString())
+          .replace('@id', step.recipeStepID.toString());
+        await this.homeManagementDbConnection.execute(sql);
+      }
+    });
   }
 
   /**
@@ -373,7 +395,10 @@ export class RecipeRepositoryImplementation
       '@id',
       ingredientID.toString(),
     );
+    console.log('sql', sql);
     await this.homeManagementDbConnection.execute(sql);
+
+    console.log('deleted ingredient', ingredientID);
     await this.saveLog(
       'delete',
       'ingredient',

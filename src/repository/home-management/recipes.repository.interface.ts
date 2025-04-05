@@ -19,8 +19,11 @@ export interface RecipeRepository
   findStepByID(stepID: string): Promise<RecipeStepI>;
   createIngredient(ingredient: CreateIngredientDto): Promise<RecipeIngredientI>;
   createStep(step: CreateStepDto): Promise<RecipeStepI>;
-  modifyIngredient(ingredient: CreateIngredientDto): Promise<RecipeIngredientI>;
-  modifyStep(step: CreateStepDto): Promise<RecipeStepI>;
+  modifyIngredients(
+    ingredient: CreateIngredientDto[],
+    original: RecipeDetailI,
+  ): Promise<void>;
+  modifySteps(step: CreateStepDto[], original: RecipeDetailI): Promise<void>;
   deleteIngredient(ingredientID: string): Promise<void>;
   deleteStep(stepID: string): Promise<void>;
   findAllNames(): Promise<RecipeNameI[]>;
