@@ -617,10 +617,10 @@ export const recipesQueries = {
   delete: generateQuery(baseQueries.hardDelete, [
     { key: '@DeleteTable', value: recipesTable },
   ]),
-  deleteIngredient: generateQuery(baseQueries.specificHardDelete, [
+  deleteIngredient: generateQuery(baseQueries.hardDelete, [
     { key: '@DeleteTable', value: recipeIngredientsTable },
   ]),
-  deleteStep: generateQuery(baseQueries.specificHardDelete, [
+  deleteStep: generateQuery(baseQueries.hardDelete, [
     { key: '@DeleteTable', value: recipeStepsTable },
   ]),
 };

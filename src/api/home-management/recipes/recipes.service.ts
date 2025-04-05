@@ -133,24 +133,6 @@ export class RecipeService {
   }
 
   /**
-   * Método para actualizar un ingrediente
-   * @param dto - DTO del ingrediente
-   * @returns string - ingrediente actualizado
-   */
-  async modifyIngredient(dto: CreateIngredientDto): Promise<RecipeIngredientI> {
-    return await this.recipeRepository.modifyIngredient(dto);
-  }
-
-  /**
-   * Método para actualizar un paso
-   * @param dto - DTO del paso
-   * @returns string - paso actualizado
-   */
-  async modifyStep(dto: CreateStepDto): Promise<RecipeStepI> {
-    return await this.recipeRepository.modifyStep(dto);
-  }
-
-  /**
    * Método para eliminar una receta
    * @param id - id de la receta
    * @returns null - receta eliminada

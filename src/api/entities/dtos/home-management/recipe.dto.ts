@@ -68,9 +68,9 @@ export class CreateIngredientDto {
   @IsNumber()
   recipeID: number;
   @IsObject()
-  productID: {
-    value: number;
-    label: string;
+  product: {
+    productID: number;
+    productName: string;
   };
   @IsNumber()
   recipeIngredientAmount: number;

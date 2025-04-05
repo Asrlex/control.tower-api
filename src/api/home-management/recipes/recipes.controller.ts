@@ -281,53 +281,6 @@ export class RecipeController {
     return formattedResponse;
   }
 
-  @Put('ingredient/:id')
-  @UsePipes(dtoValidator())
-  @ApiOperation({
-    summary: 'Update an existing ingredient',
-  })
-  @ApiParam({ name: 'id', description: 'Recipe ID' })
-  @ApiBody({ description: 'Recipe data', type: CreateRecipeDto })
-  @ApiResponse({
-    status: SuccessCodes.Ok,
-    description: 'Recipe updated successfully',
-  })
-  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
-  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
-  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
-  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
-  async updateIngredient(
-    @Param('id') id: string,
-    @Body() ingredient: CreateIngredientDto,
-  ) {
-    this.logger.debug('PUT /recipes/ingredient/:id');
-    const response = await this.recipeService.modifyIngredient(ingredient);
-    const formattedResponse = formatResponse(response, { id });
-    return formattedResponse;
-  }
-
-  @Put('step/:id')
-  @UsePipes(dtoValidator())
-  @ApiOperation({
-    summary: 'Update an existing step',
-  })
-  @ApiParam({ name: 'id', description: 'Recipe ID' })
-  @ApiBody({ description: 'Recipe data', type: CreateRecipeDto })
-  @ApiResponse({
-    status: SuccessCodes.Ok,
-    description: 'Recipe updated successfully',
-  })
-  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
-  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
-  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
-  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
-  async updateStep(@Param('id') id: string, @Body() step: CreateStepDto) {
-    this.logger.debug('PUT /recipes/step/:id');
-    const response = await this.recipeService.modifyStep(step);
-    const formattedResponse = formatResponse(response, { id });
-    return formattedResponse;
-  }
-
   @Delete(':id')
   @ApiOperation({
     summary: 'Delete an existing recipe',
