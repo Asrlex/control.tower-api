@@ -1,4 +1,4 @@
-import { Controller, Get, Logger, Param, Post } from '@nestjs/common';
+import { Controller, Get, Logger, Param } from '@nestjs/common';
 import { ApiService } from './api.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ErrorCodes, SuccessCodes } from './entities/enums/response-codes.enum';
@@ -45,25 +45,5 @@ export class ApiController {
   throwError(@Param('type') type: string): void {
     this.logger.error('GET control/error');
     this.apiService.throwError(type);
-  }
-
-  /**
-   * Método para enviar un mensaje a Kafka
-   * @returns Retorna un mensaje de control de la API
-   * @example POST control/message
-   */
-  @Post('message')
-  @ApiOperation({ summary: 'Send a message to Kafka' })
-  @ApiResponse({
-    status: SuccessCodes.Ok,
-    description: 'Message sent to Kafka',
-  })
-  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
-  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
-  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
-  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
-  async sendMessage(): Promise<void> {
-    this.logger.debug('GET control/message');
-    await this.apiService.sendMessage('control-tower-insert', 'Test message');
   }
 }
