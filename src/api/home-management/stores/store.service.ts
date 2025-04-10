@@ -2,11 +2,11 @@ import { CreateStoreDto } from '@/api/entities/dtos/home-management/store.dto';
 import { SuccessCodes } from '@/api/entities/enums/response-codes.enum';
 import { SearchCriteriaI } from '@/api/entities/interfaces/api.entity';
 import { StoreI } from '@/api/entities/interfaces/home-management.entity';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   STORE_REPOSITORY,
   StoreRepository,
-} from '@/repository/home-management/store.repository.interface';
-import { Inject, Injectable } from '@nestjs/common';
+} from './repository/store.repository.interface';
 
 @Injectable()
 export class StoreService {

@@ -1,9 +1,7 @@
 import { Inject, Logger, NotFoundException } from '@nestjs/common';
 import { DatabaseConnection } from 'src/db/database.connection';
 import { SortI } from 'src/api/entities/interfaces/api.entity';
-import { BaseRepository } from 'src/repository/base-repository';
 import { plainToInstance } from 'class-transformer';
-import { TaskRepository } from './task.repository.interface';
 import {
   HouseTaskI,
   TaskI,
@@ -15,6 +13,8 @@ import {
   GetHouseTaskDto,
   GetTaskDto,
 } from '@/api/entities/dtos/home-management/task.dto';
+import { BaseRepository } from '@/common/repository/base-repository';
+import { TaskRepository } from './task.repository.interface';
 
 export class TaskRepositoryImplementation
   extends BaseRepository

@@ -1,11 +1,11 @@
 import { CreateSettingsDto } from '@/api/entities/dtos/home-management/settings.dto';
 import { SuccessCodes } from '@/api/entities/enums/response-codes.enum';
 import { SettingsI } from '@/api/entities/interfaces/home-management.entity';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   SETTINGS_REPOSITORY,
   SettingsRepository,
-} from '@/repository/home-management/settings.repository.interface';
-import { Inject, Injectable } from '@nestjs/common';
+} from './repository/settings.repository.interface';
 
 @Injectable()
 export class SettingService {

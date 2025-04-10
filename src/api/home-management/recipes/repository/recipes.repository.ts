@@ -1,7 +1,6 @@
 import { Inject, Logger, NotFoundException } from '@nestjs/common';
 import { DatabaseConnection } from 'src/db/database.connection';
 import { SortI } from 'src/api/entities/interfaces/api.entity';
-import { BaseRepository } from 'src/repository/base-repository';
 import { plainToInstance } from 'class-transformer';
 import {
   CreateIngredientDto,
@@ -9,7 +8,6 @@ import {
   CreateStepDto,
   GetRecipeDto,
 } from '@/api/entities/dtos/home-management/recipe.dto';
-import { RecipeRepository } from './recipes.repository.interface';
 import { recipesQueries } from '@/db/queries/home-management.queries';
 import {
   RecipeDetailI,
@@ -19,6 +17,8 @@ import {
 } from '@/api/entities/interfaces/home-management.entity';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { BaseRepository } from '@/common/repository/base-repository';
+import { RecipeRepository } from './recipes.repository.interface';
 
 export class RecipeRepositoryImplementation
   extends BaseRepository

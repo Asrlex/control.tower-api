@@ -1,15 +1,15 @@
 import { Inject, Logger, NotFoundException } from '@nestjs/common';
 import { DatabaseConnection } from 'src/db/database.connection';
 import { SortI } from 'src/api/entities/interfaces/api.entity';
-import { BaseRepository } from 'src/repository/base-repository';
 import { plainToInstance } from 'class-transformer';
-import { StoreRepository } from './store.repository.interface';
 import {
   CreateStoreDto,
   GetStoreDto,
 } from '@/api/entities/dtos/home-management/store.dto';
 import { StoreI } from '@/api/entities/interfaces/home-management.entity';
 import { storesQueries } from '@/db/queries/home-management.queries';
+import { BaseRepository } from '@/common/repository/base-repository';
+import { StoreRepository } from './store.repository.interface';
 
 export class StoreRepositoryImplementation
   extends BaseRepository

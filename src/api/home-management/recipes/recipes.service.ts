@@ -11,11 +11,11 @@ import {
   RecipeNameI,
   RecipeStepI,
 } from '@/api/entities/interfaces/home-management.entity';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   RECIPE_REPOSITORY,
   RecipeRepository,
-} from '@/repository/home-management/recipes.repository.interface';
-import { Inject, Injectable } from '@nestjs/common';
+} from './repository/recipes.repository.interface';
 
 @Injectable()
 export class RecipeService {

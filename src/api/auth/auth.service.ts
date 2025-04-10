@@ -1,4 +1,3 @@
-import { UserRepository } from '@/repository/home-management/user.repository.interface';
 import {
   Inject,
   Injectable,
@@ -11,6 +10,7 @@ import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { SuccessCodes } from '../entities/enums/response-codes.enum';
+import { UserRepository } from './repository/user.repository.interface';
 
 @Injectable()
 export class AuthService {

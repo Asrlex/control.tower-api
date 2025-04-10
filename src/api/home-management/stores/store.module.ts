@@ -1,10 +1,10 @@
 import { Module, Logger } from '@nestjs/common';
 import { DatabaseModule } from '@/db/database.module';
 import { StoreController } from './store.controller';
-import { STORE_REPOSITORY } from '@/repository/home-management/store.repository.interface';
-import { StoreRepositoryImplementation } from '@/repository/home-management/store.repository';
 import { StoreService } from './store.service';
 import { AuthModule } from '@/api/auth/auth.module';
+import { StoreRepositoryImplementation } from './repository/store.repository';
+import { STORE_REPOSITORY } from './repository/store.repository.interface';
 
 @Module({
   imports: [DatabaseModule, AuthModule],

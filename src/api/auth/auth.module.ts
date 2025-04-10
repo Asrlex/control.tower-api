@@ -3,9 +3,9 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { USER_REPOSITORY } from '@/repository/home-management/user.repository.interface';
-import { UserRepositoryImplementation } from '@/repository/home-management/user.repository';
 import { DatabaseModule } from '@/db/database.module';
+import { UserRepositoryImplementation } from './repository/user.repository';
+import { USER_REPOSITORY } from './repository/user.repository.interface';
 
 @Module({
   imports: [

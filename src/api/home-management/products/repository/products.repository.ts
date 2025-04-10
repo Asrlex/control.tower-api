@@ -1,9 +1,7 @@
 import { Inject, Logger, NotFoundException } from '@nestjs/common';
 import { DatabaseConnection } from 'src/db/database.connection';
 import { SortI } from 'src/api/entities/interfaces/api.entity';
-import { BaseRepository } from 'src/repository/base-repository';
 import { plainToInstance } from 'class-transformer';
-import { ProductRepository } from './products.repository.interface';
 import { ProductI } from '@/api/entities/interfaces/home-management.entity';
 import { productsQueries } from '@/db/queries/home-management.queries';
 import {
@@ -12,6 +10,8 @@ import {
 } from '@/api/entities/dtos/home-management/product.dto';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { BaseRepository } from '@/common/repository/base-repository';
+import { ProductRepository } from './products.repository.interface';
 
 export class ProductRepositoryImplementation
   extends BaseRepository

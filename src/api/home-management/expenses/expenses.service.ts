@@ -5,11 +5,11 @@ import {
   ExpenseCategoryI,
   ExpenseI,
 } from '@/api/entities/interfaces/home-management.entity';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   EXPENSE_REPOSITORY,
   ExpenseRepository,
-} from '@/repository/home-management/expenses.repository.interface';
-import { Inject, Injectable } from '@nestjs/common';
+} from './repository/expenses.repository.interface';
 
 @Injectable()
 export class ExpenseService {

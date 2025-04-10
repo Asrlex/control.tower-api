@@ -1,4 +1,4 @@
-import { GenericRepository } from 'src/repository/generic-repository.interface';
+import { GenericRepository } from '@/common/repository/generic-repository.interface';
 import {
   ShoppingListProductI,
   StockProductI,

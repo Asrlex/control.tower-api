@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Inject, Logger, NotFoundException } from '@nestjs/common';
 import { DatabaseConnection } from 'src/db/database.connection';
-import { BaseRepository } from 'src/repository/base-repository';
 import { plainToInstance } from 'class-transformer';
 import { settingsQueries } from '@/db/queries/home-management.queries';
-import { SettingsRepository } from './settings.repository.interface';
 import { SettingsI } from '@/api/entities/interfaces/home-management.entity';
 import {
   CreateSettingsDto,
   GetSettingsDto,
 } from '@/api/entities/dtos/home-management/settings.dto';
+import { BaseRepository } from '@/common/repository/base-repository';
+import { SettingsRepository } from './settings.repository.interface';
 
 export class SettingsRepositoryImplementation
   extends BaseRepository

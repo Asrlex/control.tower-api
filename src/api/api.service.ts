@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { KafkaService } from '@/kafka/kafka.service';
 
 @Injectable()
 export class ApiService {
-  constructor(private readonly kafkaService: KafkaService) {}
+  constructor() {}
 
   /**
    * Método para obtener información sobre la salud de la API
@@ -29,16 +28,6 @@ export class ApiService {
         throw new Error('Asynchronous error');
       });
     }
-    return;
-  }
-
-  /**
-   * Método para enviar un mensaje a Kafka
-   * @param topic - topico de Kafka
-   * @param message - mensaje a enviar
-   */
-  async sendMessage(topic: string, message: string): Promise<void> {
-    await this.kafkaService.sendMessage(topic, message);
     return;
   }
 }

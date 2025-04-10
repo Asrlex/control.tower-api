@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Inject, Logger, NotFoundException } from '@nestjs/common';
-import { BaseRepository } from '../base-repository';
-import { UserRepository } from './user.repository.interface';
+import { BaseRepository } from '../../../common/repository/base-repository';
 import { DatabaseConnection } from '@/db/database.connection';
 import { usersQueries } from '@/db/queries/home-management.queries';
 import {
@@ -9,6 +8,7 @@ import {
   GetUserDto,
 } from '@/api/entities/dtos/home-management/user.dto';
 import { UserI } from '@/api/entities/interfaces/home-management.entity';
+import { UserRepository } from './user.repository.interface';
 
 export class UserRepositoryImplementation
   extends BaseRepository

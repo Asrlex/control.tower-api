@@ -2,12 +2,12 @@ import { Module, Logger, forwardRef } from '@nestjs/common';
 import { DatabaseModule } from '@/db/database.module';
 import { StockProductService } from './stock.service';
 import { StockProductController } from './stock.controller';
-import { STOCK_PRODUCT_REPOSITORY } from '@/repository/home-management/stock.repository.interface';
-import { StockProductRepositoryImplementation } from '@/repository/home-management/stock.repository';
 import { ShoppingListProductModule } from '../shopping-list/shopping-list.module';
-import { SHOPPING_LIST_PRODUCT_REPOSITORY } from '@/repository/home-management/shopping-list.repository.interface';
-import { ShoppingListProductRepositoryImplementation } from '@/repository/home-management/shopping-list.repository';
 import { AuthModule } from '@/api/auth/auth.module';
+import { ShoppingListProductRepositoryImplementation } from '../shopping-list/repository/shopping-list.repository';
+import { SHOPPING_LIST_PRODUCT_REPOSITORY } from '../shopping-list/repository/shopping-list.repository.interface';
+import { StockProductRepositoryImplementation } from './repository/stock.repository';
+import { STOCK_PRODUCT_REPOSITORY } from './repository/stock.repository.interface';
 
 @Module({
   imports: [

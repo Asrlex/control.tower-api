@@ -1,6 +1,4 @@
 import { Inject, Logger, NotFoundException } from '@nestjs/common';
-import { BaseRepository } from '../base-repository';
-import { ExpenseRepository } from './expenses.repository.interface';
 import { DatabaseConnection } from '@/db/database.connection';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
@@ -14,6 +12,8 @@ import {
   CreateExpenseDto,
   GetExpenseDto,
 } from '@/api/entities/dtos/home-management/expense.dto';
+import { ExpenseRepository } from './expenses.repository.interface';
+import { BaseRepository } from '@/common/repository/base-repository';
 
 export class ExpenseRepositoryImplementation
   extends BaseRepository

@@ -1,4 +1,4 @@
-import { GenericRepository } from 'src/repository/generic-repository.interface';
+import { GenericRepository } from '@/common/repository/generic-repository.interface';
 import { TagI } from '@/api/entities/interfaces/home-management.entity';
 import { CreateTagDto } from '@/api/entities/dtos/home-management/tag.dto';
 

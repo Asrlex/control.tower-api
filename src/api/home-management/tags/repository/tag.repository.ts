@@ -1,7 +1,6 @@
 import { Inject, Logger, NotFoundException } from '@nestjs/common';
 import { DatabaseConnection } from 'src/db/database.connection';
 import { SortI } from 'src/api/entities/interfaces/api.entity';
-import { BaseRepository } from 'src/repository/base-repository';
 import { plainToInstance } from 'class-transformer';
 import { TagRepository } from './tag.repository.interface';
 import { tagsQueries } from '@/db/queries/home-management.queries';
@@ -10,6 +9,7 @@ import {
   CreateTagDto,
   GetTagDto,
 } from '@/api/entities/dtos/home-management/tag.dto';
+import { BaseRepository } from '@/common/repository/base-repository';
 
 export class TagRepositoryImplementation
   extends BaseRepository

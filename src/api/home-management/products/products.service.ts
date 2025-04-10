@@ -2,11 +2,11 @@ import { CreateProductDto } from '@/api/entities/dtos/home-management/product.dt
 import { SuccessCodes } from '@/api/entities/enums/response-codes.enum';
 import { SearchCriteriaI } from '@/api/entities/interfaces/api.entity';
 import { ProductI } from '@/api/entities/interfaces/home-management.entity';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   PRODUCT_REPOSITORY,
   ProductRepository,
-} from '@/repository/home-management/products.repository.interface';
-import { Inject, Injectable } from '@nestjs/common';
+} from './repository/products.repository.interface';
 
 @Injectable()
 export class ProductService {

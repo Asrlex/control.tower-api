@@ -8,11 +8,11 @@ import {
   HouseTaskI,
   TaskI,
 } from '@/api/entities/interfaces/home-management.entity';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   TASK_REPOSITORY,
   TaskRepository,
-} from '@/repository/home-management/task.repository.interface';
-import { Inject, Injectable } from '@nestjs/common';
+} from './repository/task.repository.interface';
 
 @Injectable()
 export class TaskService {

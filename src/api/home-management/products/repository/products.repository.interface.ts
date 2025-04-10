@@ -1,4 +1,4 @@
-import { GenericRepository } from 'src/repository/generic-repository.interface';
+import { GenericRepository } from '@/common/repository/generic-repository.interface';
 import { ProductI } from '@/api/entities/interfaces/home-management.entity';
 import { CreateProductDto } from '@/api/entities/dtos/home-management/product.dto';
 

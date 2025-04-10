@@ -1,32 +1,32 @@
 import { forwardRef, Inject, Logger, NotFoundException } from '@nestjs/common';
 import { DatabaseConnection } from 'src/db/database.connection';
 import { SortI } from 'src/api/entities/interfaces/api.entity';
-import { BaseRepository } from 'src/repository/base-repository';
 import { plainToInstance } from 'class-transformer';
+import { shoppingListQueries } from '@/db/queries/home-management.queries';
 import {
   ShoppingListProductI,
   StockProductI,
 } from '@/api/entities/interfaces/home-management.entity';
-import { stockProductQueries } from '@/db/queries/home-management.queries';
-import { StockProductRepository } from './stock.repository.interface';
 import {
-  CreateStockProductDto,
-  GetStockProductDto,
-} from '@/api/entities/dtos/home-management/stock-product.dto';
-import { ShoppingListProductRepository } from './shopping-list.repository.interface';
+  CreateShoppingListProductDto,
+  GetShoppingListProductDto,
+} from '@/api/entities/dtos/home-management/shopping-list.dto';
+import { StockProductRepository } from '../../stock/repository/stock.repository.interface';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { ShoppingListProductRepository } from './shopping-list.repository.interface';
+import { BaseRepository } from '@/common/repository/base-repository';
 
-export class StockProductRepositoryImplementation
+export class ShoppingListProductRepositoryImplementation
   extends BaseRepository
-  implements StockProductRepository
+  implements ShoppingListProductRepository
 {
   constructor(
     @Inject('HOME_MANAGEMENT_CONNECTION')
     private readonly homeManagementDbConnection: DatabaseConnection,
     private readonly logger: Logger,
-    @Inject(forwardRef(() => 'SHOPPING_LIST_PRODUCT_REPOSITORY'))
-    protected readonly shoppingListProductRepository: ShoppingListProductRepository,
+    @Inject(forwardRef(() => 'STOCK_PRODUCT_REPOSITORY'))
+    protected readonly stockProductRepository: StockProductRepository,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {
     super(homeManagementDbConnection);
@@ -37,23 +37,23 @@ export class StockProductRepositoryImplementation
    * @returns string - todos los productos
    */
   async findAll(): Promise<{
-    entities: StockProductI[];
+    entities: ShoppingListProductI[];
     total: number;
   }> {
-    const cacheKey = 'stock';
+    const cacheKey = 'shopping-list';
     if (this.cacheManager) {
-      const cachedStock: {
-        entities: StockProductI[];
+      const cachedShoppingList: {
+        entities: ShoppingListProductI[];
         total: number;
       } = await this.cacheManager.get(cacheKey);
-      if (cachedStock) {
-        this.logger.log('Stock cache hit');
-        return cachedStock;
+      if (cachedShoppingList) {
+        this.logger.log('Shopping list cache hit');
+        return cachedShoppingList;
       }
     }
-    const sql = stockProductQueries.getAll;
+    const sql = shoppingListQueries.getAll;
     const result = await this.homeManagementDbConnection.execute(sql);
-    const entities: StockProductI[] = this.resultToProduct(result);
+    const entities: ShoppingListProductI[] = this.resultToProduct(result);
     const total = result[0] ? parseInt(result[0].total, 10) : 0;
     if (this.cacheManager) {
       await this.cacheManager.set(cacheKey, { entities, total });
@@ -72,9 +72,9 @@ export class StockProductRepositoryImplementation
     page: number,
     limit: number,
     searchCriteria: any,
-  ): Promise<{ entities: StockProductI[]; total: number }> {
+  ): Promise<{ entities: ShoppingListProductI[]; total: number }> {
     let filters = '';
-    let sort: SortI = { field: 'productName', order: 'DESC' };
+    let sort: SortI = { field: 'customerName', order: 'DESC' };
     if (searchCriteria) {
       const sqlFilters = this.filterstoSQL(searchCriteria);
       filters = this.addSearchToFilters(
@@ -85,14 +85,14 @@ export class StockProductRepositoryImplementation
     }
     const offset: number = page * limit + 1;
     limit = offset + parseInt(limit.toString(), 10) - 1;
-    const sql = stockProductQueries.get
+    const sql = shoppingListQueries.get
       .replaceAll('@DynamicWhereClause', filters)
       .replaceAll('@DynamicOrderByField', `${sort.field}`)
       .replaceAll('@DynamicOrderByDirection', `${sort.order}`)
       .replace('@start', offset.toString())
       .replace('@end', limit.toString());
     const result = await this.homeManagementDbConnection.execute(sql);
-    const entities: StockProductI[] = this.resultToProduct(result);
+    const entities: ShoppingListProductI[] = this.resultToProduct(result);
     return {
       entities,
       total: result[0] ? parseInt(result[0].total, 10) : 0,
@@ -104,10 +104,10 @@ export class StockProductRepositoryImplementation
    * @param id - id del producto
    * @returns string
    */
-  async findById(id: string): Promise<StockProductI | null> {
-    const sql = stockProductQueries.getOne.replace('@id', id);
+  async findById(id: string): Promise<ShoppingListProductI | null> {
+    const sql = shoppingListQueries.getOne.replace('@id', id);
     const result = await this.homeManagementDbConnection.execute(sql);
-    const entities: StockProductI[] = this.resultToProduct(result);
+    const entities: ShoppingListProductI[] = this.resultToProduct(result);
     return entities.length > 0 ? entities[0] : null;
   }
 
@@ -115,26 +115,36 @@ export class StockProductRepositoryImplementation
    * Metodo para crear un nuevo producto
    * @returns string - producto creado
    */
-  async create(dto: CreateStockProductDto): Promise<StockProductI> {
+  async create(
+    dto: CreateShoppingListProductDto,
+  ): Promise<ShoppingListProductI> {
     dto = this.prepareDTO(dto);
-    const sqlProduct = stockProductQueries.create.replace(
+    const sqlProduct = shoppingListQueries.create.replace(
       '@InsertValues',
-      `'${dto.stockProductAmount}', '${dto.stockProductID}'`,
+      `'${dto.shoppingListAmount}', '${dto.shoppingListProductID}', '${dto.storeID}'`,
     );
+
     const responseProduct =
       await this.homeManagementDbConnection.execute(sqlProduct);
     const productID = responseProduct[0].id;
-    const newStockProduct = await this.findById(productID);
+    const newShoppingListProduct = await this.findById(productID);
 
-    const stock: { entities: StockProductI[]; total: number } =
-      await this.cacheManager.get('stock');
-    if (stock) {
-      stock.entities.push(newStockProduct);
-      await this.cacheManager.set('stock', stock);
+    const shoppingList: {
+      entities: ShoppingListProductI[];
+      total: number;
+    } = await this.cacheManager.get('shopping-list');
+    if (shoppingList) {
+      shoppingList.entities.push(newShoppingListProduct);
+      shoppingList.total += 1;
+      await this.cacheManager.set('shopping-list', shoppingList);
     }
 
-    await this.saveLog('insert', 'product', `Created product ${productID}`);
-    return newStockProduct;
+    await this.saveLog(
+      'insert',
+      'shopping_list',
+      `Created product ${productID}`,
+    );
+    return newShoppingListProduct;
   }
 
   /**
@@ -145,21 +155,37 @@ export class StockProductRepositoryImplementation
    * @param product - producto
    * @returns string - producto actualizado
    */
-  async modify(id: string, dto: CreateStockProductDto): Promise<StockProductI> {
+  async modify(
+    id: string,
+    dto: CreateShoppingListProductDto,
+  ): Promise<ShoppingListProductI> {
     const originalProduct = await this.findById(id);
     if (!originalProduct) {
       throw new NotFoundException('Product not found');
     }
     dto = this.prepareDTO(dto);
 
-    const sqlProduct = stockProductQueries.update
-      .replace('@amount', dto.stockProductAmount.toString())
-      .replace('@product_id', dto.stockProductID.toString())
+    const sqlProduct = shoppingListQueries.update
+      .replace('@amount', dto.shoppingListAmount.toString())
+      .replace('@product_id', dto.shoppingListProductID.toString())
       .replace('@id', id);
     await this.homeManagementDbConnection.execute(sqlProduct);
+    const editedProduct = await this.findById(id);
 
-    await this.saveLog('update', 'product', `Modified product ${id}`);
-    return this.findById(id);
+    const shoppingList: {
+      entities: ShoppingListProductI[];
+      total: number;
+    } = await this.cacheManager.get('shopping-list');
+    if (shoppingList) {
+      const index = shoppingList.entities.findIndex(
+        (p: ShoppingListProductI) => p.shoppingListProductID.toString() === id,
+      );
+      shoppingList.entities[index] = editedProduct;
+      await this.cacheManager.set('shopping-list', shoppingList);
+    }
+
+    await this.saveLog('update', 'shopping_list', `Modified product ${id}`);
+    return editedProduct;
   }
 
   /**
@@ -167,25 +193,22 @@ export class StockProductRepositoryImplementation
    * @param productId - id del producto
    * @returns string - producto comprado
    */
-  async addProductToShoppingList(
-    productId: string,
-  ): Promise<ShoppingListProductI> {
+  async buyProduct(productId: string): Promise<StockProductI> {
     const originalProduct = await this.findById(productId);
     if (!originalProduct) {
       throw new NotFoundException('Product not found');
     }
 
+    await this.delete(productId);
+    const response = await this.stockProductRepository.create({
+      stockProductID: originalProduct.product.productID,
+      stockProductAmount: originalProduct.shoppingListProductAmount,
+    });
     await this.saveLog(
       'update',
       'shopping_list',
       `Bought product ${productId}`,
     );
-    await this.delete(productId);
-    const response = await this.shoppingListProductRepository.create({
-      shoppingListProductID: originalProduct.product.productID,
-      shoppingListAmount: originalProduct.stockProductAmount,
-      storeID: '2',
-    });
     return response;
   }
 
@@ -200,7 +223,7 @@ export class StockProductRepositoryImplementation
     if (!originalProduct) {
       throw new NotFoundException('Product not found');
     }
-    const sql = stockProductQueries.modifyAmount
+    const sql = shoppingListQueries.modifyAmount
       .replace('@amount', amount.toString())
       .replace('@id', productId);
     await this.homeManagementDbConnection.execute(sql);
@@ -221,9 +244,23 @@ export class StockProductRepositoryImplementation
     if (!originalProduct) {
       throw new NotFoundException('Product not found');
     }
-    const sql = stockProductQueries.delete.replace('@id', id);
+    const sql = shoppingListQueries.delete.replace('@id', id);
     await this.homeManagementDbConnection.execute(sql);
-    await this.saveLog('delete', 'product', `Deleted product ${id}`);
+
+    const shoppingList: {
+      entities: ShoppingListProductI[];
+      total: number;
+    } = await this.cacheManager.get('shopping-list');
+    if (shoppingList) {
+      const index = shoppingList.entities.findIndex(
+        (p: ShoppingListProductI) => p.shoppingListProductID.toString() === id,
+      );
+      shoppingList.entities.splice(index, 1);
+      shoppingList.total -= 1;
+      await this.cacheManager.set('shopping-list', shoppingList);
+    }
+
+    await this.saveLog('delete', 'shopping_list', `Deleted product ${id}`);
   }
 
   /**
@@ -231,8 +268,10 @@ export class StockProductRepositoryImplementation
    * @param dto - DTO
    * @returns DTO
    */
-  private prepareDTO(dto: CreateStockProductDto): CreateStockProductDto {
-    dto = plainToInstance(CreateStockProductDto, dto, {
+  private prepareDTO(
+    dto: CreateShoppingListProductDto,
+  ): CreateShoppingListProductDto {
+    dto = plainToInstance(CreateShoppingListProductDto, dto, {
       exposeDefaultValues: true,
     });
     return dto;
@@ -243,16 +282,18 @@ export class StockProductRepositoryImplementation
    * @param result - resultado de la consulta
    * @returns array de productos
    */
-  private resultToProduct(result: GetStockProductDto[]): StockProductI[] {
-    const mappedProducts: Map<number, StockProductI> = new Map();
-    result.forEach((record: GetStockProductDto) => {
-      let product: StockProductI;
-      if (mappedProducts.has(record.stockProductID)) {
-        product = mappedProducts.get(record.stockProductID);
+  private resultToProduct(
+    result: GetShoppingListProductDto[],
+  ): ShoppingListProductI[] {
+    const mappedProducts: Map<number, ShoppingListProductI> = new Map();
+    result.forEach((record: GetShoppingListProductDto) => {
+      let product: ShoppingListProductI;
+      if (mappedProducts.has(record.shoppingListProductID)) {
+        product = mappedProducts.get(record.shoppingListProductID);
       } else {
         product = {
-          stockProductID: record.stockProductID,
-          stockProductAmount: record.stockProductAmount,
+          shoppingListProductID: record.shoppingListProductID,
+          shoppingListProductAmount: record.shoppingListAmount,
           product: {
             productID: record.productID,
             productName: record.productName,
@@ -261,9 +302,12 @@ export class StockProductRepositoryImplementation
             productDateLastConsumed: record.productDateLastConsumed,
             tags: [],
           },
+          store: {
+            storeID: record.storeID,
+            storeName: record.storeName,
+          },
         };
-
-        mappedProducts.set(record.stockProductID, product);
+        mappedProducts.set(record.shoppingListProductID, product);
       }
 
       if (record.tagID) {

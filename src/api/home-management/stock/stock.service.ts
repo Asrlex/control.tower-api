@@ -5,11 +5,11 @@ import {
   ShoppingListProductI,
   StockProductI,
 } from '@/api/entities/interfaces/home-management.entity';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   STOCK_PRODUCT_REPOSITORY,
   StockProductRepository,
-} from '@/repository/home-management/stock.repository.interface';
-import { Inject, Injectable } from '@nestjs/common';
+} from './repository/stock.repository.interface';
 
 @Injectable()
 export class StockProductService {
