@@ -5,18 +5,19 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
+import { AuthEnum, AuthMessages } from '../entities/enums/auth.enum';
 
 @Injectable()
 export class GlobalApiKeyGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const validApiKey = process.env.GLOBAL_API_KEY;
     const request: Request = context.switchToHttp().getRequest();
-    const apiKey = request.headers['x-api-key'];
+    const apiKey = request.headers[AuthEnum.AuthAPIKey];
 
     if (apiKey && apiKey === validApiKey) {
       return true;
     } else {
-      throw new UnauthorizedException('Invalid API key');
+      throw new UnauthorizedException(AuthMessages.InvalidAPIKey);
     }
   }
 }

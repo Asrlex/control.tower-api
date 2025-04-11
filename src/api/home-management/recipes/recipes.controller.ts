@@ -11,7 +11,7 @@ import {
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
-import { dtoValidator, formatResponse } from 'src/api/utils/utils.api';
+import { dtoValidator, formatResponse } from '@/common/utils/utils.api';
 import { ValidatePaginationPipe } from 'src/common/pipes/pagination.pipe';
 import { SearchCriteriaI } from 'src/api/entities/interfaces/api.entity';
 import { ValidateSearchCriteriaPipe } from 'src/common/pipes/search.pipe';
@@ -62,7 +62,6 @@ export class RecipeController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getAllRecipes() {
-    this.logger.debug('GET /recipes/all');
     const response = await this.recipeService.getAllRecipes();
     const formattedResponse = formatResponse(response.entities, {
       total: response.total,
@@ -81,7 +80,6 @@ export class RecipeController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getAllRecipeNames() {
-    this.logger.debug('GET /recipes/names');
     const response = await this.recipeService.getAllRecipeNames();
     const formattedResponse = formatResponse(response);
     return formattedResponse;
@@ -101,7 +99,6 @@ export class RecipeController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getRecipeById(@Param('id') id: string) {
-    this.logger.debug('GET /recipes/id/:id');
     const response = await this.recipeService.getRecipeById(id);
     const formattedResponse = formatResponse(response, { id });
     return formattedResponse;
@@ -121,7 +118,6 @@ export class RecipeController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getIngredientByID(@Param('id') id: string) {
-    this.logger.debug('GET /recipes/ingredient/id/:id');
     const response = await this.recipeService.getIngredientByID(id);
     const formattedResponse = formatResponse(response, { id });
     return formattedResponse;
@@ -141,7 +137,6 @@ export class RecipeController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getStepByID(@Param('id') id: string) {
-    this.logger.debug('GET /recipes/step/id/:id');
     const response = await this.recipeService.getStepByID(id);
     const formattedResponse = formatResponse(response, { id });
     return formattedResponse;
@@ -172,7 +167,6 @@ export class RecipeController {
     @Query('searchCriteria', new ValidateSearchCriteriaPipe())
     searchCriteria?: string,
   ) {
-    this.logger.debug('GET /recipes');
     const searchCriteriaObj: SearchCriteriaI = JSON.parse(
       decodeURIComponent(searchCriteria),
     );
@@ -205,7 +199,6 @@ export class RecipeController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async createRecipe(@Body() recipe: CreateRecipeDto) {
-    this.logger.debug('POST /recipes');
     const response = await this.recipeService.createRecipe(recipe);
     const formattedResponse = formatResponse(response, {
       id: response.recipeID,
@@ -228,7 +221,6 @@ export class RecipeController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async createIngredient(@Body() ingredient: CreateIngredientDto) {
-    this.logger.debug('POST /recipes/ingredient');
     const response = await this.recipeService.createIngredient(ingredient);
     const formattedResponse = formatResponse(response, {
       id: response.recipeIngredientID,
@@ -251,7 +243,6 @@ export class RecipeController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async createStep(@Body() step: CreateStepDto) {
-    this.logger.debug('POST /recipes/step');
     const response = await this.recipeService.createStep(step);
     const formattedResponse = formatResponse(response, {
       id: response.recipeStepID,
@@ -275,7 +266,6 @@ export class RecipeController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async updateRecipe(@Param('id') id: string, @Body() recipe: CreateRecipeDto) {
-    this.logger.debug('PUT /recipes/:id');
     const response = await this.recipeService.updateRecipe(id, recipe);
     const formattedResponse = formatResponse(response, { id });
     return formattedResponse;
@@ -295,7 +285,6 @@ export class RecipeController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async deleteRecipe(@Param('id') id: string) {
-    this.logger.debug('DELETE /recipes/:id');
     await this.recipeService.deleteRecipe(id);
     const formattedResponse = formatResponse(null, { id });
     return formattedResponse;
@@ -315,7 +304,6 @@ export class RecipeController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async deleteIngredient(@Param('id') id: string) {
-    this.logger.debug('DELETE /recipes/ingredient/:id');
     await this.recipeService.deleteIngredient(id);
     const formattedResponse = formatResponse(null, { id });
     return formattedResponse;
@@ -335,7 +323,6 @@ export class RecipeController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async deleteStep(@Param('id') id: string) {
-    this.logger.debug('DELETE /recipes/step/:id');
     await this.recipeService.deleteStep(id);
     const formattedResponse = formatResponse(null, { id });
     return formattedResponse;

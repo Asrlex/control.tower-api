@@ -11,7 +11,7 @@ import {
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
-import { dtoValidator, formatResponse } from 'src/api/utils/utils.api';
+import { dtoValidator, formatResponse } from '@/common/utils/utils.api';
 import { ValidatePaginationPipe } from 'src/common/pipes/pagination.pipe';
 import { SearchCriteriaI } from 'src/api/entities/interfaces/api.entity';
 import { ValidateSearchCriteriaPipe } from 'src/common/pipes/search.pipe';
@@ -61,7 +61,6 @@ export class TagController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getAllTags() {
-    this.logger.debug('GET /tags/all');
     const response = await this.tagService.getAllTags();
     const formattedResponse = formatResponse(response.entities, {
       total: response.total,
@@ -83,7 +82,6 @@ export class TagController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getTagById(@Param('id') id: string) {
-    this.logger.debug('GET /tags/id/:id');
     const response = await this.tagService.getTagById(id);
     const formattedResponse = formatResponse(response, { id });
     return formattedResponse;
@@ -114,7 +112,6 @@ export class TagController {
     @Query('searchCriteria', new ValidateSearchCriteriaPipe())
     searchCriteria?: string,
   ) {
-    this.logger.debug('GET /tags');
     const searchCriteriaObj: SearchCriteriaI = JSON.parse(
       decodeURIComponent(searchCriteria),
     );
@@ -147,7 +144,6 @@ export class TagController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async createTag(@Body() tag: CreateTagDto) {
-    this.logger.debug('POST /tags');
     const response = await this.tagService.createTag(tag);
     const formattedResponse = formatResponse(response, {
       id: response.tagID,
@@ -170,7 +166,6 @@ export class TagController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async createItemTag(@Body() tag: CreateItemTagDto) {
-    this.logger.debug('POST /tags');
     await this.tagService.createItemTag(
       tag.tagID.toString(),
       tag.itemID.toString(),
@@ -195,7 +190,6 @@ export class TagController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async updateTag(@Param('id') id: string, @Body() tag: CreateTagDto) {
-    this.logger.debug('PUT /tags/:id');
     const response = await this.tagService.updateTag(id, tag);
     const formattedResponse = formatResponse(response, { id });
     return formattedResponse;
@@ -216,7 +210,6 @@ export class TagController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async deleteItemTag(@Body() tag: CreateItemTagDto) {
-    this.logger.debug('DELETE /tags/item');
     await this.tagService.deleteItemTag(
       tag.tagID.toString(),
       tag.itemID.toString(),
@@ -239,7 +232,6 @@ export class TagController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async deleteTag(@Param('id') id: string) {
-    this.logger.debug('DELETE /tags/:id');
     await this.tagService.deleteTag(id);
     const formattedResponse = formatResponse(null, { id });
     return formattedResponse;

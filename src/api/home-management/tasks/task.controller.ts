@@ -12,7 +12,7 @@ import {
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
-import { dtoValidator, formatResponse } from 'src/api/utils/utils.api';
+import { dtoValidator, formatResponse } from '@/common/utils/utils.api';
 import { ValidatePaginationPipe } from 'src/common/pipes/pagination.pipe';
 import { SearchCriteriaI } from 'src/api/entities/interfaces/api.entity';
 import { ValidateSearchCriteriaPipe } from 'src/common/pipes/search.pipe';
@@ -62,7 +62,6 @@ export class TaskController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getAllTasks() {
-    this.logger.debug('GET /tasks/all');
     const response = await this.taskService.getAllTasks();
     const formattedResponse = formatResponse(response.entities, {
       total: response.total,
@@ -81,7 +80,6 @@ export class TaskController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getAllHouseTasks() {
-    this.logger.debug('GET /tasks/home');
     const response = await this.taskService.getAllHouseTasks();
     const formattedResponse = formatResponse(response.entities, {
       total: response.total,
@@ -103,7 +101,6 @@ export class TaskController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getTaskById(@Param('id') id: string) {
-    this.logger.debug('GET /tasks/id/:id');
     const response = await this.taskService.getTaskById(id);
     const formattedResponse = formatResponse(response, { id });
     return formattedResponse;
@@ -134,7 +131,6 @@ export class TaskController {
     @Query('searchCriteria', new ValidateSearchCriteriaPipe())
     searchCriteria?: string,
   ) {
-    this.logger.debug('GET /tasks');
     const searchCriteriaObj: SearchCriteriaI = JSON.parse(
       decodeURIComponent(searchCriteria),
     );
@@ -167,7 +163,6 @@ export class TaskController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async createHouseTask(@Body() task: CreateHouseTaskDto) {
-    this.logger.debug('POST /tasks/home');
     const response = await this.taskService.createHouseTask(task);
     const formattedResponse = formatResponse(response, {
       id: response.houseTaskID,
@@ -190,7 +185,6 @@ export class TaskController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async createTask(@Body() task: CreateTaskDto) {
-    this.logger.debug('POST /tasks');
     const response = await this.taskService.createTask(task);
     const formattedResponse = formatResponse(response, {
       id: response.taskID,
@@ -214,7 +208,6 @@ export class TaskController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async updateTask(@Param('id') id: string, @Body() task: CreateTaskDto) {
-    this.logger.debug('PUT /tasks/:id');
     const response = await this.taskService.updateTask(id, task);
     const formattedResponse = formatResponse(response, { id });
     return formattedResponse;
@@ -242,7 +235,6 @@ export class TaskController {
     @Param('id') id: string,
     @Query('taskCompleted') taskCompleted: boolean,
   ) {
-    this.logger.debug('PUT /tasks/complete/:id');
     const response = await this.taskService.toggleCompletedTask(
       id,
       taskCompleted,
@@ -265,7 +257,6 @@ export class TaskController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async deleteTask(@Param('id') id: string) {
-    this.logger.debug('DELETE /tasks/:id');
     await this.taskService.deleteTask(id);
     const formattedResponse = formatResponse(null, { id });
     return formattedResponse;

@@ -11,7 +11,7 @@ import {
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
-import { dtoValidator, formatResponse } from 'src/api/utils/utils.api';
+import { dtoValidator, formatResponse } from '@/common/utils/utils.api';
 import { ValidatePaginationPipe } from 'src/common/pipes/pagination.pipe';
 import { SearchCriteriaI } from 'src/api/entities/interfaces/api.entity';
 import { ValidateSearchCriteriaPipe } from 'src/common/pipes/search.pipe';
@@ -58,7 +58,6 @@ export class StoreController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getAllStores() {
-    this.logger.debug('GET /stores/all');
     const response = await this.storeService.getAllStores();
     const formattedResponse = formatResponse(response.entities, {
       total: response.total,
@@ -80,7 +79,6 @@ export class StoreController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getStoreById(@Param('id') id: string) {
-    this.logger.debug('GET /stores/id/:id');
     const response = await this.storeService.getStoreById(id);
     const formattedResponse = formatResponse(response, { id });
     return formattedResponse;
@@ -111,7 +109,6 @@ export class StoreController {
     @Query('searchCriteria', new ValidateSearchCriteriaPipe())
     searchCriteria?: string,
   ) {
-    this.logger.debug('GET /product');
     const searchCriteriaObj: SearchCriteriaI = JSON.parse(
       decodeURIComponent(searchCriteria),
     );
@@ -144,7 +141,6 @@ export class StoreController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async createStore(@Body() product: CreateStoreDto) {
-    this.logger.debug('POST /product');
     const response = await this.storeService.createStore(product);
     const formattedResponse = formatResponse(response, {
       id: response.storeID,
@@ -168,7 +164,6 @@ export class StoreController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async updateStore(@Param('id') id: string, @Body() product: CreateStoreDto) {
-    this.logger.debug('PUT /stores/:id');
     const response = await this.storeService.updateStore(id, product);
     const formattedResponse = formatResponse(response, { id });
     return formattedResponse;
@@ -188,7 +183,6 @@ export class StoreController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async deleteStore(@Param('id') id: string) {
-    this.logger.debug('DELETE /stores/:id');
     await this.storeService.deleteStore(id);
     const formattedResponse = formatResponse(null, { id });
     return formattedResponse;

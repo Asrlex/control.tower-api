@@ -8,7 +8,6 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    this.logger.debug('GET /');
     return 'Hello World!';
   }
 }

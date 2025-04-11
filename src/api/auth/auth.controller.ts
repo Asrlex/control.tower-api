@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../entities/dtos/home-management/user.dto';
-import { formatResponse } from '../utils/utils.api';
+import { formatResponse } from '../../common/utils/utils.api';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { GlobalApiKeyGuard } from './guards/global-api-key.guard';
 import { Request } from 'express';
@@ -18,6 +18,7 @@ import {
   SuccessCodes,
   ErrorCodes,
 } from '../entities/enums/response-codes.enum';
+import { AuthMessages } from './entities/enums/auth.enum';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -53,10 +54,9 @@ export class AuthController {
     description: 'Internal Server Error',
   })
   async login(@Body() loginDto: CreateUserDto) {
-    this.logger.log('POST /auth/login');
     const response = await this.authService.login(loginDto);
     if (!response) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException(AuthMessages.InvalidCredentials);
     }
     const formattedResponse = formatResponse(response);
     return formattedResponse;
@@ -82,10 +82,9 @@ export class AuthController {
     description: 'Internal Server Error',
   })
   async signup(@Body() signupDto: CreateUserDto) {
-    this.logger.log('POST /auth/signup');
     const response = await this.authService.signup(signupDto);
     if (!response) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException(AuthMessages.InvalidCredentials);
     }
     const formattedResponse = formatResponse(response);
     return formattedResponse;
@@ -106,18 +105,17 @@ export class AuthController {
     description: 'Internal Server Error',
   })
   async validate(@Req() req: Request) {
-    this.logger.log('GET /auth/me');
     const token = await this.authService.getTokenFromRequest(req);
     if (!token) {
-      throw new UnauthorizedException('Token not found');
+      throw new UnauthorizedException(AuthMessages.NoTokenProvided);
     }
     const response = await this.authService.validateToken(token);
     if (!response) {
-      throw new UnauthorizedException('Invalid token');
+      throw new UnauthorizedException(AuthMessages.InvalidToken);
     }
     const user = await this.authService.getUserFromToken(token);
     if (!user) {
-      throw new UnauthorizedException('User not found');
+      throw new UnauthorizedException(AuthMessages.UserNotFound);
     }
     const formattedResponse = formatResponse(user);
     return formattedResponse;

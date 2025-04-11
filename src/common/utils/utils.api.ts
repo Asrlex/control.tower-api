@@ -4,7 +4,7 @@ import {
   FormattedResponseI,
   SortI,
   FilterI,
-} from '../entities/interfaces/api.entity';
+} from '../../api/entities/interfaces/api.entity';
 import {
   BadRequestException,
   ValidationError,
@@ -13,7 +13,7 @@ import {
 import {
   ErrorCodes,
   SuccessCodes,
-} from '../entities/enums/response-codes.enum';
+} from '../../api/entities/enums/response-codes.enum';
 
 /**
  * Formatear la respuesta de la API

@@ -8,7 +8,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { formatResponse } from 'src/api/utils/utils.api';
+import { formatResponse } from '@/common/utils/utils.api';
 
 @Injectable()
 @Catch()

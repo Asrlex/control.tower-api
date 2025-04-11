@@ -11,6 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { SuccessCodes } from '../entities/enums/response-codes.enum';
 import { UserRepository } from './repository/user.repository.interface';
+import { AuthMessages } from './entities/enums/auth.enum';
 
 @Injectable()
 export class AuthService {
@@ -28,7 +29,7 @@ export class AuthService {
   async status() {
     return {
       statusCode: SuccessCodes.Ok,
-      message: 'Auth endpoint is working',
+      message: AuthMessages.AuthEndpointWorking,
     };
   }
 
@@ -40,7 +41,7 @@ export class AuthService {
   async login(dto: CreateUserDto): Promise<{ user: UserI; token: string }> {
     const user = await this.validateUser(dto.email, dto.password);
     if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException(AuthMessages.InvalidCredentials);
     }
     const payload = { email: user.userEmail, sub: user.userID };
     const token = this.createToken(payload);
@@ -61,16 +62,16 @@ export class AuthService {
   ): Promise<{ user: UserI; token: string }> {
     const existingUser = await this.userRepository.findByEmail(signupDto.email);
     if (existingUser) {
-      throw new UnauthorizedException('Email already exists');
+      throw new UnauthorizedException(AuthMessages.UserAlreadyExists);
     }
     const hashedPassword = await bcrypt.hash(signupDto.password, 10);
     if (!hashedPassword) {
-      throw new UnauthorizedException('Password hashing failed');
+      throw new UnauthorizedException(AuthMessages.PasswordHashingFailed);
     }
     signupDto.password = hashedPassword;
     const user = await this.userRepository.create(signupDto);
     if (!user) {
-      throw new UnauthorizedException('User creation failed');
+      throw new UnauthorizedException(AuthMessages.UserCreationFailed);
     }
 
     const payload = { email: user.userEmail, sub: user.userID };
@@ -107,7 +108,7 @@ export class AuthService {
   async getTokenFromRequest(request: Request): Promise<string> {
     const token = request.headers['authorization']?.split(' ')[1];
     if (!token) {
-      throw new UnauthorizedException('No token provided');
+      throw new UnauthorizedException(AuthMessages.NoTokenProvided);
     }
     return token;
   }
@@ -141,12 +142,12 @@ export class AuthService {
       });
       const user = await this.userRepository.findByEmail(decoded.email);
       if (!user) {
-        throw new UnauthorizedException('User not found');
+        throw new UnauthorizedException(AuthMessages.UserNotFound);
       }
       return user;
     } catch (error) {
       console.error('Error getting user from token', error);
-      throw new UnauthorizedException('Invalid token');
+      throw new UnauthorizedException(AuthMessages.InvalidToken);
     }
   }
 

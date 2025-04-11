@@ -1,4 +1,4 @@
-import { Logger, Module } from '@nestjs/common';
+import { Logger, MiddlewareConsumer, Module } from '@nestjs/common';
 import { ApiModule } from './api/api.module';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
@@ -10,6 +10,7 @@ import { AppService } from './app.service';
 import { ErrorWrapperFilter } from './common/filters/errorWrapping.filter';
 import { AuthModule } from './api/auth/auth.module';
 import { CacheModule } from '@nestjs/cache-manager';
+import { LoggingMiddleware } from './common/middleware/endpoint-logger.middleware';
 
 @Module({
   imports: [
@@ -54,4 +55,8 @@ import { CacheModule } from '@nestjs/cache-manager';
     },
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggingMiddleware).forRoutes('*');
+  }
+}

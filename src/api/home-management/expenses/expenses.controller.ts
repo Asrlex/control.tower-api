@@ -20,7 +20,7 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@/api/auth/guards/jwt-auth.guard';
 import { GlobalApiKeyGuard } from '@/api/auth/guards/global-api-key.guard';
-import { formatResponse } from '@/api/utils/utils.api';
+import { formatResponse } from '@/common/utils/utils.api';
 import { ValidatePaginationPipe } from '@/common/pipes/pagination.pipe';
 import { ValidateSearchCriteriaPipe } from '@/common/pipes/search.pipe';
 import { SearchCriteriaI } from '@/api/entities/interfaces/api.entity';
@@ -57,7 +57,6 @@ export class ExpenseController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getAllExpenses() {
-    this.logger.debug('GET /expenses/all');
     const response = await this.expenseService.getAllExpenses();
     const formattedResponse = formatResponse(response.entities, {
       total: response.total,
@@ -76,7 +75,6 @@ export class ExpenseController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getAllExpenseCategories() {
-    this.logger.debug('GET /expenses/all/categories');
     const response = await this.expenseService.getAllExpenseCategories();
     const formattedResponse = formatResponse(response);
     return formattedResponse;
@@ -96,7 +94,6 @@ export class ExpenseController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getExpenseById(id: string) {
-    this.logger.debug(`GET /expenses/id/${id}`);
     const response = await this.expenseService.getExpenseById(id);
     const formattedResponse = formatResponse(response, {});
     return formattedResponse;
@@ -125,7 +122,6 @@ export class ExpenseController {
     @Query('searchCriteria', new ValidateSearchCriteriaPipe())
     searchCriteria?: string,
   ) {
-    this.logger.debug('GET /expenses');
     const searchCriteriaObj: SearchCriteriaI = JSON.parse(
       decodeURIComponent(searchCriteria),
     );
@@ -155,7 +151,6 @@ export class ExpenseController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async createExpense(@Body() dto: CreateExpenseDto) {
-    this.logger.debug('POST /expenses');
     const response = await this.expenseService.createExpense(dto);
     const formattedResponse = formatResponse(response, {
       id: response.expenseID,
@@ -178,7 +173,6 @@ export class ExpenseController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async updateExpense(@Param('id') id: string, @Body() dto: CreateExpenseDto) {
-    this.logger.debug(`PUT /expenses/${id}`);
     const response = await this.expenseService.updateExpense(id, dto);
     const formattedResponse = formatResponse(response, {});
     return formattedResponse;
@@ -198,7 +192,6 @@ export class ExpenseController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async deleteExpense(@Param('id') id: string) {
-    this.logger.debug(`DELETE /expenses/${id}`);
     const response = await this.expenseService.deleteExpense(id);
     const formattedResponse = formatResponse(response, {});
     return formattedResponse;

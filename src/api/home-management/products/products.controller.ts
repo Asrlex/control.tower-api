@@ -11,7 +11,7 @@ import {
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
-import { dtoValidator, formatResponse } from 'src/api/utils/utils.api';
+import { dtoValidator, formatResponse } from '@/common/utils/utils.api';
 import { ValidatePaginationPipe } from 'src/common/pipes/pagination.pipe';
 import { SearchCriteriaI } from 'src/api/entities/interfaces/api.entity';
 import { ValidateSearchCriteriaPipe } from 'src/common/pipes/search.pipe';
@@ -58,7 +58,6 @@ export class ProductController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getAllProducts() {
-    this.logger.debug('GET /products/all');
     const response = await this.productService.getAllProducts();
     const formattedResponse = formatResponse(response.entities, {
       total: response.total,
@@ -80,7 +79,6 @@ export class ProductController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getProductById(@Param('id') id: string) {
-    this.logger.debug('GET /products/id/:id');
     const response = await this.productService.getProductById(id);
     const formattedResponse = formatResponse(response, { id });
     return formattedResponse;
@@ -111,7 +109,6 @@ export class ProductController {
     @Query('searchCriteria', new ValidateSearchCriteriaPipe())
     searchCriteria?: string,
   ) {
-    this.logger.debug('GET /product');
     const searchCriteriaObj: SearchCriteriaI = JSON.parse(
       decodeURIComponent(searchCriteria),
     );
@@ -143,7 +140,6 @@ export class ProductController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getOrderProducts(@Param('type') type: string) {
-    this.logger.debug('GET /products/order/:type');
     const response = await this.productService.getOrderProducts(type);
     const formattedResponse = formatResponse(response, { id: type });
     return formattedResponse;
@@ -167,7 +163,6 @@ export class ProductController {
     @Param('type') type: string,
     @Body() order: string[],
   ) {
-    this.logger.debug('POST /products/order/:type');
     const response = await this.productService.postOrderProducts(type, order);
     const formattedResponse = formatResponse(response, { id: type });
     return formattedResponse;
@@ -188,7 +183,6 @@ export class ProductController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async createProduct(@Body() product: CreateProductDto) {
-    this.logger.debug('POST /product');
     const response = await this.productService.createProduct(product);
     const formattedResponse = formatResponse(response, {
       id: response.productID,
@@ -215,7 +209,6 @@ export class ProductController {
     @Param('id') id: string,
     @Body() product: CreateProductDto,
   ) {
-    this.logger.debug('PUT /products/:id');
     const response = await this.productService.updateProduct(id, product);
     const formattedResponse = formatResponse(response, { id });
     return formattedResponse;
@@ -235,7 +228,6 @@ export class ProductController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async deleteProduct(@Param('id') id: string) {
-    this.logger.debug('DELETE /products/:id');
     await this.productService.deleteProduct(id);
     const formattedResponse = formatResponse(null, { id });
     return formattedResponse;
