@@ -103,6 +103,11 @@ export interface UserI {
   userLastLogin: string;
 }
 
+export interface LoggedUserI {
+  user: UserI;
+  token: string;
+}
+
 export interface ExpenseI {
   expenseID: number;
   expenseAmount: number;

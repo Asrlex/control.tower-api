@@ -4,7 +4,10 @@ import {
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UserI } from '../entities/interfaces/home-management.entity';
+import {
+  LoggedUserI,
+  UserI,
+} from '../entities/interfaces/home-management.entity';
 import { CreateUserDto } from '../entities/dtos/home-management/user.dto';
 import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
@@ -38,7 +41,7 @@ export class AuthService {
    * @param dto - usuario
    * @returns string - token de autenticación
    */
-  async login(dto: CreateUserDto): Promise<{ user: UserI; token: string }> {
+  async login(dto: CreateUserDto): Promise<LoggedUserI> {
     const user = await this.validateUser(dto.email, dto.password);
     if (!user) {
       throw new UnauthorizedException(AuthMessages.InvalidCredentials);
@@ -57,9 +60,7 @@ export class AuthService {
    * @param password - contraseña del usuario
    * @returns string - usuario creado
    */
-  async signup(
-    signupDto: CreateUserDto,
-  ): Promise<{ user: UserI; token: string }> {
+  async signup(signupDto: CreateUserDto): Promise<LoggedUserI> {
     const existingUser = await this.userRepository.findByEmail(signupDto.email);
     if (existingUser) {
       throw new UnauthorizedException(AuthMessages.UserAlreadyExists);
