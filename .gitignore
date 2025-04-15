@@ -5,3 +5,7 @@ logs
 .env
 *.env*
 scripts
+
+*.log
+*.tsbuildinfo
+*.sqlite3
