@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
 
 export class GetSettingsDto {
@@ -14,8 +15,18 @@ export class GetSettingsDto {
 }
 
 export class CreateSettingsDto {
+  @ApiProperty({
+    description: 'Settings',
+    example: '{"theme":"dark","language":"en"}',
+    nullable: false,
+  })
   @IsString()
   settings: string;
+  @ApiProperty({
+    description: 'Settings User ID',
+    example: 1,
+    nullable: false,
+  })
   @IsNumber()
   settingsUserID: number;
 }

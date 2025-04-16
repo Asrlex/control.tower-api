@@ -1,8 +1,19 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
 
 export class CreateProductDto {
+  @ApiProperty({
+    description: 'The name of the product',
+    example: 'Milk',
+    nullable: false,
+  })
   @IsString()
   productName: string;
+  @ApiProperty({
+    description: 'The unit of the product',
+    example: 'liters',
+    nullable: false,
+  })
   @IsString()
   productUnit: string;
 }
