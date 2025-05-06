@@ -84,7 +84,7 @@ export class ProductController {
     return formattedResponse;
   }
 
-  @Get('')
+  @Get()
   @ApiOperation({
     summary: 'Get products with pagination and optional search criteria',
   })
