@@ -46,8 +46,8 @@ export class SettingsController {
   @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
-  async getAllSettingss() {
-    const response = await this.settingsService.getAllSettings();
+  async findAllSettingss() {
+    const response = await this.settingsService.findAllSettings();
     const formattedResponse = formatResponse(response.entities, {
       total: response.total,
     });

@@ -61,8 +61,8 @@ export class TaskController {
   @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
-  async getAllTasks() {
-    const response = await this.taskService.getAllTasks();
+  async findAllTasks() {
+    const response = await this.taskService.findAllTasks();
     const formattedResponse = formatResponse(response.entities, {
       total: response.total,
     });
@@ -79,8 +79,8 @@ export class TaskController {
   @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
-  async getAllHouseTasks() {
-    const response = await this.taskService.getAllHouseTasks();
+  async findAllHouseTasks() {
+    const response = await this.taskService.findAllHouseTasks();
     const formattedResponse = formatResponse(response.entities, {
       total: response.total,
     });

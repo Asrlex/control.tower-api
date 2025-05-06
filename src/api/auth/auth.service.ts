@@ -164,4 +164,30 @@ export class AuthService {
     });
     return token;
   }
+
+  /**
+   * Método para validar el token de un usuario de Cognito
+   * @param request - petición HTTP
+   * @returns string - usuario validado
+   */
+  async authenticateCognitoUser(req: Request): Promise<{ email: string }> {
+    const authHeader = req.headers['authorization'];
+    if (!authHeader) {
+      throw new UnauthorizedException(AuthMessages.NoTokenProvided);
+    }
+
+    const token = authHeader.split(' ')[1];
+    if (!token) {
+      throw new UnauthorizedException(AuthMessages.NoTokenProvided);
+    }
+
+    try {
+      const decoded = this.jwtService.verify(token, {
+        secret: process.env.COGNITO_SECRET,
+      });
+      return { email: decoded.email };
+    } catch (error) {
+      throw new UnauthorizedException(AuthMessages.InvalidToken);
+    }
+  }
 }

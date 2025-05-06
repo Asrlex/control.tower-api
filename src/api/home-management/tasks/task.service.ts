@@ -36,7 +36,7 @@ export class TaskService {
    * Método para obtener todos los tareas
    * @returns string - todos los tareas
    */
-  async getAllTasks(): Promise<{
+  async findAllTasks(): Promise<{
     entities: TaskI[];
     total: number;
   }> {
@@ -47,7 +47,7 @@ export class TaskService {
    * Método para obtener todas las tareas de la casa
    * @returns string - todas las tareas de la casa
    */
-  async getAllHouseTasks(): Promise<{ entities: HouseTaskI[]; total: number }> {
+  async findAllHouseTasks(): Promise<{ entities: HouseTaskI[]; total: number }> {
     return await this.taskRepository.findAllHouseTasks();
   }
 

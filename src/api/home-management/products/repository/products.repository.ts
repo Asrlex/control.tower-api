@@ -3,7 +3,6 @@ import { DatabaseConnection } from 'src/db/database.connection';
 import { SortI } from 'src/api/entities/interfaces/api.entity';
 import { plainToInstance } from 'class-transformer';
 import { ProductI } from '@/api/entities/interfaces/home-management.entity';
-import { productsQueries } from '@/db/queries/home-management.queries';
 import {
   CreateProductDto,
   GetProductDto,
@@ -12,6 +11,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { BaseRepository } from '@/common/repository/base-repository';
 import { ProductRepository } from './products.repository.interface';
+import { productsQueries } from '@/db/queries/products.queries';
 
 export class ProductRepositoryImplementation
   extends BaseRepository
@@ -45,7 +45,7 @@ export class ProductRepositoryImplementation
         return cachedProducts;
       }
     }
-    const sql = productsQueries.getAll;
+    const sql = productsQueries.findAll;
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: ProductI[] = this.resultToProduct(result);
     const total = result[0] ? parseInt(result[0].total, 10) : 0;
@@ -79,7 +79,7 @@ export class ProductRepositoryImplementation
     }
     const offset: number = page * limit + 1;
     limit = offset + parseInt(limit.toString(), 10) - 1;
-    const sql = productsQueries.get
+    const sql = productsQueries.find
       .replaceAll('@DynamicWhereClause', filters)
       .replaceAll('@DynamicOrderByField', `${sort.field}`)
       .replaceAll('@DynamicOrderByDirection', `${sort.order}`)
@@ -99,7 +99,7 @@ export class ProductRepositoryImplementation
    * @returns string
    */
   async findById(id: string): Promise<ProductI | null> {
-    const sql = productsQueries.getOne.replace('@id', id);
+    const sql = productsQueries.findByID.replace('@id', id);
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: ProductI[] = this.resultToProduct(result);
     return entities.length > 0 ? entities[0] : null;

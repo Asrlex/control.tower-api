@@ -29,7 +29,7 @@ export class SettingService {
    * Método para obtener todos los ajustes
    * @returns string - todos los ajustes
    */
-  async getAllSettings(): Promise<{
+  async findAllSettings(): Promise<{
     entities: SettingsI[];
     total: number;
   }> {

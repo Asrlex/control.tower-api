@@ -6,7 +6,6 @@ import {
   ExpenseCategoryI,
   ExpenseI,
 } from '@/api/entities/interfaces/home-management.entity';
-import { expensesQueries } from '@/db/queries/home-management.queries';
 import { SortI } from '@/api/entities/interfaces/api.entity';
 import {
   CreateExpenseDto,
@@ -14,6 +13,7 @@ import {
 } from '@/api/entities/dtos/home-management/expense.dto';
 import { ExpenseRepository } from './expenses.repository.interface';
 import { BaseRepository } from '@/common/repository/base-repository';
+import { expensesQueries } from '@/db/queries/expenses.queries';
 
 export class ExpenseRepositoryImplementation
   extends BaseRepository
@@ -47,7 +47,7 @@ export class ExpenseRepositoryImplementation
         return cachedExpenses;
       }
     }
-    const sql = expensesQueries.getAll;
+    const sql = expensesQueries.findAll;
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: ExpenseI[] = this.resultToExpense(result);
     const total = result[0] ? parseInt(result[0].total, 10) : 0;
@@ -74,7 +74,7 @@ export class ExpenseRepositoryImplementation
         return cachedExpenses;
       }
     }
-    const sql = expensesQueries.getAllCategories;
+    const sql = expensesQueries.findAllCategories;
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: ExpenseI[] = this.resultToExpense(result);
     return entities;
@@ -86,7 +86,7 @@ export class ExpenseRepositoryImplementation
    * @returns string - gasto
    */
   async findById(id: string): Promise<ExpenseI> {
-    const sql = expensesQueries.getOne.replace('@id', id);
+    const sql = expensesQueries.findByID.replace('@id', id);
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: ExpenseI[] = this.resultToExpense(result);
     return entities.length > 0 ? entities[0] : null;
@@ -113,7 +113,7 @@ export class ExpenseRepositoryImplementation
     }
     const offset: number = page * limit + 1;
     limit = offset + parseInt(limit.toString(), 10) - 1;
-    const sql = expensesQueries.get
+    const sql = expensesQueries.find
       .replaceAll('@DynamicWhereClause', filters)
       .replaceAll('@DynamicOrderByField', `${sort.field}`)
       .replaceAll('@DynamicOrderByDirection', `${sort.order}`)

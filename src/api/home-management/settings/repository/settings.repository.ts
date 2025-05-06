@@ -2,7 +2,6 @@
 import { Inject, Logger, NotFoundException } from '@nestjs/common';
 import { DatabaseConnection } from 'src/db/database.connection';
 import { plainToInstance } from 'class-transformer';
-import { settingsQueries } from '@/db/queries/home-management.queries';
 import { SettingsI } from '@/api/entities/interfaces/home-management.entity';
 import {
   CreateSettingsDto,
@@ -10,6 +9,7 @@ import {
 } from '@/api/entities/dtos/home-management/settings.dto';
 import { BaseRepository } from '@/common/repository/base-repository';
 import { SettingsRepository } from './settings.repository.interface';
+import { settingsQueries } from '@/db/queries/settings.queries';
 
 export class SettingsRepositoryImplementation
   extends BaseRepository
@@ -31,7 +31,7 @@ export class SettingsRepositoryImplementation
     entities: SettingsI[];
     total: number;
   }> {
-    const sql = settingsQueries.getAll;
+    const sql = settingsQueries.findAll;
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: SettingsI[] = this.resultToSettings(result);
     const total = result[0] ? parseInt(result[0].total, 10) : 0;
@@ -55,7 +55,7 @@ export class SettingsRepositoryImplementation
    * @returns string
    */
   async findById(id: string): Promise<SettingsI | null> {
-    const sql = settingsQueries.getOne.replace('@id', id);
+    const sql = settingsQueries.findByID.replace('@id', id);
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: SettingsI[] = this.resultToSettings(result);
     return entities.length > 0 ? entities[0] : null;

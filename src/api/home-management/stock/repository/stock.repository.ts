@@ -6,7 +6,6 @@ import {
   ShoppingListProductI,
   StockProductI,
 } from '@/api/entities/interfaces/home-management.entity';
-import { stockProductQueries } from '@/db/queries/home-management.queries';
 import {
   CreateStockProductDto,
   GetStockProductDto,
@@ -16,6 +15,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { BaseRepository } from '@/common/repository/base-repository';
 import { StockProductRepository } from './stock.repository.interface';
+import { stockProductQueries } from '@/db/queries/stock.queries';
 
 export class StockProductRepositoryImplementation
   extends BaseRepository
@@ -51,7 +51,7 @@ export class StockProductRepositoryImplementation
         return cachedStock;
       }
     }
-    const sql = stockProductQueries.getAll;
+    const sql = stockProductQueries.findAll;
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: StockProductI[] = this.resultToProduct(result);
     const total = result[0] ? parseInt(result[0].total, 10) : 0;
@@ -85,7 +85,7 @@ export class StockProductRepositoryImplementation
     }
     const offset: number = page * limit + 1;
     limit = offset + parseInt(limit.toString(), 10) - 1;
-    const sql = stockProductQueries.get
+    const sql = stockProductQueries.find
       .replaceAll('@DynamicWhereClause', filters)
       .replaceAll('@DynamicOrderByField', `${sort.field}`)
       .replaceAll('@DynamicOrderByDirection', `${sort.order}`)
@@ -105,7 +105,7 @@ export class StockProductRepositoryImplementation
    * @returns string
    */
   async findById(id: string): Promise<StockProductI | null> {
-    const sql = stockProductQueries.getOne.replace('@id', id);
+    const sql = stockProductQueries.findByID.replace('@id', id);
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: StockProductI[] = this.resultToProduct(result);
     return entities.length > 0 ? entities[0] : null;

@@ -2,7 +2,6 @@ import { forwardRef, Inject, Logger, NotFoundException } from '@nestjs/common';
 import { DatabaseConnection } from 'src/db/database.connection';
 import { SortI } from 'src/api/entities/interfaces/api.entity';
 import { plainToInstance } from 'class-transformer';
-import { shoppingListQueries } from '@/db/queries/home-management.queries';
 import {
   ShoppingListProductI,
   StockProductI,
@@ -16,6 +15,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { ShoppingListProductRepository } from './shopping-list.repository.interface';
 import { BaseRepository } from '@/common/repository/base-repository';
+import { shoppingListQueries } from '@/db/queries/shopping-list.queries';
 
 export class ShoppingListProductRepositoryImplementation
   extends BaseRepository
@@ -51,7 +51,7 @@ export class ShoppingListProductRepositoryImplementation
         return cachedShoppingList;
       }
     }
-    const sql = shoppingListQueries.getAll;
+    const sql = shoppingListQueries.findAll;
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: ShoppingListProductI[] = this.resultToProduct(result);
     const total = result[0] ? parseInt(result[0].total, 10) : 0;
@@ -85,7 +85,7 @@ export class ShoppingListProductRepositoryImplementation
     }
     const offset: number = page * limit + 1;
     limit = offset + parseInt(limit.toString(), 10) - 1;
-    const sql = shoppingListQueries.get
+    const sql = shoppingListQueries.find
       .replaceAll('@DynamicWhereClause', filters)
       .replaceAll('@DynamicOrderByField', `${sort.field}`)
       .replaceAll('@DynamicOrderByDirection', `${sort.order}`)
@@ -105,7 +105,7 @@ export class ShoppingListProductRepositoryImplementation
    * @returns string
    */
   async findById(id: string): Promise<ShoppingListProductI | null> {
-    const sql = shoppingListQueries.getOne.replace('@id', id);
+    const sql = shoppingListQueries.findByID.replace('@id', id);
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: ShoppingListProductI[] = this.resultToProduct(result);
     return entities.length > 0 ? entities[0] : null;

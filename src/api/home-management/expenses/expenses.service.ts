@@ -33,7 +33,7 @@ export class ExpenseService {
    * Método para obtener todos los gastos
    * @returns string - todos los gastos
    */
-  async getAllExpenses(): Promise<{
+  async findAllExpenses(): Promise<{
     entities: ExpenseI[];
     total: number;
   }> {
@@ -44,7 +44,7 @@ export class ExpenseService {
    * Método para obtener todas las categorias de gastos
    * @returns string - todas las categorias de gastos
    */
-  async getAllExpenseCategories(): Promise<ExpenseCategoryI[]> {
+  async findAllExpenseCategories(): Promise<ExpenseCategoryI[]> {
     return await this.expenseRepository.findAllCategories();
   }
 

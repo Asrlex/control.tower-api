@@ -60,8 +60,8 @@ export class TagController {
   @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
-  async getAllTags() {
-    const response = await this.tagService.getAllTags();
+  async findAllTags() {
+    const response = await this.tagService.findAllTags();
     const formattedResponse = formatResponse(response.entities, {
       total: response.total,
     });

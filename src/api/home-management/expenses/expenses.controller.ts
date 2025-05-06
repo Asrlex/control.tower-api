@@ -56,8 +56,8 @@ export class ExpenseController {
   @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
-  async getAllExpenses() {
-    const response = await this.expenseService.getAllExpenses();
+  async findAllExpenses() {
+    const response = await this.expenseService.findAllExpenses();
     const formattedResponse = formatResponse(response.entities, {
       total: response.total,
     });
@@ -74,8 +74,8 @@ export class ExpenseController {
   @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
-  async getAllExpenseCategories() {
-    const response = await this.expenseService.getAllExpenseCategories();
+  async findAllExpenseCategories() {
+    const response = await this.expenseService.findAllExpenseCategories();
     const formattedResponse = formatResponse(response);
     return formattedResponse;
   }

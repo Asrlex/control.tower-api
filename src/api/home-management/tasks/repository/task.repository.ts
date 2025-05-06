@@ -6,7 +6,6 @@ import {
   HouseTaskI,
   TaskI,
 } from '@/api/entities/interfaces/home-management.entity';
-import { tasksQueries } from '@/db/queries/home-management.queries';
 import {
   CreateHouseTaskDto,
   CreateTaskDto,
@@ -15,6 +14,7 @@ import {
 } from '@/api/entities/dtos/home-management/task.dto';
 import { BaseRepository } from '@/common/repository/base-repository';
 import { TaskRepository } from './task.repository.interface';
+import { tasksQueries } from '@/db/queries/tasks.queries';
 
 export class TaskRepositoryImplementation
   extends BaseRepository
@@ -36,7 +36,7 @@ export class TaskRepositoryImplementation
     entities: TaskI[];
     total: number;
   }> {
-    const sql = tasksQueries.getAll;
+    const sql = tasksQueries.findAll;
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: TaskI[] = this.resultToTask(result);
     return {
@@ -53,7 +53,7 @@ export class TaskRepositoryImplementation
     entities: HouseTaskI[];
     total: number;
   }> {
-    const sql = tasksQueries.getAllHouseTasks;
+    const sql = tasksQueries.findAllHouseTasks;
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: HouseTaskI[] = result.map((record: GetHouseTaskDto) => ({
       houseTaskID: record.houseTaskID,
@@ -87,7 +87,7 @@ export class TaskRepositoryImplementation
     }
     const offset: number = page * limit + 1;
     limit = offset + parseInt(limit.toString(), 10) - 1;
-    const sql = tasksQueries.get
+    const sql = tasksQueries.find
       .replaceAll('@DynamicWhereClause', filters)
       .replaceAll('@DynamicOrderByField', `${sort.field}`)
       .replaceAll('@DynamicOrderByDirection', `${sort.order}`)
@@ -107,7 +107,7 @@ export class TaskRepositoryImplementation
    * @returns string
    */
   async findById(id: string): Promise<TaskI | null> {
-    const sql = tasksQueries.getOne.replace('@id', id);
+    const sql = tasksQueries.findByID.replace('@id', id);
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: TaskI[] = this.resultToTask(result);
     return entities.length > 0 ? entities[0] : null;

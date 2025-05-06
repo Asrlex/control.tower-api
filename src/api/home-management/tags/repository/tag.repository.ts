@@ -3,13 +3,13 @@ import { DatabaseConnection } from 'src/db/database.connection';
 import { SortI } from 'src/api/entities/interfaces/api.entity';
 import { plainToInstance } from 'class-transformer';
 import { TagRepository } from './tag.repository.interface';
-import { tagsQueries } from '@/db/queries/home-management.queries';
 import { TagI } from '@/api/entities/interfaces/home-management.entity';
 import {
   CreateTagDto,
   GetTagDto,
 } from '@/api/entities/dtos/home-management/tag.dto';
 import { BaseRepository } from '@/common/repository/base-repository';
+import { tagsQueries } from '@/db/queries/tags.queries';
 
 export class TagRepositoryImplementation
   extends BaseRepository
@@ -31,7 +31,7 @@ export class TagRepositoryImplementation
     entities: TagI[];
     total: number;
   }> {
-    const sql = tagsQueries.getAll;
+    const sql = tagsQueries.findAll;
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: TagI[] = this.resultToTag(result);
     return {
@@ -61,7 +61,7 @@ export class TagRepositoryImplementation
     }
     const offset: number = page * limit + 1;
     limit = offset + parseInt(limit.toString(), 10) - 1;
-    const sql = tagsQueries.get
+    const sql = tagsQueries.find
       .replaceAll('@DynamicWhereClause', filters)
       .replaceAll('@DynamicOrderByField', `${sort.field}`)
       .replaceAll('@DynamicOrderByDirection', `${sort.order}`)
@@ -81,7 +81,7 @@ export class TagRepositoryImplementation
    * @returns string
    */
   async findById(id: string): Promise<TagI | null> {
-    const sql = tagsQueries.getOne.replace('@id', id);
+    const sql = tagsQueries.findByID.replace('@id', id);
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: TagI[] = this.resultToTag(result);
     return entities.length > 0 ? entities[0] : null;

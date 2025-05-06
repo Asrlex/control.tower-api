@@ -8,7 +8,6 @@ import {
   CreateStepDto,
   GetRecipeDto,
 } from '@/api/entities/dtos/home-management/recipe.dto';
-import { recipesQueries } from '@/db/queries/home-management.queries';
 import {
   RecipeDetailI,
   RecipeIngredientI,
@@ -19,6 +18,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { BaseRepository } from '@/common/repository/base-repository';
 import { RecipeRepository } from './recipes.repository.interface';
+import { recipesQueries } from '@/db/queries/recipes.queries';
 
 export class RecipeRepositoryImplementation
   extends BaseRepository
@@ -52,7 +52,7 @@ export class RecipeRepositoryImplementation
         return cachedRecipes;
       }
     }
-    const sql = recipesQueries.getAll;
+    const sql = recipesQueries.findAll;
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: RecipeDetailI[] = this.resultToRecipe(result);
     const total = result[0] ? parseInt(result[0].total, 10) : 0;
@@ -73,7 +73,7 @@ export class RecipeRepositoryImplementation
    * @returns string - todos los nombres de las recetas
    */
   async findAllNames(): Promise<RecipeNameI[]> {
-    const sql = recipesQueries.getAllNames;
+    const sql = recipesQueries.findAllNames;
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: RecipeNameI[] = this.resultToRecipeName(result);
     return entities;
@@ -100,7 +100,7 @@ export class RecipeRepositoryImplementation
     }
     const offset: number = page * limit + 1;
     limit = offset + parseInt(limit.toString(), 10) - 1;
-    const sql = recipesQueries.get
+    const sql = recipesQueries.find
       .replaceAll('@DynamicWhereClause', filters)
       .replaceAll('@DynamicOrderByField', `${sort.field}`)
       .replaceAll('@DynamicOrderByDirection', `${sort.order}`)
@@ -128,7 +128,7 @@ export class RecipeRepositoryImplementation
         return cachedRecipe;
       }
     }
-    const sql = recipesQueries.getOne.replace('@id', id);
+    const sql = recipesQueries.findByID.replace('@id', id);
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: RecipeDetailI[] = this.resultToRecipe(result);
     return entities.length > 0 ? entities[0] : null;
@@ -140,7 +140,7 @@ export class RecipeRepositoryImplementation
    * @returns string
    */
   async findIngredientByID(ingredientID: string): Promise<RecipeIngredientI> {
-    const sql = recipesQueries.getOneIngredient.replace(
+    const sql = recipesQueries.findByIDIngredient.replace(
       '@id',
       ingredientID.toString(),
     );
@@ -155,7 +155,7 @@ export class RecipeRepositoryImplementation
    * @returns string
    */
   async findStepByID(stepID: string): Promise<RecipeStepI> {
-    const sql = recipesQueries.getOneStep.replace('@id', stepID.toString());
+    const sql = recipesQueries.findByIDStep.replace('@id', stepID.toString());
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: RecipeStepI[] = this.resultToStep(result);
     return entities.length > 0 ? entities[0] : null;

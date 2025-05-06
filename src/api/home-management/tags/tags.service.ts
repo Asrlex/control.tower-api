@@ -30,7 +30,7 @@ export class TagService {
    * Método para obtener todos las etiquetas
    * @returns string - todos las etiquetas
    */
-  async getAllTags(): Promise<{
+  async findAllTags(): Promise<{
     entities: TagI[];
     total: number;
   }> {

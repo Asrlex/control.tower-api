@@ -61,8 +61,8 @@ export class RecipeController {
   @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
-  async getAllRecipes() {
-    const response = await this.recipeService.getAllRecipes();
+  async findAllRecipes() {
+    const response = await this.recipeService.findAllRecipes();
     const formattedResponse = formatResponse(response.entities, {
       total: response.total,
     });
@@ -79,8 +79,8 @@ export class RecipeController {
   @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
-  async getAllRecipeNames() {
-    const response = await this.recipeService.getAllRecipeNames();
+  async findAllRecipeNames() {
+    const response = await this.recipeService.findAllRecipeNames();
     const formattedResponse = formatResponse(response);
     return formattedResponse;
   }

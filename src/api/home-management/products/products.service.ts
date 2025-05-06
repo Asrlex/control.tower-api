@@ -30,7 +30,7 @@ export class ProductService {
    * Método para obtener todos los productos
    * @returns string - todos los productos
    */
-  async getAllProducts(): Promise<{
+  async findAllProducts(): Promise<{
     entities: ProductI[];
     total: number;
   }> {

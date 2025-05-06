@@ -2,13 +2,13 @@
 import { Inject, Logger, NotFoundException } from '@nestjs/common';
 import { BaseRepository } from '../../../common/repository/base-repository';
 import { DatabaseConnection } from '@/db/database.connection';
-import { usersQueries } from '@/db/queries/home-management.queries';
 import {
   CreateUserDto,
   GetUserDto,
 } from '@/api/entities/dtos/home-management/user.dto';
 import { UserI } from '@/api/entities/interfaces/home-management.entity';
 import { UserRepository } from './user.repository.interface';
+import { usersQueries } from '@/db/queries/users.queries';
 
 export class UserRepositoryImplementation
   extends BaseRepository
@@ -30,7 +30,7 @@ export class UserRepositoryImplementation
     entities: any[];
     total: number;
   }> {
-    const sql = usersQueries.getAll;
+    const sql = usersQueries.findAll;
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: UserI[] = this.resultToUser(result);
     return {
@@ -45,7 +45,7 @@ export class UserRepositoryImplementation
    * @returns string - usuario
    */
   async findById(id: string): Promise<UserI> {
-    const sql = usersQueries.getOne.replace('@id', id);
+    const sql = usersQueries.findByID.replace('@id', id);
     const result = await this.homeManagementDbConnection.execute(sql);
     if (result.length === 0) {
       throw new NotFoundException(`User with ID ${id} not found`);
@@ -60,7 +60,7 @@ export class UserRepositoryImplementation
    * @returns string - usuario
    */
   async findByEmail(userEmail: string): Promise<UserI> {
-    const sql = usersQueries.getOneByEmail;
+    const sql = usersQueries.findByIDByEmail;
     const result = await this.homeManagementDbConnection.execute(sql, [
       userEmail,
     ]);

@@ -57,8 +57,8 @@ export class ShoppingListProductController {
   @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
-  async getAllProducts() {
-    const response = await this.shoppingListProductService.getAllProducts();
+  async findAllProducts() {
+    const response = await this.shoppingListProductService.findAllProducts();
     const formattedResponse = formatResponse(response.entities, {
       total: response.total,
     });

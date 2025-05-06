@@ -1,4 +1,4 @@
-import { generateQuery, baseQueries } from '@/db/database.utils';
+import { baseQueries } from '@/db/base-queries';
 import {
   SearchCriteriaI,
   SortI,
@@ -6,6 +6,7 @@ import {
 } from 'src/api/entities/interfaces/api.entity';
 import { EscapingException } from 'src/common/exceptions/escaping.exception';
 import { DatabaseConnection } from 'src/db/database.connection';
+import { formatTemplateString } from '../utils/string-formatter';
 
 export class BaseRepository {
   protected connection: DatabaseConnection;
@@ -24,12 +25,9 @@ export class BaseRepository {
     table: string,
     description: string,
   ): Promise<void> {
-    const sql = generateQuery(baseQueries.createLog, [
-      {
-        key: '@InsertValues',
-        value: `'${table}', 'system', '${description}'`,
-      },
-    ]);
+    const sql = formatTemplateString(baseQueries.CreateLog, {
+      InsertValues: `'${table}', 'system', '${description}'`,
+    });
     await this.connection.execute(sql);
 
     // setTimeout(async () => {

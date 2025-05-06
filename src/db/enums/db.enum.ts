@@ -1,8 +1,39 @@
-export const baseQueries = {
-  getAll: `
+export enum DBEnum {
+  DateFunction = 'GETDATE()',
+  InsertLog = 'insert',
+  UpdateLog = 'update',
+  DeleteLog = 'delete',
+  Output = 'OUTPUT INSERTED.id',
+  DeletedAt = 'deleted_at',
+  Id = 'id',
+}
+
+export enum TableNames {
+  Products = 'products',
+  Pantry = 'pantry',
+  Stores = 'store',
+  ShoppingList = 'shopping_list',
+  ProductTags = 'product_tag',
+  Tags = 'tag',
+  Tasks = 'task',
+  HouseTasks = 'house_task',
+  TaskTags = 'task_tag',
+  Order = 'list_order',
+  Recipes = 'recipe',
+  RecipeTags = 'recipe_tag',
+  RecipeIngredients = 'recipe_ingredient',
+  RecipeSteps = 'recipe_step',
+  Settings = 'settings',
+  Users = 'user',
+  Expenses = 'expenses',
+  ExpenseCategories = 'expense_category',
+}
+
+export enum BaseQueries {
+  FindAll = `
     WITH UniqueValues AS (
-      SELECT DISTINCT @KeyParam
-      FROM @SelectTables
+      SELECT DISTINCT id
+      FROM @KeyTable
     )
     SELECT
       ai.*,
@@ -11,9 +42,10 @@ export const baseQueries = {
       select
         @SelectFields
       from @SelectTables
+      WHERE @DeletedAt IS NULL
     ) ai
   `,
-  search: `
+  Find = `
     WITH AliasItems AS (
       SELECT 
         @SelectFields
@@ -46,59 +78,33 @@ export const baseQueries = {
     INNER JOIN FilteredRows fr on @FilterJoins
     ORDER BY ai.@DynamicOrderByField @DynamicOrderByDirection
   `,
-  getById: `
+  FindById = `
     select
       @SelectFields
     from @SelectTables
-    WHERE @SelectId = @id
+    WHERE @SelectId = '@id'
   `,
-  insertmssql: `
+  Create = `
     INSERT INTO @InsertTable (@InsertFields)
     @InsertOutput
     VALUES (@InsertValues)
   `,
-  insertsqlite: `
-    INSERT INTO @InsertTable (@InsertFields)
-    VALUES (@InsertValues)
-    @InsertOutput
-  `,
-  update: `
+  Modify = `
     UPDATE @UpdateTable
     SET @UpdateFields
     WHERE @UpdateId = '@id'
   `,
-  delete: `
+  SoftDelete = `
     UPDATE @DeleteTable
-    SET deleted_at = CURRENT_TIMESTAMP
+    SET deleted_at = GETDATE(), deleted_by = '@deletedBy'
     WHERE @DeleteId = '@id'
   `,
-  hardDelete: `
+  HardDelete = `
     DELETE FROM @DeleteTable
-    WHERE id = '@id'
+    WHERE @DeleteId = '@id'
   `,
-  specificHardDelete: `
-    DELETE FROM @DeleteTable
-    WHERE @DeleteFields
-  `,
-  createLog: `
-    INSERT INTO logs (table_name, changed_by, change_description)
+  CreateLog = `
+    INSERT INTO MASTER.master_logs (table_name, changed_by, change_description)
     VALUES (@InsertValues)
   `,
-};
-
-/**
- * Función para generar una consulta a partir de una consulta base y un array de sustituciones
- * @param baseQuery - consulta base
- * @param substitutions - array de sustituciones
- * @returns string - consulta generada
- */
-export const generateQuery = (
-  baseQuery: string,
-  substitutions: { key: string; value: string }[],
-) => {
-  let query = baseQuery;
-  substitutions.forEach((substitution) => {
-    query = query.replaceAll(substitution.key, substitution.value);
-  });
-  return query;
-};
+}

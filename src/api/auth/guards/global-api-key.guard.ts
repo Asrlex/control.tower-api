@@ -14,10 +14,13 @@ export class GlobalApiKeyGuard implements CanActivate {
     const request: Request = context.switchToHttp().getRequest();
     const apiKey = request.headers[AuthEnum.AuthAPIKey];
 
-    if (apiKey && apiKey === validApiKey) {
-      return true;
-    } else {
-      throw new UnauthorizedException(AuthMessages.InvalidAPIKey);
+    if (apiKey) {
+      if (apiKey === validApiKey) {
+        return true;
+      } else {
+        throw new UnauthorizedException(AuthMessages.InvalidAPIKey);
+      }
     }
+    return false;
   }
 }

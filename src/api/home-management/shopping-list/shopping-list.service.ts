@@ -33,7 +33,7 @@ export class ShoppingListProductService {
    * Método para obtener todos los productos
    * @returns string - todos los productos
    */
-  async getAllProducts(): Promise<{
+  async findAllProducts(): Promise<{
     entities: ShoppingListProductI[];
     total: number;
   }> {

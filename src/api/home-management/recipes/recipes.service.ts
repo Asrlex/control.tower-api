@@ -39,7 +39,7 @@ export class RecipeService {
    * Método para obtener todos los recetas
    * @returns string - todos los recetas
    */
-  async getAllRecipes(): Promise<{
+  async findAllRecipes(): Promise<{
     entities: RecipeDetailI[];
     total: number;
   }> {
@@ -50,7 +50,7 @@ export class RecipeService {
    * Método para obtener todos los nombres de las recetas
    * @returns string - todos los nombres de las recetas
    */
-  async getAllRecipeNames(): Promise<RecipeNameI[]> {
+  async findAllRecipeNames(): Promise<RecipeNameI[]> {
     return await this.recipeRepository.findAllNames();
   }
 

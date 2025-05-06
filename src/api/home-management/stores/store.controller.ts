@@ -57,8 +57,8 @@ export class StoreController {
   @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
-  async getAllStores() {
-    const response = await this.storeService.getAllStores();
+  async findAllStores() {
+    const response = await this.storeService.findAllStores();
     const formattedResponse = formatResponse(response.entities, {
       total: response.total,
     });

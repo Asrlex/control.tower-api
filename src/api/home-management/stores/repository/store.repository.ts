@@ -7,9 +7,9 @@ import {
   GetStoreDto,
 } from '@/api/entities/dtos/home-management/store.dto';
 import { StoreI } from '@/api/entities/interfaces/home-management.entity';
-import { storesQueries } from '@/db/queries/home-management.queries';
 import { BaseRepository } from '@/common/repository/base-repository';
 import { StoreRepository } from './store.repository.interface';
+import { storesQueries } from '@/db/queries/shops.queries';
 
 export class StoreRepositoryImplementation
   extends BaseRepository
@@ -31,7 +31,7 @@ export class StoreRepositoryImplementation
     entities: StoreI[];
     total: number;
   }> {
-    const sql = storesQueries.getAll;
+    const sql = storesQueries.findAll;
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: StoreI[] = this.resultToStore(result);
     return {
@@ -61,7 +61,7 @@ export class StoreRepositoryImplementation
     }
     const offset: number = page * limit + 1;
     limit = offset + parseInt(limit.toString(), 10) - 1;
-    const sql = storesQueries.get
+    const sql = storesQueries.find
       .replaceAll('@DynamicWhereClause', filters)
       .replaceAll('@DynamicOrderByField', `${sort.field}`)
       .replaceAll('@DynamicOrderByDirection', `${sort.order}`)
@@ -81,7 +81,7 @@ export class StoreRepositoryImplementation
    * @returns string
    */
   async findById(id: string): Promise<StoreI | null> {
-    const sql = storesQueries.getOne.replace('@id', id);
+    const sql = storesQueries.findByID.replace('@id', id);
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: StoreI[] = this.resultToStore(result);
     return entities.length > 0 ? entities[0] : null;

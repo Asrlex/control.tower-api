@@ -30,7 +30,7 @@ export class StoreService {
    * Método para obtener todos los tiendas
    * @returns string - todos los tiendas
    */
-  async getAllStores(): Promise<{
+  async findAllStores(): Promise<{
     entities: StoreI[];
     total: number;
   }> {
