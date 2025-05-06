@@ -14,7 +14,7 @@ export function formatTemplateString(
   variables: Record<string, any>,
 ): string {
   return Object.keys(variables).reduce(
-    (result, key) => result.replace(`@${key}`, variables[key]),
+    (result, key) => result.replaceAll(`@${key}`, variables[key]),
     template,
   );
 }
