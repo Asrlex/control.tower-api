@@ -24,6 +24,7 @@ export enum TableNames {
   RecipeIngredients = 'recipe_ingredient',
   RecipeSteps = 'recipe_step',
   Settings = 'settings',
+  Shifts = 'shifts',
   Users = 'user',
   Expenses = 'expenses',
   ExpenseCategories = 'expense_category',

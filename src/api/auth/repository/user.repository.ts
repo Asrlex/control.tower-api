@@ -60,7 +60,7 @@ export class UserRepositoryImplementation
    * @returns string - usuario
    */
   async findByEmail(userEmail: string): Promise<UserI> {
-    const sql = usersQueries.findByIDByEmail;
+    const sql = usersQueries.findByEmail;
     const result = await this.homeManagementDbConnection.execute(sql, [
       userEmail,
     ]);

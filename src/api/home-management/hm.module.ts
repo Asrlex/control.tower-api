@@ -26,6 +26,7 @@ import { TagRepositoryImplementation } from './tags/repository/tag.repository';
 import { TAG_REPOSITORY } from './tags/repository/tag.repository.interface';
 import { TaskRepositoryImplementation } from './tasks/repository/task.repository';
 import { TASK_REPOSITORY } from './tasks/repository/task.repository.interface';
+import { ShiftModule } from './shifts/shift.module';
 
 @Module({
   imports: [
@@ -79,6 +80,10 @@ import { TASK_REPOSITORY } from './tasks/repository/task.repository.interface';
           {
             path: 'expenses',
             module: ExpenseModule,
+          },
+          {
+            path: 'shifts',
+            module: ShiftModule,
           },
         ],
       },

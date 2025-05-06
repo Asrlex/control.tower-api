@@ -121,3 +121,10 @@ export interface ExpenseCategoryI {
   categoryID: number;
   categoryName: string;
 }
+
+export interface ShiftI {
+  shiftID: number;
+  shiftDate: string;
+  shiftTimestamp: string;
+  shiftType: 'CLOCK_IN' | 'CLOCK_OUT';
+}

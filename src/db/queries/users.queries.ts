@@ -25,7 +25,7 @@ export const usersQueries = {
     SelectTables: `${TableNames.Users} u`,
     SelectId: `u.id`,
   }),
-  findByIDByEmail: formatTemplateString(baseQueries.FindById, {
+  findByEmail: formatTemplateString(baseQueries.FindById, {
     SelectFields: usersSelectRoot,
     SelectTables: `${TableNames.Users} u`,
     SelectId: `u.email`,
