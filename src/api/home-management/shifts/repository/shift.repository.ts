@@ -4,11 +4,14 @@ import { DatabaseConnection } from 'src/db/database.connection';
 import { plainToInstance } from 'class-transformer';
 import { BaseRepository } from '@/common/repository/base-repository';
 import { ShiftRepository } from './shift.repository.interface';
-import { ShiftI } from '@/api/entities/interfaces/home-management.entity';
+import {
+  ShiftI,
+  UserI,
+} from '@/api/entities/interfaces/home-management.entity';
 import { shiftQueries } from '@/db/queries/shifts.queries';
 import {
-  CreateShiftDto,
-  GetShiftDto,
+  CreateShiftCheckinDto,
+  GetShiftCheckinDto,
 } from '@/api/entities/dtos/home-management/shift.dto';
 
 export class ShiftRepositoryImplementation
@@ -61,26 +64,33 @@ export class ShiftRepositoryImplementation
   }
 
   /**
-   * Método para obtener turnos por su fecha
-   * @param date - fecha
+   * Método para obtener turnos por su mes
+   * @param month - mes de los turnos
    * @returns string
    */
-  async findByDate(date: string): Promise<ShiftI[]> {
-    const sql = shiftQueries.findByDate.replace('@id', date);
+  async findByMonth(month: string, user: UserI): Promise<ShiftI[]> {
+    const sql = shiftQueries.findByMonth.replace(
+      '@id',
+      `'${month}' AND user_id = '${user.userID}'`,
+    );
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: ShiftI[] = this.resultToShift(result);
     return entities.length > 0 ? entities : null;
+  }
+
+  async create(dto: CreateShiftCheckinDto): Promise<ShiftI> {
+    return null;
   }
 
   /**
    * Metodo para crear un nuevo turnos
    * @returns string - turno creado
    */
-  async create(dto: CreateShiftDto): Promise<ShiftI> {
+  async createByUser(dto: CreateShiftCheckinDto, user: UserI): Promise<ShiftI> {
     dto = this.prepareDTO(dto);
     const sqlProduct = shiftQueries.create.replace(
       '@InsertValues',
-      `'${dto.shiftDate}', '${dto.shiftTimestamp}', '${dto.shiftType}'`,
+      `'${dto.shiftDate}', '${dto.shiftTimestamp}', '${dto.shiftType}', '${user.userID}'`,
     );
     const responseProduct =
       await this.homeManagementDbConnection.execute(sqlProduct);
@@ -98,7 +108,7 @@ export class ShiftRepositoryImplementation
    * @param product - turno
    * @returns string - turno actualizado
    */
-  async modify(id: string, dto: CreateShiftDto): Promise<ShiftI> {
+  async modify(id: string, dto: CreateShiftCheckinDto): Promise<ShiftI> {
     const originalShift = await this.findById(id);
     if (!originalShift) {
       throw new NotFoundException('Shift ID not found');
@@ -136,8 +146,8 @@ export class ShiftRepositoryImplementation
    * @param dto - DTO
    * @returns DTO
    */
-  private prepareDTO(dto: CreateShiftDto): CreateShiftDto {
-    dto = plainToInstance(CreateShiftDto, dto, {
+  private prepareDTO(dto: CreateShiftCheckinDto): CreateShiftCheckinDto {
+    dto = plainToInstance(CreateShiftCheckinDto, dto, {
       exposeDefaultValues: true,
     });
     return dto;
@@ -148,22 +158,50 @@ export class ShiftRepositoryImplementation
    * @param result - resultado de la consulta
    * @returns array de turnos
    */
-  private resultToShift(result: GetShiftDto[]): ShiftI[] {
-    const mappedStores: Map<number, ShiftI> = new Map();
-    result.forEach((record: GetShiftDto) => {
+  private resultToShift(result: GetShiftCheckinDto[]): ShiftI[] {
+    const mappedShifts: Map<string, ShiftI> = new Map();
+    result.forEach((record: GetShiftCheckinDto, index: number) => {
       let shift: ShiftI;
-      if (mappedStores.has(record.shiftID)) {
-        shift = mappedStores.get(record.shiftID);
+      if (mappedShifts.has(record.shiftDate)) {
+        shift = mappedShifts.get(record.shiftDate);
       } else {
         shift = {
-          shiftID: record.shiftID,
+          shiftID: index,
           shiftDate: record.shiftDate,
-          shiftTimestamp: record.shiftTimestamp,
-          shiftType: record.shiftType,
+          shiftTime: 0,
+          shiftCheckins: [],
         };
-        mappedStores.set(record.shiftID, shift);
+        mappedShifts.set(shift.shiftDate, shift);
+      }
+
+      shift.shiftCheckins.push({
+        shiftCheckinID: record.shiftID,
+        shiftCheckinDate: record.shiftDate,
+        shiftCheckinTimestamp: record.shiftTimestamp,
+        shiftCheckinType: record.shiftType,
+      });
+    });
+
+    mappedShifts.forEach((shift) => {
+      shift.shiftCheckins.sort(
+        (a, b) =>
+          new Date(a.shiftCheckinTimestamp).getTime() -
+          new Date(b.shiftCheckinTimestamp).getTime(),
+      );
+
+      for (let i = 0; i < shift.shiftCheckins.length; i += 2) {
+        if (i + 1 < shift.shiftCheckins.length) {
+          const clockIn = new Date(
+            shift.shiftCheckins[i].shiftCheckinTimestamp,
+          ).getTime();
+          const clockOut = new Date(
+            shift.shiftCheckins[i + 1].shiftCheckinTimestamp,
+          ).getTime();
+          shift.shiftTime += (clockOut - clockIn) / 1000;
+        }
       }
     });
-    return Array.from(mappedStores.values());
+
+    return Array.from(mappedShifts.values());
   }
 }

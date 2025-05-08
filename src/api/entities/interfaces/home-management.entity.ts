@@ -96,6 +96,7 @@ export interface SettingsI {
 
 export interface UserI {
   userID: number;
+  userName: string;
   userEmail: string;
   userPassword: string;
   userDateCreated: string;
@@ -124,7 +125,14 @@ export interface ExpenseCategoryI {
 
 export interface ShiftI {
   shiftID: number;
+  shiftTime: number;
   shiftDate: string;
-  shiftTimestamp: string;
-  shiftType: 'CLOCK_IN' | 'CLOCK_OUT';
+  shiftCheckins: ShiftCheckinI[];
+}
+
+export interface ShiftCheckinI {
+  shiftCheckinID: number;
+  shiftCheckinDate: string;
+  shiftCheckinTimestamp: string;
+  shiftCheckinType: 'CLOCK_IN' | 'CLOCK_OUT';
 }

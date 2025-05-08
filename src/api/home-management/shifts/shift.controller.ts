@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Req,
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
@@ -18,23 +19,24 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { GlobalApiKeyGuard } from '@/api/auth/guards/global-api-key.guard';
-import { CreateShiftDto } from '@/api/entities/dtos/home-management/shift.dto';
-import { JwtAuthGuard } from '@/api/auth/guards/jwt-auth.guard';
+import { CreateShiftCheckinDto } from '@/api/entities/dtos/home-management/shift.dto';
 import {
   SuccessCodes,
   ErrorCodes,
 } from '@/api/entities/enums/response-codes.enum';
 import { ShiftService } from './shift.service';
+import { CompositeAuthGuard } from '@/api/auth/guards/composite-auth.guard';
+import { Request } from 'express';
+import { AuthService } from '@/api/auth/auth.service';
 
 @ApiTags('Shifts')
 @Controller()
-@UseGuards(GlobalApiKeyGuard)
-@UseGuards(JwtAuthGuard)
+@UseGuards(CompositeAuthGuard)
 export class ShiftController {
   constructor(
     private readonly logger: Logger,
     private readonly shiftService: ShiftService,
+    private readonly authService: AuthService,
   ) {}
 
   @Get('status')
@@ -79,12 +81,33 @@ export class ShiftController {
     return formattedResponse;
   }
 
+  @Get('month/:month')
+  @ApiOperation({
+    summary: 'Get shifts by month',
+  })
+  @ApiParam({ name: 'month', description: 'Shift month' })
+  @ApiResponse({
+    status: SuccessCodes.Ok,
+    description: 'Shift(s) retrieved successfully',
+  })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
+  async getShiftsByMonth(@Param('month') month: string, @Req() req: Request) {
+    const token = await this.authService.getTokenFromRequest(req);
+    const user = await this.authService.getUserFromToken(token);
+    const response = await this.shiftService.getShiftsByMonth(month, user);
+    const formattedResponse = formatResponse(response, { id: month });
+    return formattedResponse;
+  }
+
   @Post('')
   @UsePipes(dtoValidator())
   @ApiOperation({
     summary: 'Create a new product',
   })
-  @ApiBody({ description: 'Shift data', type: CreateShiftDto })
+  @ApiBody({ description: 'Shift data', type: CreateShiftCheckinDto })
   @ApiResponse({
     status: SuccessCodes.Created,
     description: 'Shift created successfully',
@@ -93,8 +116,13 @@ export class ShiftController {
   @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
-  async createShift(@Body() product: CreateShiftDto) {
-    const response = await this.shiftService.createShift(product);
+  async createShift(
+    @Body() product: CreateShiftCheckinDto,
+    @Req() req: Request,
+  ) {
+    const token = await this.authService.getTokenFromRequest(req);
+    const user = await this.authService.getUserFromToken(token);
+    const response = await this.shiftService.createShift(product, user);
     const formattedResponse = formatResponse(response, {
       id: response.shiftID,
     });
@@ -107,7 +135,7 @@ export class ShiftController {
     summary: 'Update an existing product',
   })
   @ApiParam({ name: 'id', description: 'Shift ID' })
-  @ApiBody({ description: 'Shift data', type: CreateShiftDto })
+  @ApiBody({ description: 'Shift data', type: CreateShiftCheckinDto })
   @ApiResponse({
     status: SuccessCodes.Ok,
     description: 'Shift updated successfully',
@@ -116,7 +144,10 @@ export class ShiftController {
   @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
-  async updateShift(@Param('id') id: string, @Body() product: CreateShiftDto) {
+  async updateShift(
+    @Param('id') id: string,
+    @Body() product: CreateShiftCheckinDto,
+  ) {
     const response = await this.shiftService.updateShift(id, product);
     const formattedResponse = formatResponse(response, { id });
     return formattedResponse;

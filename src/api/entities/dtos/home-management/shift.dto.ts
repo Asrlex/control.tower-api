@@ -1,6 +1,6 @@
 import { IsNumber, IsString } from 'class-validator';
 
-export class GetShiftDto {
+export class GetShiftCheckinDto {
   @IsNumber()
   shiftID: number;
   @IsString()
@@ -11,7 +11,7 @@ export class GetShiftDto {
   shiftType: 'CLOCK_IN' | 'CLOCK_OUT';
 }
 
-export class CreateShiftDto {
+export class CreateShiftCheckinDto {
   @IsString()
   shiftDate: string;
   @IsString()

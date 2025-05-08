@@ -4,8 +4,11 @@ import {
   SHIFT_REPOSITORY,
   ShiftRepository,
 } from './repository/shift.repository.interface';
-import { ShiftI } from '@/api/entities/interfaces/home-management.entity';
-import { CreateShiftDto } from '@/api/entities/dtos/home-management/shift.dto';
+import {
+  ShiftI,
+  UserI,
+} from '@/api/entities/interfaces/home-management.entity';
+import { CreateShiftCheckinDto } from '@/api/entities/dtos/home-management/shift.dto';
 
 @Injectable()
 export class ShiftService {
@@ -46,11 +49,20 @@ export class ShiftService {
   }
 
   /**
+   * Método para obtener turnos por su mes
+   * @param date - mes del turno
+   * @returns string - todos los turnos
+   */
+  async getShiftsByMonth(month: string, user: UserI): Promise<ShiftI[]> {
+    return await this.storeRepository.findByMonth(month, user);
+  }
+
+  /**
    * Metodo para crear un nuevo tienda
    * @returns string - tienda creado
    */
-  async createShift(dto: CreateShiftDto): Promise<ShiftI> {
-    return await this.storeRepository.create(dto);
+  async createShift(dto: CreateShiftCheckinDto, user: UserI): Promise<ShiftI> {
+    return await this.storeRepository.createByUser(dto, user);
   }
 
   /**
@@ -59,7 +71,7 @@ export class ShiftService {
    * @param customer - tienda
    * @returns string - tienda actualizado
    */
-  async updateShift(id: string, customer: CreateShiftDto) {
+  async updateShift(id: string, customer: CreateShiftCheckinDto) {
     return await this.storeRepository.modify(id, customer);
   }
 

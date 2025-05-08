@@ -7,7 +7,7 @@ import { TableNames } from '../enums/db.enum';
 // ******************************************************
 const usersSelectRoot = `
   u.id as userID,
-  u.username as userUsername,
+  u.username as userName,
   u.email as userEmail,
   u.password as userPassword,
   u.created_at as userCreatedAt,

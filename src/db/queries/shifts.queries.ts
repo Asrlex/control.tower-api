@@ -6,7 +6,7 @@ import { TableNames } from '../enums/db.enum';
 // SHIFTS
 // ******************************************************
 const shiftSelectRoot = `
-  s.id as userID,
+  s.id as shiftID,
   s.date as shiftDate,
   s.timestamp as shiftTimestamp,
   s.type as shiftType
@@ -21,16 +21,16 @@ export const shiftQueries = {
   findByID: formatTemplateString(baseQueries.FindById, {
     SelectFields: shiftSelectRoot,
     SelectTables: `${TableNames.Shifts} s`,
-    SelectId: `u.id`,
+    SelectId: `s.id`,
   }),
-  findByDate: formatTemplateString(baseQueries.FindById, {
+  findByMonth: formatTemplateString(baseQueries.FindById, {
     SelectFields: shiftSelectRoot,
     SelectTables: `${TableNames.Shifts} s`,
-    SelectId: `u.date`,
+    SelectId: `strftime('%Y-%m', s.date)`,
   }),
   create: formatTemplateString(baseQueries.Create, {
     InsertTable: TableNames.Shifts,
-    InsertFields: 'date, timestamp, type',
+    InsertFields: 'date, timestamp, type, user_id',
     InsertOutput: 'RETURNING id',
   }),
   update: formatTemplateString(baseQueries.Update, {

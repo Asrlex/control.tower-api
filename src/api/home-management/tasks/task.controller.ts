@@ -24,22 +24,20 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { GlobalApiKeyGuard } from '@/api/auth/guards/global-api-key.guard';
 import { TaskService } from './task.service';
 import {
   CreateHouseTaskDto,
   CreateTaskDto,
 } from '@/api/entities/dtos/home-management/task.dto';
-import { JwtAuthGuard } from '@/api/auth/guards/jwt-auth.guard';
 import {
   SuccessCodes,
   ErrorCodes,
 } from '@/api/entities/enums/response-codes.enum';
+import { CompositeAuthGuard } from '@/api/auth/guards/composite-auth.guard';
 
 @ApiTags('Tasks')
 @Controller()
-@UseGuards(GlobalApiKeyGuard)
-@UseGuards(JwtAuthGuard)
+@UseGuards(CompositeAuthGuard)
 export class TaskController {
   constructor(
     private readonly logger: Logger,

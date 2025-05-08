@@ -23,8 +23,9 @@ import { LoggingMiddleware } from './common/middleware/endpoint-logger.middlewar
           .valid('development', 'production', 'test')
           .default('development'),
         PORT: Joi.number().default(3000),
-        AR_API_KEY: Joi.string().required(),
         GLOBAL_API_KEY: Joi.string(),
+        HOME_MANAGER_DATABASE: Joi.string().required(),
+        JWT_SECRET: Joi.string().required(),
       }),
     }),
     ThrottlerModule.forRoot([

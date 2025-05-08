@@ -23,23 +23,21 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { GlobalApiKeyGuard } from '@/api/auth/guards/global-api-key.guard';
 import {
   CreateIngredientDto,
   CreateRecipeDto,
   CreateStepDto,
 } from '@/api/entities/dtos/home-management/recipe.dto';
 import { RecipeService } from './recipes.service';
-import { JwtAuthGuard } from '@/api/auth/guards/jwt-auth.guard';
 import {
   SuccessCodes,
   ErrorCodes,
 } from '@/api/entities/enums/response-codes.enum';
+import { CompositeAuthGuard } from '@/api/auth/guards/composite-auth.guard';
 
 @ApiTags('Recipes')
 @Controller()
-@UseGuards(GlobalApiKeyGuard)
-@UseGuards(JwtAuthGuard)
+@UseGuards(CompositeAuthGuard)
 export class RecipeController {
   constructor(
     private readonly logger: Logger,

@@ -40,6 +40,7 @@ import { ShiftModule } from './shifts/shift.module';
     RecipeModule,
     SettingsModule,
     ExpenseModule,
+    ShiftModule,
     RouterModule.register([
       {
         path: 'home-management',

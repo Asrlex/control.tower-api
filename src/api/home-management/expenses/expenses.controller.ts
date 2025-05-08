@@ -18,8 +18,6 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '@/api/auth/guards/jwt-auth.guard';
-import { GlobalApiKeyGuard } from '@/api/auth/guards/global-api-key.guard';
 import { formatResponse } from '@/common/utils/utils.api';
 import { ValidatePaginationPipe } from '@/common/pipes/pagination.pipe';
 import { ValidateSearchCriteriaPipe } from '@/common/pipes/search.pipe';
@@ -30,11 +28,11 @@ import {
   SuccessCodes,
   ErrorCodes,
 } from '@/api/entities/enums/response-codes.enum';
+import { CompositeAuthGuard } from '@/api/auth/guards/composite-auth.guard';
 
 @ApiTags('Expenses')
 @Controller()
-@UseGuards(GlobalApiKeyGuard)
-@UseGuards(JwtAuthGuard)
+@UseGuards(CompositeAuthGuard)
 export class ExpenseController {
   constructor(
     private readonly logger: Logger,

@@ -127,6 +127,7 @@ export class UserRepositoryImplementation
     const users: UserI[] = result.map((record: GetUserDto) => {
       return {
         userID: record.userID,
+        userName: record.userName,
         userEmail: record.userEmail,
         userPassword: record.userPassword,
         userDateCreated: record.userDateCreated,

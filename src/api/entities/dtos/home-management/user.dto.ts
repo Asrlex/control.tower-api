@@ -5,6 +5,8 @@ export class GetUserDto {
   @IsNumber()
   userID: number;
   @IsString()
+  userName: string;
+  @IsString()
   userEmail: string;
   @IsString()
   userPassword: string;

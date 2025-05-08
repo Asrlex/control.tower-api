@@ -11,20 +11,18 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { SettingService } from './settings.service';
-import { GlobalApiKeyGuard } from '@/api/auth/guards/global-api-key.guard';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { dtoValidator, formatResponse } from '@/common/utils/utils.api';
 import { CreateSettingsDto } from '@/api/entities/dtos/home-management/settings.dto';
-import { JwtAuthGuard } from '@/api/auth/guards/jwt-auth.guard';
 import {
   SuccessCodes,
   ErrorCodes,
 } from '@/api/entities/enums/response-codes.enum';
+import { CompositeAuthGuard } from '@/api/auth/guards/composite-auth.guard';
 
 @ApiTags('Settingss')
 @Controller()
-@UseGuards(GlobalApiKeyGuard)
-@UseGuards(JwtAuthGuard)
+@UseGuards(CompositeAuthGuard)
 export class SettingsController {
   constructor(
     private readonly logger: Logger,

@@ -6,6 +6,9 @@ import { AuthController } from './auth.controller';
 import { DatabaseModule } from '@/db/database.module';
 import { UserRepositoryImplementation } from './repository/user.repository';
 import { USER_REPOSITORY } from './repository/user.repository.interface';
+import { CompositeAuthGuard } from './guards/composite-auth.guard';
+import { GlobalApiKeyGuard } from './guards/global-api-key.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -26,8 +29,11 @@ import { USER_REPOSITORY } from './repository/user.repository.interface';
       provide: USER_REPOSITORY,
       useClass: UserRepositoryImplementation,
     },
+    GlobalApiKeyGuard,
+    JwtAuthGuard,
+    CompositeAuthGuard,
   ],
   controllers: [AuthController],
-  exports: [AuthService],
+  exports: [AuthService, GlobalApiKeyGuard, JwtAuthGuard, CompositeAuthGuard],
 })
 export class AuthModule {}
