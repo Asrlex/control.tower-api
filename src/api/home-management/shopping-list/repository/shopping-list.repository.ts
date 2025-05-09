@@ -190,16 +190,17 @@ export class ShoppingListProductRepositoryImplementation
 
   /**
    * Método para comprar un producto
-   * @param productId - id del producto
+   * @param shoppingListProductID - id del producto
    * @returns string - producto comprado
    */
-  async buyProduct(productId: string): Promise<StockProductI> {
-    const originalProduct = await this.findById(productId);
+  async buyProduct(shoppingListProductID: string): Promise<StockProductI> {
+    const originalProduct = await this.findById(shoppingListProductID);
     if (!originalProduct) {
       throw new NotFoundException('Product not found');
     }
 
-    await this.delete(productId);
+    console.log(originalProduct);
+    await this.delete(shoppingListProductID);
     const response = await this.stockProductRepository.create({
       stockProductID: originalProduct.product.productID,
       stockProductAmount: originalProduct.shoppingListProductAmount,
@@ -207,7 +208,7 @@ export class ShoppingListProductRepositoryImplementation
     await this.saveLog(
       'update',
       'shopping_list',
-      `Bought product ${productId}`,
+      `Bought product ${shoppingListProductID}`,
     );
     return response;
   }

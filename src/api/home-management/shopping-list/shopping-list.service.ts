@@ -90,11 +90,13 @@ export class ShoppingListProductService {
 
   /**
    * Método para comprar un producto
-   * @param productId - id del producto
+   * @param shoppingListProductID - id del producto
    * @returns string - producto comprado
    */
-  async buyProduct(productId: string): Promise<StockProductI> {
-    return await this.shoppingListProductRepository.buyProduct(productId);
+  async buyProduct(shoppingListProductID: string): Promise<StockProductI> {
+    return await this.shoppingListProductRepository.buyProduct(
+      shoppingListProductID,
+    );
   }
 
   /**

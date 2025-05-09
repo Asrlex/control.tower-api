@@ -135,6 +135,7 @@ export class ProductRepositoryImplementation
       '@InsertValues',
       `'${type}', '${JSON.stringify(order)}'`,
     );
+    console.log(sql);
     await this.homeManagementDbConnection.execute(sql);
   }
 

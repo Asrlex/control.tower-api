@@ -84,14 +84,14 @@ export class StockProductService {
 
   /**
    * Método para comprar un producto
-   * @param productId - id del producto
+   * @param stockProductID - id del producto
    * @returns string - producto comprado
    */
   async addProductToShoppingList(
-    productId: string,
+    stockProductID: string,
   ): Promise<ShoppingListProductI> {
     return await this.stockProductRepository.addProductToShoppingList(
-      productId,
+      stockProductID,
     );
   }
 

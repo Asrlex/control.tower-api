@@ -38,13 +38,13 @@ export const productsQueries = {
     FilterJoins: `fr.productID = ai.productID`,
   }),
   getOrderProducts: formatTemplateString(baseQueries.FindById, {
-    SelectFields: `p.id as productID, p.name as productName, p.unit as productUnit`,
-    SelectTables: `${TableNames.Products} p`,
-    SelectId: `p.id`,
+    SelectFields: `list_order as listOrder`,
+    SelectTables: TableNames.Order,
+    SelectId: `type`,
   }),
   postOrderProducts: formatTemplateString(baseQueries.Create, {
     InsertTable: TableNames.Order,
-    InsertFields: 'product_id, list_order',
+    InsertFields: 'type, list_order',
     InsertOutput: 'RETURNING id',
   }),
   deleteOrderProducts: formatTemplateString(baseQueries.SpecificHardDelete, {

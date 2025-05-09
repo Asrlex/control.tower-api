@@ -150,7 +150,7 @@ export class StockProductController {
   @ApiOperation({
     summary: 'Add a product to the shopping list',
   })
-  @ApiParam({ name: 'id', description: 'Product ID' })
+  @ApiParam({ name: 'id', description: 'Stock product ID' })
   @ApiBody({ description: 'Product data', type: CreateStockProductDto })
   @ApiResponse({
     status: SuccessCodes.Ok,

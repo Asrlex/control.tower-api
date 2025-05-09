@@ -54,11 +54,13 @@ export class AuthController {
     description: 'Internal Server Error',
   })
   async login(@Body() loginDto: CreateUserDto) {
+    console.log('Login DTO:', loginDto); // Log the login DTO for debugging
     const response = await this.authService.login(loginDto);
     if (!response) {
       throw new UnauthorizedException(AuthMessages.InvalidCredentials);
     }
     const formattedResponse = formatResponse(response);
+    console.log('Formatted Response:', formattedResponse); // Log the formatted response for debugging
     return formattedResponse;
   }
 

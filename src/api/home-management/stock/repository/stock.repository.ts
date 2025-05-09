@@ -164,28 +164,27 @@ export class StockProductRepositoryImplementation
 
   /**
    * Método para comprar un producto
-   * @param productId - id del producto
+   * @param stockProductID - id del producto
    * @returns string - producto comprado
    */
   async addProductToShoppingList(
-    productId: string,
+    stockProductID: string,
   ): Promise<ShoppingListProductI> {
-    const originalProduct = await this.findById(productId);
+    const originalProduct = await this.findById(stockProductID);
     if (!originalProduct) {
       throw new NotFoundException('Product not found');
     }
-
-    await this.saveLog(
-      'update',
-      'shopping_list',
-      `Bought product ${productId}`,
-    );
-    await this.delete(productId);
+    await this.delete(stockProductID);
     const response = await this.shoppingListProductRepository.create({
       shoppingListProductID: originalProduct.product.productID,
       shoppingListAmount: originalProduct.stockProductAmount,
       storeID: '2',
     });
+    await this.saveLog(
+      'update',
+      'shopping_list',
+      `Bought product ${stockProductID}`,
+    );
     return response;
   }
 
@@ -221,6 +220,19 @@ export class StockProductRepositoryImplementation
     if (!originalProduct) {
       throw new NotFoundException('Product not found');
     }
+
+    const stock: { entities: StockProductI[]; total: number } =
+      await this.cacheManager.get('stock');
+    if (stock) {
+      const index = stock.entities.findIndex(
+        (product) => product.stockProductID === Number(id),
+      );
+      if (index !== -1) {
+        stock.entities.splice(index, 1);
+        await this.cacheManager.set('stock', stock);
+      }
+    }
+
     const sql = stockProductQueries.delete.replace('@id', id);
     await this.homeManagementDbConnection.execute(sql);
     await this.saveLog('delete', 'product', `Deleted product ${id}`);
