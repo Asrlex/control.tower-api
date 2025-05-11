@@ -15,4 +15,5 @@ export interface TaskRepository
   toggleCompletedTask(taskID: string, taskCompleted: boolean): Promise<TaskI>;
   findAllHouseTasks(): Promise<{ entities: HouseTaskI[]; total: number }>;
   createHouseTask(dto: CreateHouseTaskDto): Promise<HouseTaskI>;
+  deleteHouseTask(houseTaskID: string): Promise<void>;
 }

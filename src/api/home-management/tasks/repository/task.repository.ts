@@ -114,6 +114,22 @@ export class TaskRepositoryImplementation
   }
 
   /**
+   * Método para obtener una tarea de casa por su id
+   * @param id - id de la tarea
+   * @returns string
+   */
+  async findHouseTaskById(id: string): Promise<HouseTaskI | null> {
+    const sql = tasksQueries.findHouseTaskByID.replace('@id', id);
+    const result = await this.homeManagementDbConnection.execute(sql);
+    const entities: HouseTaskI[] = result.map((record: GetHouseTaskDto) => ({
+      houseTaskID: record.houseTaskID,
+      houseTaskName: record.houseTaskName,
+      houseTaskDate: record.houseTaskDate,
+    }));
+    return entities.length > 0 ? entities[0] : null;
+  }
+
+  /**
    * Metodo para crear un nuevo tarea
    * @returns string - tarea creada
    */
@@ -139,12 +155,9 @@ export class TaskRepositoryImplementation
       '@InsertValues',
       `'${dto.houseTaskName}'`,
     );
-    const responseTask = await this.homeManagementDbConnection.execute(sqlTask);
-    const task: HouseTaskI = {
-      houseTaskID: responseTask[0].id,
-      houseTaskName: responseTask[0].name,
-      houseTaskDate: responseTask[0].date,
-    };
+    const responseTaskID =
+      await this.homeManagementDbConnection.execute(sqlTask);
+    const task: HouseTaskI = await this.findHouseTaskById(responseTaskID[0].id);
 
     await this.saveLog(
       'insert',
@@ -219,6 +232,21 @@ export class TaskRepositoryImplementation
     const sql = tasksQueries.delete.replace('@id', id);
     await this.homeManagementDbConnection.execute(sql);
     await this.saveLog('delete', 'task', `Deleted task ${id}`);
+  }
+
+  /**
+   * Método para eliminar un tarea
+   * @param houseTaskID - id de la tarea
+   * @returns string - tarea eliminada
+   */
+  async deleteHouseTask(houseTaskID: string): Promise<void> {
+    const originalTask = await this.findHouseTaskById(houseTaskID);
+    if (!originalTask) {
+      throw new NotFoundException('Task not found');
+    }
+    const sql = tasksQueries.deleteHouseTask.replace('@id', houseTaskID);
+    await this.homeManagementDbConnection.execute(sql);
+    await this.saveLog('delete', 'house-task', `Deleted task ${houseTaskID}`);
   }
 
   /**

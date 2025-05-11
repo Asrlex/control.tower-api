@@ -47,7 +47,10 @@ export class TaskService {
    * Método para obtener todas las tareas de la casa
    * @returns string - todas las tareas de la casa
    */
-  async findAllHouseTasks(): Promise<{ entities: HouseTaskI[]; total: number }> {
+  async findAllHouseTasks(): Promise<{
+    entities: HouseTaskI[];
+    total: number;
+  }> {
     return await this.taskRepository.findAllHouseTasks();
   }
 
@@ -118,5 +121,14 @@ export class TaskService {
    */
   async deleteTask(id: string) {
     await this.taskRepository.delete(id);
+  }
+
+  /**
+   * Método para eliminar una tarea de la casa
+   * @param id - id de la tarea
+   * @returns null - tarea eliminada
+   */
+  async deleteHouseTask(id: string) {
+    await this.taskRepository.deleteHouseTask(id);
   }
 }

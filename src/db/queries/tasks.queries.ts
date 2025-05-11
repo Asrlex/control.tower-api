@@ -48,6 +48,12 @@ export const tasksQueries = {
     SelectTables: `${TableNames.Tasks} t ${tasksJoin}`,
     SelectId: `t.id`,
   }),
+  findHouseTaskByID: formatTemplateString(baseQueries.FindById, {
+    SelectFields:
+      'id as houseTaskID, name as houseTaskName, date as houseTaskDate',
+    SelectTables: TableNames.HouseTasks,
+    SelectId: 'id',
+  }),
   find: formatTemplateString(baseQueries.Find, {
     KeyParam,
     IncludedItemsTable: `${TableNames.Tasks} t ${tasksJoin}`,
@@ -61,7 +67,7 @@ export const tasksQueries = {
   }),
   createHouseTask: formatTemplateString(baseQueries.Create, {
     InsertTable: TableNames.HouseTasks,
-    InsertFields: 'name, date',
+    InsertFields: 'name',
     InsertOutput: 'RETURNING id',
   }),
   update: formatTemplateString(baseQueries.Update, {
@@ -76,5 +82,8 @@ export const tasksQueries = {
   }),
   delete: formatTemplateString(baseQueries.HardDelete, {
     DeleteTable: TableNames.Tasks,
+  }),
+  deleteHouseTask: formatTemplateString(baseQueries.HardDelete, {
+    DeleteTable: TableNames.HouseTasks,
   }),
 };

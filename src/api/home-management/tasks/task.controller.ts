@@ -259,4 +259,23 @@ export class TaskController {
     const formattedResponse = formatResponse(null, { id });
     return formattedResponse;
   }
+
+  @Delete('home/:id')
+  @ApiOperation({
+    summary: 'Delete an existing house task',
+  })
+  @ApiParam({ name: 'id', description: 'House task ID' })
+  @ApiResponse({
+    status: SuccessCodes.NoContent,
+    description: 'Task deleted successfully',
+  })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
+  async deleteHouseTask(@Param('id') id: string) {
+    await this.taskService.deleteHouseTask(id);
+    const formattedResponse = formatResponse(null, { id });
+    return formattedResponse;
+  }
 }
