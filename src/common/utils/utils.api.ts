@@ -91,6 +91,10 @@ export const formatResponse = (
           limit: options?.limit
             ? parseInt(options.limit.toString(), 10)
             : undefined,
+          hasMore: options?.total
+            ? options.total > (options.page || 0) * (options.limit || 0)
+            : undefined,
+          loading: options?.total ? false : true,
         }
       : undefined;
 

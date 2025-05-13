@@ -48,6 +48,20 @@ export interface HouseTaskI {
   houseTaskDate: string;
 }
 
+export interface CarTaskI {
+  carTaskID: number;
+  carTaskName:
+    | 'Golosinas'
+    | 'Cambio Aceite'
+    | 'Presión Ruedas'
+    | 'Sustitución Limpiaparabrisas'
+    | 'Revisión'
+    | 'ITV';
+  carTaskDetails: string;
+  carTaskCost: number;
+  carTaskDate: string;
+}
+
 export interface RecipeDetailI {
   recipeID: number;
   recipeName: string;

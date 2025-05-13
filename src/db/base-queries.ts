@@ -46,6 +46,26 @@ export const baseQueries = {
     INNER JOIN FilteredRows fr on @FilterJoins
     ORDER BY ai.@DynamicOrderByField @DynamicOrderByDirection
   `,
+  FindPaginated: `
+    WITH AliasItems AS (
+      SELECT 
+        @SelectFields
+      FROM @IncludedItemsTable
+    ),
+    FilteredRows AS (
+      SELECT @KeyParam
+      FROM AliasItems
+      WHERE rn BETWEEN @start AND @end
+    ),
+    TotalItems AS (
+      SELECT COUNT(DISTINCT @KeyParam) as total FROM AliasItems
+    )
+    select
+      ai.*,
+      (SELECT total FROM TotalItems) as total
+    FROM AliasItems ai
+    INNER JOIN FilteredRows fr on @FilterJoins
+  `,
   FindById: `
     select
       @SelectFields

@@ -30,9 +30,11 @@ export interface FormattedResponseI {
   statusCode: number;
   data: any;
   pagination?: {
-    total: number;
-    offset: number;
-    limit: number;
+    total?: number;
+    offset?: number;
+    limit?: number;
+    hasMore?: boolean;
+    loading?: boolean;
   };
   id?: string | number;
   searchCriteria?: SearchCriteriaI;

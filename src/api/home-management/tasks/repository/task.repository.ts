@@ -1,14 +1,17 @@
 import { Inject, Logger, NotFoundException } from '@nestjs/common';
 import { DatabaseConnection } from 'src/db/database.connection';
-import { SortI } from 'src/api/entities/interfaces/api.entity';
+import { SearchCriteriaI, SortI } from 'src/api/entities/interfaces/api.entity';
 import { plainToInstance } from 'class-transformer';
 import {
+  CarTaskI,
   HouseTaskI,
   TaskI,
 } from '@/api/entities/interfaces/home-management.entity';
 import {
+  CreateCarTaskDto,
   CreateHouseTaskDto,
   CreateTaskDto,
+  GetCarTaskDto,
   GetHouseTaskDto,
   GetTaskDto,
 } from '@/api/entities/dtos/home-management/task.dto';
@@ -62,7 +65,30 @@ export class TaskRepositoryImplementation
     }));
     return {
       entities,
-      total: result.length,
+      total: result[0] ? parseInt(result[0].total, 10) : 0,
+    };
+  }
+
+  /**
+   * Método para obtener todas las tareas del coche
+   * @returns string - todas las tareas del coche
+   */
+  async findAllCarTasks(): Promise<{
+    entities: CarTaskI[];
+    total: number;
+  }> {
+    const sql = tasksQueries.findAllCarTasks;
+    const result = await this.homeManagementDbConnection.execute(sql);
+    const entities: CarTaskI[] = result.map((record: GetCarTaskDto) => ({
+      carTaskID: record.carTaskID,
+      carTaskName: record.carTaskName,
+      carTaskDetails: record.carTaskDetails,
+      carTaskCost: record.carTaskCost,
+      carTaskDate: record.carTaskDate,
+    }));
+    return {
+      entities,
+      total: result[0] ? parseInt(result[0].total, 10) : 0,
     };
   }
 
@@ -73,7 +99,7 @@ export class TaskRepositoryImplementation
   async find(
     page: number,
     limit: number,
-    searchCriteria: any,
+    searchCriteria: SearchCriteriaI,
   ): Promise<{ entities: TaskI[]; total: number }> {
     let filters = '';
     let sort: SortI = { field: 'customerName', order: 'DESC' };
@@ -102,6 +128,58 @@ export class TaskRepositoryImplementation
   }
 
   /**
+   * Método para obtener lista de tareas filtradas
+   * @returns string - lista de tareas filtradas
+   */
+  async findHouseTasks(
+    page: number,
+    limit: number,
+  ): Promise<{ entities: HouseTaskI[]; total: number }> {
+    const offset: number = page * limit + 1;
+    limit = offset + parseInt(limit.toString(), 10) - 1;
+    const sql = tasksQueries.findHouseTasks
+      .replace('@start', offset.toString())
+      .replace('@end', limit.toString());
+    const result = await this.homeManagementDbConnection.execute(sql);
+    const entities: HouseTaskI[] = result.map((record: GetHouseTaskDto) => ({
+      houseTaskID: record.houseTaskID,
+      houseTaskName: record.houseTaskName,
+      houseTaskDate: record.houseTaskDate,
+    }));
+    return {
+      entities,
+      total: result[0] ? parseInt(result[0].total, 10) : 0,
+    };
+  }
+
+  /**
+   * Método para obtener lista de tareas filtradas
+   * @returns string - lista de tareas filtradas
+   */
+  async findCarTasks(
+    page: number,
+    limit: number,
+  ): Promise<{ entities: CarTaskI[]; total: number }> {
+    const offset: number = page * limit + 1;
+    limit = offset + parseInt(limit.toString(), 10) - 1;
+    const sql = tasksQueries.findCarTasks
+      .replace('@start', offset.toString())
+      .replace('@end', limit.toString());
+    const result = await this.homeManagementDbConnection.execute(sql);
+    const entities: CarTaskI[] = result.map((record: GetCarTaskDto) => ({
+      carTaskID: record.carTaskID,
+      carTaskName: record.carTaskName,
+      carTaskDetails: record.carTaskDetails,
+      carTaskCost: record.carTaskCost,
+      carTaskDate: record.carTaskDate,
+    }));
+    return {
+      entities,
+      total: result[0] ? parseInt(result[0].total, 10) : 0,
+    };
+  }
+
+  /**
    * Método para obtener un tarea por su id
    * @param id - id de la tarea
    * @returns string
@@ -122,6 +200,22 @@ export class TaskRepositoryImplementation
     const sql = tasksQueries.findHouseTaskByID.replace('@id', id);
     const result = await this.homeManagementDbConnection.execute(sql);
     const entities: HouseTaskI[] = result.map((record: GetHouseTaskDto) => ({
+      houseTaskID: record.houseTaskID,
+      houseTaskName: record.houseTaskName,
+      houseTaskDate: record.houseTaskDate,
+    }));
+    return entities.length > 0 ? entities[0] : null;
+  }
+
+  /**
+   * Método para obtener una tarea de casa por su id
+   * @param id - id de la tarea
+   * @returns string
+   */
+  async findCarTaskById(id: string): Promise<CarTaskI | null> {
+    const sql = tasksQueries.findCarTaskByID.replace('@id', id);
+    const result = await this.homeManagementDbConnection.execute(sql);
+    const entities: CarTaskI[] = result.map((record: GetHouseTaskDto) => ({
       houseTaskID: record.houseTaskID,
       houseTaskName: record.houseTaskName,
       houseTaskDate: record.houseTaskDate,
@@ -164,6 +258,23 @@ export class TaskRepositoryImplementation
       'house-task',
       `Created task ${task.houseTaskID}`,
     );
+    return task;
+  }
+
+  /**
+   * Metodo para crear una nueva tarea de casa
+   * @returns string - tarea creada
+   */
+  async createCarTask(dto: CreateCarTaskDto): Promise<CarTaskI> {
+    const sqlTask = tasksQueries.createHouseTask.replace(
+      '@InsertValues',
+      `'${dto.carTaskName}', '${dto.carTaskDetails}', ${dto.carTaskCost}, '${dto.carTaskDate}'`,
+    );
+    const responseTaskID =
+      await this.homeManagementDbConnection.execute(sqlTask);
+    const task: CarTaskI = await this.findCarTaskById(responseTaskID[0].id);
+
+    await this.saveLog('insert', 'car-task', `Created task ${task.carTaskID}`);
     return task;
   }
 
@@ -247,6 +358,21 @@ export class TaskRepositoryImplementation
     const sql = tasksQueries.deleteHouseTask.replace('@id', houseTaskID);
     await this.homeManagementDbConnection.execute(sql);
     await this.saveLog('delete', 'house-task', `Deleted task ${houseTaskID}`);
+  }
+
+  /**
+   * Método para eliminar un tarea
+   * @param houseTaskID - id de la tarea
+   * @returns string - tarea eliminada
+   */
+  async deleteCarTask(id: string): Promise<void> {
+    const originalTask = await this.findCarTaskById(id);
+    if (!originalTask) {
+      throw new NotFoundException('Task not found');
+    }
+    const sql = tasksQueries.deleteCarTask.replace('@id', id);
+    await this.homeManagementDbConnection.execute(sql);
+    await this.saveLog('delete', 'car-task', `Deleted task ${id}`);
   }
 
   /**

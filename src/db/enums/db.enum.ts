@@ -17,6 +17,7 @@ export enum TableNames {
   Tags = 'tag',
   Tasks = 'task',
   HouseTasks = 'house_task',
+  CarTasks = 'car_task',
   TaskTags = 'task_tag',
   Order = 'list_order',
   Recipes = 'recipe',

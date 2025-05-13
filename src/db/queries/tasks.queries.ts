@@ -21,6 +21,18 @@ const tasksJoin = `
   LEFT JOIN ${TableNames.TaskTags} tt ON tt.task_id = t.id
   LEFT JOIN ${TableNames.Tags} tg ON tg.id = tt.id
 `;
+const houseTaskSelectRoot = `
+  id as houseTaskID,
+  name as houseTaskName,
+  date as houseTaskDate
+`;
+const carTaskSelectRoot = `
+  id as carTaskID,
+  name as carTaskName,
+  details as carTaskDetails,
+  cost as carTaskCost,
+  date as carTaskDate
+`;
 const KeyParam = 'taskID';
 export const tasksQueries = {
   findAll: formatTemplateString(baseQueries.FindAll, {
@@ -28,30 +40,29 @@ export const tasksQueries = {
     SelectFields: tasksSelectRoot,
     SelectTables: `${TableNames.Tasks} t ${tasksJoin}`,
   }),
-  findAllHouseTasks: `
-    WITH UniqueValues AS (
-      SELECT DISTINCT houseTaskID
-      FROM ${TableNames.HouseTasks}
-    )
-    SELECT
-      ai.*,
-      (SELECT COUNT(*) FROM UniqueValues) AS total
-    FROM (
-      select
-        id as houseTaskID, name as houseTaskName, date as houseTaskDate
-      from ${TableNames.HouseTasks}
-      order by date desc
-    ) ai
-  `,
+  findAllHouseTasks: formatTemplateString(baseQueries.FindAll, {
+    KeyParam: 'houseTaskID',
+    SelectFields: houseTaskSelectRoot,
+    SelectTables: TableNames.HouseTasks,
+  }),
+  findAllCarTasks: formatTemplateString(baseQueries.FindAll, {
+    KeyParam: 'carTaskID',
+    SelectFields: carTaskSelectRoot,
+    SelectTables: TableNames.CarTasks,
+  }),
   findByID: formatTemplateString(baseQueries.FindById, {
     SelectFields: tasksSelectRoot,
     SelectTables: `${TableNames.Tasks} t ${tasksJoin}`,
     SelectId: `t.id`,
   }),
   findHouseTaskByID: formatTemplateString(baseQueries.FindById, {
-    SelectFields:
-      'id as houseTaskID, name as houseTaskName, date as houseTaskDate',
+    SelectFields: houseTaskSelectRoot,
     SelectTables: TableNames.HouseTasks,
+    SelectId: 'id',
+  }),
+  findCarTaskByID: formatTemplateString(baseQueries.FindById, {
+    SelectFields: carTaskSelectRoot,
+    SelectTables: TableNames.CarTasks,
     SelectId: 'id',
   }),
   find: formatTemplateString(baseQueries.Find, {
@@ -59,6 +70,18 @@ export const tasksQueries = {
     IncludedItemsTable: `${TableNames.Tasks} t ${tasksJoin}`,
     SelectFields: `${tasksSelectRoot}`,
     FilterJoins: `fr.taskID = ai.taskID`,
+  }),
+  findHouseTasks: formatTemplateString(baseQueries.FindPaginated, {
+    KeyParam: 'houseTaskID',
+    IncludedItemsTable: TableNames.HouseTasks,
+    SelectFields: houseTaskSelectRoot,
+    FilterJoins: `fr.houseTaskID = ai.houseTaskID`,
+  }),
+  findCarTasks: formatTemplateString(baseQueries.FindPaginated, {
+    KeyParam: 'carTaskID',
+    IncludedItemsTable: TableNames.CarTasks,
+    SelectFields: carTaskSelectRoot,
+    FilterJoins: `fr.carTaskID = ai.carTaskID`,
   }),
   create: formatTemplateString(baseQueries.Create, {
     InsertTable: TableNames.Tasks,
@@ -68,6 +91,11 @@ export const tasksQueries = {
   createHouseTask: formatTemplateString(baseQueries.Create, {
     InsertTable: TableNames.HouseTasks,
     InsertFields: 'name',
+    InsertOutput: 'RETURNING id',
+  }),
+  createCarTask: formatTemplateString(baseQueries.Create, {
+    InsertTable: TableNames.CarTasks,
+    InsertFields: 'name, details, cost, date',
     InsertOutput: 'RETURNING id',
   }),
   update: formatTemplateString(baseQueries.Update, {
@@ -85,5 +113,8 @@ export const tasksQueries = {
   }),
   deleteHouseTask: formatTemplateString(baseQueries.HardDelete, {
     DeleteTable: TableNames.HouseTasks,
+  }),
+  deleteCarTask: formatTemplateString(baseQueries.HardDelete, {
+    DeleteTable: TableNames.CarTasks,
   }),
 };

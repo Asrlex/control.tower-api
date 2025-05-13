@@ -26,6 +26,7 @@ import {
 } from '@nestjs/swagger';
 import { TaskService } from './task.service';
 import {
+  CreateCarTaskDto,
   CreateHouseTaskDto,
   CreateTaskDto,
 } from '@/api/entities/dtos/home-management/task.dto';
@@ -67,7 +68,7 @@ export class TaskController {
     return formattedResponse;
   }
 
-  @Get('home')
+  @Get('all/home')
   @ApiOperation({ summary: 'Get all house tasks' })
   @ApiResponse({
     status: SuccessCodes.Ok,
@@ -79,6 +80,24 @@ export class TaskController {
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async findAllHouseTasks() {
     const response = await this.taskService.findAllHouseTasks();
+    const formattedResponse = formatResponse(response.entities, {
+      total: response.total,
+    });
+    return formattedResponse;
+  }
+
+  @Get('all/car')
+  @ApiOperation({ summary: 'Get all car tasks' })
+  @ApiResponse({
+    status: SuccessCodes.Ok,
+    description: 'Car task(s) retrieved successfully',
+  })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
+  async findAllCarTasks() {
+    const response = await this.taskService.findAllCarTasks();
     const formattedResponse = formatResponse(response.entities, {
       total: response.total,
     });
@@ -99,7 +118,7 @@ export class TaskController {
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async getTaskById(@Param('id') id: string) {
-    const response = await this.taskService.getTaskById(id);
+    const response = await this.taskService.findById(id);
     const formattedResponse = formatResponse(response, { id });
     return formattedResponse;
   }
@@ -132,7 +151,7 @@ export class TaskController {
     const searchCriteriaObj: SearchCriteriaI = JSON.parse(
       decodeURIComponent(searchCriteria),
     );
-    const response = await this.taskService.getTasks(
+    const response = await this.taskService.findTasks(
       page,
       limit,
       searchCriteriaObj,
@@ -142,6 +161,60 @@ export class TaskController {
       page,
       limit,
       searchCriteria: searchCriteriaObj,
+    });
+    return formattedResponse;
+  }
+
+  @Get('home')
+  @ApiOperation({
+    summary: 'Get tasks with pagination and optional search criteria',
+  })
+  @ApiQuery({ name: 'page', description: 'Requested page', type: 'number' })
+  @ApiQuery({ name: 'limit', description: 'Elements per page', type: 'number' })
+  @ApiResponse({
+    status: SuccessCodes.Ok,
+    description: 'Task(s) retrieved successfully',
+  })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
+  async findHouseTasks(
+    @Query('page', new ValidatePaginationPipe()) page: number = 0,
+    @Query('limit', new ValidatePaginationPipe()) limit: number = 50,
+  ) {
+    const response = await this.taskService.findHouseTasks(page, limit);
+    const formattedResponse = formatResponse(response.entities, {
+      total: response.total,
+      page,
+      limit,
+    });
+    return formattedResponse;
+  }
+
+  @Get('car')
+  @ApiOperation({
+    summary: 'Get tasks with pagination and optional search criteria',
+  })
+  @ApiQuery({ name: 'page', description: 'Requested page', type: 'number' })
+  @ApiQuery({ name: 'limit', description: 'Elements per page', type: 'number' })
+  @ApiResponse({
+    status: SuccessCodes.Ok,
+    description: 'Task(s) retrieved successfully',
+  })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
+  async findCarTasks(
+    @Query('page', new ValidatePaginationPipe()) page: number = 0,
+    @Query('limit', new ValidatePaginationPipe()) limit: number = 50,
+  ) {
+    const response = await this.taskService.findCarTasks(page, limit);
+    const formattedResponse = formatResponse(response.entities, {
+      total: response.total,
+      page,
+      limit,
     });
     return formattedResponse;
   }
@@ -164,6 +237,28 @@ export class TaskController {
     const response = await this.taskService.createHouseTask(task);
     const formattedResponse = formatResponse(response, {
       id: response.houseTaskID,
+    });
+    return formattedResponse;
+  }
+
+  @Post('car')
+  @UsePipes(dtoValidator())
+  @ApiOperation({
+    summary: 'Create a new car task',
+  })
+  @ApiBody({ description: 'Task data', type: CreateTaskDto })
+  @ApiResponse({
+    status: SuccessCodes.Created,
+    description: 'Task created successfully',
+  })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
+  async createCarTask(@Body() task: CreateCarTaskDto) {
+    const response = await this.taskService.createCarTask(task);
+    const formattedResponse = formatResponse(response, {
+      id: response.carTaskID,
     });
     return formattedResponse;
   }
@@ -275,6 +370,25 @@ export class TaskController {
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
   async deleteHouseTask(@Param('id') id: string) {
     await this.taskService.deleteHouseTask(id);
+    const formattedResponse = formatResponse(null, { id });
+    return formattedResponse;
+  }
+
+  @Delete('car/:id')
+  @ApiOperation({
+    summary: 'Delete an existing car task',
+  })
+  @ApiParam({ name: 'id', description: 'Car task ID' })
+  @ApiResponse({
+    status: SuccessCodes.NoContent,
+    description: 'Task deleted successfully',
+  })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
+  async deleteCarTask(@Param('id') id: string) {
+    await this.taskService.deleteCarTask(id);
     const formattedResponse = formatResponse(null, { id });
     return formattedResponse;
   }

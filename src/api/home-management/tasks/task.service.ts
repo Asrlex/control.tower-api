@@ -1,10 +1,12 @@
 import {
+  CreateCarTaskDto,
   CreateHouseTaskDto,
   CreateTaskDto,
 } from '@/api/entities/dtos/home-management/task.dto';
 import { SuccessCodes } from '@/api/entities/enums/response-codes.enum';
 import { SearchCriteriaI } from '@/api/entities/interfaces/api.entity';
 import {
+  CarTaskI,
   HouseTaskI,
   TaskI,
 } from '@/api/entities/interfaces/home-management.entity';
@@ -55,10 +57,21 @@ export class TaskService {
   }
 
   /**
+   * Método para obtener todas las tareas de la casa
+   * @returns string - todas las tareas de la casa
+   */
+  async findAllCarTasks(): Promise<{
+    entities: CarTaskI[];
+    total: number;
+  }> {
+    return await this.taskRepository.findAllCarTasks();
+  }
+
+  /**
    * Método para obtener lista de tareas filtrados
    * @returns string - lista de tareas filtrados
    */
-  async getTasks(
+  async findTasks(
     page: number,
     limit: number,
     searchCriteria: SearchCriteriaI,
@@ -70,11 +83,39 @@ export class TaskService {
   }
 
   /**
+   * Método para obtener lista de tareas filtrados
+   * @returns string - lista de tareas filtrados
+   */
+  async findHouseTasks(
+    page: number,
+    limit: number,
+  ): Promise<{
+    entities: HouseTaskI[];
+    total: number;
+  }> {
+    return await this.taskRepository.findHouseTasks(page, limit);
+  }
+
+  /**
+   * Método para obtener lista de tareas filtrados
+   * @returns string - lista de tareas filtrados
+   */
+  async findCarTasks(
+    page: number,
+    limit: number,
+  ): Promise<{
+    entities: CarTaskI[];
+    total: number;
+  }> {
+    return await this.taskRepository.findCarTasks(page, limit);
+  }
+
+  /**
    * Método para obtener una tarea por su id
    * @param id - id de la tarea
    * @returns string
    */
-  async getTaskById(id: string): Promise<TaskI> {
+  async findById(id: string): Promise<TaskI> {
     return await this.taskRepository.findById(id);
   }
 
@@ -92,6 +133,14 @@ export class TaskService {
    */
   async createHouseTask(dto: CreateHouseTaskDto): Promise<HouseTaskI> {
     return await this.taskRepository.createHouseTask(dto);
+  }
+
+  /**
+   * Metodo para crear una nueva tarea
+   * @returns string - tarea creada
+   */
+  async createCarTask(dto: CreateCarTaskDto): Promise<CarTaskI> {
+    return await this.taskRepository.createCarTask(dto);
   }
 
   /**
@@ -130,5 +179,14 @@ export class TaskService {
    */
   async deleteHouseTask(id: string) {
     await this.taskRepository.deleteHouseTask(id);
+  }
+
+  /**
+   * Método para eliminar una tarea del coche
+   * @param id - id de la tarea
+   * @returns null - tarea eliminada
+   */
+  async deleteCarTask(id: string) {
+    await this.taskRepository.deleteCarTask(id);
   }
 }

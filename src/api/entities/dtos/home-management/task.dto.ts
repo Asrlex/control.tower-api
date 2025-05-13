@@ -83,3 +83,42 @@ export class GetHouseTaskDto {
   @IsString()
   houseTaskDate: string;
 }
+
+export class GetCarTaskDto {
+  @IsNumber()
+  carTaskID: number;
+  @IsString()
+  carTaskName:
+    | 'Golosinas'
+    | 'Cambio Aceite'
+    | 'Presión Ruedas'
+    | 'Sustitución Limpiaparabrisas'
+    | 'Revisión'
+    | 'ITV';
+  @IsString()
+  carTaskDetails: string;
+  @IsNumber()
+  carTaskCost: number;
+  @IsString()
+  carTaskDate: string;
+}
+
+export class CreateCarTaskDto {
+  @IsNumber()
+  @IsOptional()
+  carTaskID?: number;
+  @IsString()
+  carTaskName:
+    | 'Golosinas'
+    | 'Cambio Aceite'
+    | 'Presión Ruedas'
+    | 'Sustitución Limpiaparabrisas'
+    | 'Revisión'
+    | 'ITV';
+  @IsString()
+  carTaskDetails: string;
+  @IsNumber()
+  carTaskCost: number;
+  @IsString()
+  carTaskDate: string;
+}
