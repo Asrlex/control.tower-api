@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
+import { CarTaskTypes } from '../../enums/dto.enum';
 
 export class CreateTaskDto {
   @ApiProperty({
@@ -88,13 +89,7 @@ export class GetCarTaskDto {
   @IsNumber()
   carTaskID: number;
   @IsString()
-  carTaskName:
-    | 'Golosinas'
-    | 'Cambio Aceite'
-    | 'Presión Ruedas'
-    | 'Sustitución Limpiaparabrisas'
-    | 'Revisión'
-    | 'ITV';
+  carTaskName: CarTaskTypes;
   @IsString()
   carTaskDetails: string;
   @IsNumber()
@@ -108,13 +103,7 @@ export class CreateCarTaskDto {
   @IsOptional()
   carTaskID?: number;
   @IsString()
-  carTaskName:
-    | 'Golosinas'
-    | 'Cambio Aceite'
-    | 'Presión Ruedas'
-    | 'Sustitución Limpiaparabrisas'
-    | 'Revisión'
-    | 'ITV';
+  carTaskName: CarTaskTypes;
   @IsString()
   carTaskDetails: string;
   @IsNumber()

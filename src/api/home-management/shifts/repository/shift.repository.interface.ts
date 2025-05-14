@@ -1,5 +1,9 @@
-import { CreateShiftCheckinDto } from '@/api/entities/dtos/home-management/shift.dto';
 import {
+  CreateAbsenceDto,
+  CreateShiftCheckinDto,
+} from '@/api/entities/dtos/home-management/shift.dto';
+import {
+  AbsenceI,
   ShiftI,
   UserI,
 } from '@/api/entities/interfaces/home-management.entity';
@@ -10,5 +14,8 @@ export const SHIFT_REPOSITORY = 'SHIFT_REPOSITORY';
 export interface ShiftRepository
   extends GenericRepository<ShiftI, string, CreateShiftCheckinDto> {
   findByMonth(date: string, user: UserI): Promise<ShiftI[]>;
+  findAllAbsences(user: UserI): Promise<AbsenceI[]>;
   createByUser(dto: CreateShiftCheckinDto, user: UserI): Promise<ShiftI>;
+  createAbsence(dto: CreateAbsenceDto, user: UserI): Promise<void>;
+  deleteAbsence(absenceId: string): Promise<void>;
 }

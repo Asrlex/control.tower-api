@@ -33,6 +33,11 @@ export const expensesQueries = {
     SelectTables: `${TableNames.Expenses} e ${expensesJoin}`,
     SelectId: `e.id`,
   }),
+  findByMonth: formatTemplateString(baseQueries.FindById, {
+    SelectFields: expensesSelectRoot,
+    SelectTables: `${TableNames.Expenses} e ${expensesJoin}`,
+    SelectId: `strftime('%Y-%m', e.date)`,
+  }),
   find: formatTemplateString(baseQueries.Find, {
     KeyParam,
     IncludedItemsTable: `${TableNames.Expenses} e ${expensesJoin}`,

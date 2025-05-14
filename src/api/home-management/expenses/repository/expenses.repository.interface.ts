@@ -10,4 +10,5 @@ export const EXPENSE_REPOSITORY = 'EXPENSE_REPOSITORY';
 export interface ExpenseRepository
   extends GenericRepository<ExpenseI, string, CreateExpenseDto> {
   findAllCategories(): Promise<ExpenseCategoryI[]>;
+  findByMonth(month: string): Promise<ExpenseI[]>;
 }

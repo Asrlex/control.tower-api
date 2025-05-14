@@ -5,10 +5,14 @@ import {
   ShiftRepository,
 } from './repository/shift.repository.interface';
 import {
+  AbsenceI,
   ShiftI,
   UserI,
 } from '@/api/entities/interfaces/home-management.entity';
-import { CreateShiftCheckinDto } from '@/api/entities/dtos/home-management/shift.dto';
+import {
+  CreateAbsenceDto,
+  CreateShiftCheckinDto,
+} from '@/api/entities/dtos/home-management/shift.dto';
 
 @Injectable()
 export class ShiftService {
@@ -29,8 +33,8 @@ export class ShiftService {
   }
 
   /**
-   * Método para obtener todos los tiendas
-   * @returns string - todos los tiendas
+   * Método para obtener todos los turnos
+   * @returns string - todos los turnos
    */
   async findAllShifts(): Promise<{
     entities: ShiftI[];
@@ -40,8 +44,16 @@ export class ShiftService {
   }
 
   /**
-   * Método para obtener una tienda por su id
-   * @param id - id de la tienda
+   * Método para obtener todos los turnos
+   * @returns string - todos los turnos
+   */
+  async findAllAbsences(user: UserI): Promise<AbsenceI[]> {
+    return await this.storeRepository.findAllAbsences(user);
+  }
+
+  /**
+   * Método para obtener un turno por su id
+   * @param id - id del turno
    * @returns string
    */
   async getShiftById(id: string): Promise<ShiftI> {
@@ -58,29 +70,47 @@ export class ShiftService {
   }
 
   /**
-   * Metodo para crear un nuevo tienda
-   * @returns string - tienda creado
+   * Metodo para crear un nuevo turno
+   * @returns string - turno creado
    */
   async createShift(dto: CreateShiftCheckinDto, user: UserI): Promise<ShiftI> {
     return await this.storeRepository.createByUser(dto, user);
   }
 
   /**
-   * Método para actualizar una tienda
-   * @param id - id de la tienda
-   * @param customer - tienda
-   * @returns string - tienda actualizado
+   * Método para crear una ausencia
+   * @param dto - ausencia
+   * @returns string - ausencia creada
+   */
+  async createAbsence(dto: CreateAbsenceDto, user: UserI): Promise<void> {
+    await this.storeRepository.createAbsence(dto, user);
+  }
+
+  /**
+   * Método para actualizar un turno
+   * @param id - id del turno
+   * @param customer - turno
+   * @returns string - turno actualizado
    */
   async updateShift(id: string, customer: CreateShiftCheckinDto) {
     return await this.storeRepository.modify(id, customer);
   }
 
   /**
-   * Método para eliminar una tienda
-   * @param id - id de la tienda
-   * @returns null - tienda eliminado
+   * Método para eliminar un turno
+   * @param id - id del turno
+   * @returns null - turno eliminado
    */
   async deleteShift(id: string) {
     await this.storeRepository.delete(id);
+  }
+
+  /**
+   * Método para eliminar una ausencia
+   * @param id - id de la ausencia
+   * @returns null - ausencia eliminada
+   */
+  async deleteAbsence(id: string) {
+    await this.storeRepository.deleteAbsence(id);
   }
 }

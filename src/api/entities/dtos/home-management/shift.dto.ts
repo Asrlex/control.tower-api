@@ -1,4 +1,5 @@
 import { IsNumber, IsString } from 'class-validator';
+import { AbsenceTypes, ShiftTypes } from '../../enums/dto.enum';
 
 export class GetShiftCheckinDto {
   @IsNumber()
@@ -8,7 +9,7 @@ export class GetShiftCheckinDto {
   @IsString()
   shiftTimestamp: string;
   @IsString()
-  shiftType: 'CLOCK_IN' | 'CLOCK_OUT';
+  shiftType: ShiftTypes;
 }
 
 export class CreateShiftCheckinDto {
@@ -17,5 +18,29 @@ export class CreateShiftCheckinDto {
   @IsString()
   shiftTimestamp: string;
   @IsString()
-  shiftType: 'CLOCK_IN' | 'CLOCK_OUT';
+  shiftType: ShiftTypes;
+}
+
+export class GetAbsenceDto {
+  @IsNumber()
+  absenceID: number;
+  @IsString()
+  absenceDate: string;
+  @IsString()
+  absenceType: AbsenceTypes;
+  @IsString()
+  absenceComment: string;
+  @IsNumber()
+  absenceHours: string;
+}
+
+export class CreateAbsenceDto {
+  @IsString()
+  absenceDate: string;
+  @IsString()
+  absenceType: AbsenceTypes;
+  @IsString()
+  absenceComment: string;
+  @IsNumber()
+  absenceHours: string;
 }

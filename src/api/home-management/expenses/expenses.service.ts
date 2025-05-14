@@ -73,6 +73,15 @@ export class ExpenseService {
   }
 
   /**
+   * Método para obtener un gasto por su mes
+   * @param month - mes del gasto
+   * @returns string
+   */
+  async getExpensesByMonth(month: string): Promise<ExpenseI[]> {
+    return await this.expenseRepository.findByMonth(month);
+  }
+
+  /**
    * Método para crear un gasto
    * @param dto - dto del gasto
    * @returns string - gasto creado

@@ -91,8 +91,27 @@ export class ExpenseController {
   @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
   @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
   @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
-  async getExpenseById(id: string) {
+  async getExpenseById(@Param('id') id: string) {
     const response = await this.expenseService.getExpenseById(id);
+    const formattedResponse = formatResponse(response, {});
+    return formattedResponse;
+  }
+
+  @Get('month/:month')
+  @ApiOperation({
+    summary: 'Get expense by month',
+  })
+  @ApiParam({ name: 'id', description: 'Expense month' })
+  @ApiResponse({
+    status: SuccessCodes.Ok,
+    description: 'Expense(s) retrieved successfully',
+  })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
+  async getExpensesByMonth(@Param('month') month: string) {
+    const response = await this.expenseService.getExpensesByMonth(month);
     const formattedResponse = formatResponse(response, {});
     return formattedResponse;
   }

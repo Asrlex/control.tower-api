@@ -5,12 +5,15 @@ import { plainToInstance } from 'class-transformer';
 import { BaseRepository } from '@/common/repository/base-repository';
 import { ShiftRepository } from './shift.repository.interface';
 import {
+  AbsenceI,
   ShiftI,
   UserI,
 } from '@/api/entities/interfaces/home-management.entity';
 import { shiftQueries } from '@/db/queries/shifts.queries';
 import {
+  CreateAbsenceDto,
   CreateShiftCheckinDto,
+  GetAbsenceDto,
   GetShiftCheckinDto,
 } from '@/api/entities/dtos/home-management/shift.dto';
 
@@ -41,6 +44,26 @@ export class ShiftRepositoryImplementation
       entities,
       total: result[0] ? parseInt(result[0].total, 10) : 0,
     };
+  }
+
+  /**
+   * Método para obtener todas las ausencias
+   * @returns string - todas las ausencias
+   */
+  async findAllAbsences(user: UserI): Promise<AbsenceI[]> {
+    const sql = shiftQueries.findAllAbsences.replaceAll(
+      '@id',
+      `'${user.userID.toString()}' OR user_id IS NULL`,
+    );
+    const result = await this.homeManagementDbConnection.execute(sql);
+    const entities: AbsenceI[] = result.map((record: GetAbsenceDto) => ({
+      absenceID: record.absenceID,
+      absenceDate: record.absenceDate,
+      absenceType: record.absenceType,
+      absenceHours: record.absenceHours,
+      absenceComment: record.absenceComment,
+    }));
+    return entities;
   }
 
   async find(
@@ -101,6 +124,21 @@ export class ShiftRepositoryImplementation
   }
 
   /**
+   * Metodo para crear una nueva ausencia
+   * @returns string - ausencia creada
+   */
+  async createAbsence(dto: CreateAbsenceDto, user: UserI): Promise<void> {
+    const sqlProduct = shiftQueries.createAbsence.replace(
+      '@InsertValues',
+      `'${dto.absenceDate}', '${dto.absenceType}', '${dto.absenceHours}', '${dto.absenceComment}', '${user.userID}'`,
+    );
+    const responseProduct =
+      await this.homeManagementDbConnection.execute(sqlProduct);
+
+    await this.saveLog('insert', 'absence', `Created absence`);
+  }
+
+  /**
    * Método para actualizar un turno
    * Si el turno no existe, se devuelve null
    * Si el turno no tiene cambios, se devuelve el turnos original
@@ -139,6 +177,17 @@ export class ShiftRepositoryImplementation
     const sql = shiftQueries.delete.replace('@id', id);
     await this.homeManagementDbConnection.execute(sql);
     await this.saveLog('delete', 'shift', `Deleted shift ${id}`);
+  }
+
+  /**
+   * Método para eliminar una ausencia
+   * @param id - id de la ausencia
+   * @returns string - ausencia eliminada
+   */
+  async deleteAbsence(id: string): Promise<void> {
+    const sql = shiftQueries.deleteAbsence.replace('@id', id);
+    await this.homeManagementDbConnection.execute(sql);
+    await this.saveLog('delete', 'absence', `Deleted absence ${id}`);
   }
 
   /**

@@ -1,3 +1,5 @@
+import { AbsenceTypes, CarTaskTypes, ShiftTypes } from '../enums/dto.enum';
+
 export interface StockProductI {
   stockProductID: number;
   stockProductAmount: number;
@@ -50,13 +52,7 @@ export interface HouseTaskI {
 
 export interface CarTaskI {
   carTaskID: number;
-  carTaskName:
-    | 'Golosinas'
-    | 'Cambio Aceite'
-    | 'Presión Ruedas'
-    | 'Sustitución Limpiaparabrisas'
-    | 'Revisión'
-    | 'ITV';
+  carTaskName: CarTaskTypes;
   carTaskDetails: string;
   carTaskCost: number;
   carTaskDate: string;
@@ -148,5 +144,13 @@ export interface ShiftCheckinI {
   shiftCheckinID: number;
   shiftCheckinDate: string;
   shiftCheckinTimestamp: string;
-  shiftCheckinType: 'CLOCK_IN' | 'CLOCK_OUT';
+  shiftCheckinType: ShiftTypes;
+}
+
+export interface AbsenceI {
+  absenceID: number;
+  absenceDate: string;
+  absenceType: AbsenceTypes;
+  absenceComment: string;
+  absenceHours: number;
 }

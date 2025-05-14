@@ -93,6 +93,18 @@ export class ExpenseRepositoryImplementation
   }
 
   /**
+   * Método para obtener un gasto por su mes
+   * @param month - mes del gasto
+   * @returns string - gasto
+   */
+  async findByMonth(month: string): Promise<ExpenseI[]> {
+    const sql = expensesQueries.findByMonth.replace('@id', `'${month}'`);
+    const result = await this.homeManagementDbConnection.execute(sql);
+    const entities: ExpenseI[] = this.resultToExpense(result);
+    return entities;
+  }
+
+  /**
    * Método para obtener lista de gastos filtrados
    * @returns string - lista de gastos filtrados
    */
