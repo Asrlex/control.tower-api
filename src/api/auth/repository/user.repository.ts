@@ -119,6 +119,51 @@ export class UserRepositoryImplementation
   }
 
   /**
+   * Método para guardar las credenciales biométricas de un usuario
+   * @param userID - ID del usuario
+   * @param credentialID - ID de la credencial
+   * @param credentialPublicKey - clave pública de la credencial
+   */
+  async saveBiometricCredential(
+    userID: number,
+    credentialID: string,
+    credentialPublicKey: Uint8Array,
+  ): Promise<void> {
+    const sql = usersQueries.saveBiometricCredential.replace(
+      '@InsertValues',
+      `'${userID}', '${credentialID}', '${credentialPublicKey}'`,
+    );
+    await this.homeManagementDbConnection.execute(sql);
+  }
+
+  /**
+   * Método para guardar el challenge de un usuario
+   * @param userID - ID del usuario
+   * @param challenge - challenge a guardar
+   */
+  async saveChallenge(userID: number, challenge: string): Promise<void> {
+    const sql = usersQueries.saveChallenge.replace(
+      '@InsertValues',
+      `'${userID}', '${challenge}'`,
+    );
+    await this.homeManagementDbConnection.execute(sql);
+  }
+
+  /**
+   * Método para obtener el challenge de un usuario
+   * @param userID - ID del usuario
+   * @returns string - challenge del usuario
+   */
+  async findChallenge(userID: number): Promise<string> {
+    const sql = usersQueries.findChallenge.replace('@id', userID.toString());
+    const result = await this.homeManagementDbConnection.execute(sql);
+    if (result.length === 0) {
+      throw new NotFoundException(`User with ID ${userID} not found`);
+    }
+    return result[0].challenge;
+  }
+
+  /**
    * Método para convertir el resultado de la consulta a un array de usuarios
    * @param result - resultado de la consulta
    * @returns array de usuarios

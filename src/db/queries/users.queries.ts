@@ -40,6 +40,21 @@ export const usersQueries = {
     UpdateFields: `email = '@email', password = '@password'`,
     UpdateId: 'id',
   }),
+  saveBiometricCredential: formatTemplateString(baseQueries.Create, {
+    InsertTable: TableNames.Users,
+    InsertFields: 'user_id, credential_id, credential_public_key',
+    InsertOutput: 'RETURNING id',
+  }),
+  saveChallenge: formatTemplateString(baseQueries.Create, {
+    InsertTable: TableNames.Challenges,
+    InsertFields: 'user_id, challenge',
+    InsertOutput: 'RETURNING id',
+  }),
+  findChallenge: formatTemplateString(baseQueries.FindById, {
+    SelectFields: 'challenge',
+    SelectTables: TableNames.Challenges,
+    SelectId: 'user_id',
+  }),
   delete: formatTemplateString(baseQueries.HardDelete, {
     DeleteTable: TableNames.Users,
   }),

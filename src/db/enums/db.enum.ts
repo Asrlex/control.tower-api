@@ -28,6 +28,7 @@ export enum TableNames {
   Shifts = 'shifts',
   Absences = 'absences',
   Users = 'user',
+  Challenges = 'challenges',
   Expenses = 'expenses',
   ExpenseCategories = 'expense_category',
 }

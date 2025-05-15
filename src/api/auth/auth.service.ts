@@ -15,6 +15,11 @@ import * as bcrypt from 'bcrypt';
 import { SuccessCodes } from '../entities/enums/response-codes.enum';
 import { UserRepository } from './repository/user.repository.interface';
 import { AuthMessages } from './entities/enums/auth.enum';
+import {
+  generateRegistrationOptions,
+  RegistrationResponseJSON,
+  verifyRegistrationResponse,
+} from '@simplewebauthn/server';
 
 @Injectable()
 export class AuthService {
@@ -189,5 +194,62 @@ export class AuthService {
     } catch (error) {
       throw new UnauthorizedException(AuthMessages.InvalidToken);
     }
+  }
+
+  /**
+   * Método para obtener opciones de registro de WebAuthn
+   * @param user - usuario
+   * @returns string - opciones de registro de WebAuthn
+   */
+  async generateRegistrationOptions(user: UserI): Promise<any> {
+    const options = await generateRegistrationOptions({
+      rpName: 'Home Management App',
+      rpID: process.env.RP_ID,
+      userID: new TextEncoder().encode(user.userID.toString()),
+      userName: user.userEmail,
+      attestationType: 'direct',
+      authenticatorSelection: {
+        residentKey: 'required',
+        userVerification: 'preferred',
+      },
+    });
+
+    await this.userRepository.saveChallenge(user.userID, options.challenge);
+
+    return options;
+  }
+
+  /**
+   * Método para registrar biometría de un usuario
+   * @param user - usuario
+   * @param options - opciones de registro
+   * @returns string - registro de biometría
+   */
+  async verifyAndStoreRegistration(
+    user: UserI,
+    attestation: RegistrationResponseJSON,
+  ): Promise<any> {
+    const expectedChallenge = await this.userRepository.findChallenge(
+      user.userID,
+    );
+    const verification = await verifyRegistrationResponse({
+      response: attestation,
+      expectedChallenge,
+      expectedOrigin: process.env.ORIGIN,
+      expectedRPID: process.env.RP_ID,
+    });
+
+    if (!verification.verified) {
+      throw new UnauthorizedException('Biometric verification failed');
+    }
+
+    const { credential } = verification.registrationInfo;
+    await this.userRepository.saveBiometricCredential(
+      user.userID,
+      credential.id,
+      credential.publicKey,
+    );
+
+    return verification.registrationInfo;
   }
 }
