@@ -142,10 +142,9 @@ export class UserRepositoryImplementation
    * @param challenge - challenge a guardar
    */
   async saveChallenge(userID: number, challenge: string): Promise<void> {
-    const sql = usersQueries.saveChallenge.replace(
-      '@InsertValues',
-      `'${userID}', '${challenge}'`,
-    );
+    const sql = usersQueries.saveChallenge
+      .replace('@webauthn_challenge', challenge)
+      .replace('@id', userID.toString());
     await this.homeManagementDbConnection.execute(sql);
   }
 
@@ -160,7 +159,45 @@ export class UserRepositoryImplementation
     if (result.length === 0) {
       throw new NotFoundException(`User with ID ${userID} not found`);
     }
-    return result[0].challenge;
+    return result[0].webauthn_challenge;
+  }
+
+  /**
+   * Método para obtener las credenciales biométricas de un usuario
+   * @param userID - ID del usuario
+   * @returns credenciales biométricas del usuario
+   */
+  async findCredentials(userID: number): Promise<{
+    credentialID: string;
+    credentialPublicKey: Uint8Array;
+    credentialCounter: number;
+  }> {
+    const sql = usersQueries.findCredentials.replace('@id', userID.toString());
+    const result = await this.homeManagementDbConnection.execute(sql);
+    if (result.length === 0) {
+      throw new NotFoundException(`User with ID ${userID} not found`);
+    }
+    return {
+      credentialID: result[0].credentialID,
+      credentialPublicKey: Buffer.from(result[0].credentialPublicKey, 'base64'),
+      credentialCounter: result[0].credentialCounter,
+    };
+  }
+
+  /**
+   * Método para actualizar el contador de la credencial biométrica de un usuario
+   * @param userID - ID del usuario
+   * @param credentialID - ID de la credencial
+   * @param counter - nuevo contador
+   */
+  async updateCredentialCounter(
+    userID: number,
+    counter: number,
+  ): Promise<void> {
+    const sql = usersQueries.updateCredentialCounter
+      .replace('@id', userID.toString())
+      .replace('@counter', counter.toString());
+    await this.homeManagementDbConnection.execute(sql);
   }
 
   /**

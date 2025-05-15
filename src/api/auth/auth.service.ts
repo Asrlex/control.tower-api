@@ -16,8 +16,10 @@ import { SuccessCodes } from '../entities/enums/response-codes.enum';
 import { UserRepository } from './repository/user.repository.interface';
 import { AuthMessages } from './entities/enums/auth.enum';
 import {
+  AuthenticationResponseJSON,
   generateRegistrationOptions,
   RegistrationResponseJSON,
+  verifyAuthenticationResponse,
   verifyRegistrationResponse,
 } from '@simplewebauthn/server';
 
@@ -162,7 +164,7 @@ export class AuthService {
    * @param payload - carga útil del token
    * @returns string - token de autenticación
    */
-  private createToken(payload: any) {
+  private createToken(payload: { email: string; sub: number }): string {
     const token: string = this.jwtService.sign(payload, {
       secret: process.env.JWT_SECRET,
       expiresIn: process.env.JWT_EXPIRATION,
@@ -251,5 +253,47 @@ export class AuthService {
     );
 
     return verification.registrationInfo;
+  }
+
+  /**
+   * Método para autenticar biometría de un usuario
+   * @param user - usuario
+   * @param assertion - opciones de autenticación
+   * @returns string - autenticación de biometría
+   */
+  async verifyAuthenticationAssertion(
+    user: UserI,
+    assertion: AuthenticationResponseJSON,
+  ): Promise<any> {
+    const expectedChallenge = await this.userRepository.findChallenge(
+      user.userID,
+    );
+    const credentials = await this.userRepository.findCredentials(user.userID);
+    const verification = await verifyAuthenticationResponse({
+      response: assertion,
+      expectedChallenge,
+      expectedOrigin: process.env.ORIGIN,
+      expectedRPID: process.env.RP_ID,
+      credential: {
+        id: credentials.credentialID,
+        publicKey: credentials.credentialPublicKey,
+        counter: credentials.credentialCounter,
+      },
+    });
+
+    if (!verification.verified) {
+      throw new UnauthorizedException('Biometric verification failed');
+    }
+
+    await this.userRepository.updateCredentialCounter(
+      user.userID,
+      verification.authenticationInfo.newCounter,
+    );
+
+    // Generate a new JWT token for the user
+    const payload = { email: user.userEmail, sub: user.userID };
+    const token = this.createToken(payload);
+
+    return { user, token };
   }
 }

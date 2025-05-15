@@ -41,19 +41,30 @@ export const usersQueries = {
     UpdateId: 'id',
   }),
   saveBiometricCredential: formatTemplateString(baseQueries.Create, {
-    InsertTable: TableNames.Users,
+    InsertTable: TableNames.Biometrics,
     InsertFields: 'user_id, credential_id, credential_public_key',
     InsertOutput: 'RETURNING id',
   }),
-  saveChallenge: formatTemplateString(baseQueries.Create, {
-    InsertTable: TableNames.Challenges,
-    InsertFields: 'user_id, challenge',
-    InsertOutput: 'RETURNING id',
+  saveChallenge: formatTemplateString(baseQueries.Update, {
+    InsertTable: TableNames.Users,
+    InsertFields: `webauthn_challenge = '@webauthn_challenge'`,
+    UpdateId: 'id',
   }),
   findChallenge: formatTemplateString(baseQueries.FindById, {
-    SelectFields: 'challenge',
-    SelectTables: TableNames.Challenges,
+    SelectFields: 'webauthn_challenge',
+    SelectTables: TableNames.Users,
+    SelectId: 'id',
+  }),
+  findCredentials: formatTemplateString(baseQueries.FindById, {
+    SelectFields:
+      'credential_id as credentialID, credential_public_key as credentialPublicKey, counter as credentialCounter',
+    SelectTables: TableNames.Biometrics,
     SelectId: 'user_id',
+  }),
+  updateCredentialCounter: formatTemplateString(baseQueries.Update, {
+    UpdateTable: TableNames.Biometrics,
+    UpdateFields: `counter = @counter`,
+    UpdateId: 'user_id',
   }),
   delete: formatTemplateString(baseQueries.HardDelete, {
     DeleteTable: TableNames.Users,

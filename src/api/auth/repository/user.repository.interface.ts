@@ -14,4 +14,10 @@ export interface UserRepository
   ): Promise<void>;
   saveChallenge(userID: number, challenge: string): Promise<void>;
   findChallenge(userID: number): Promise<string>;
+  findCredentials(userID: number): Promise<{
+    credentialID: string;
+    credentialPublicKey: Uint8Array;
+    credentialCounter: number;
+  }>;
+  updateCredentialCounter(userID: number, counter: number): Promise<void>;
 }

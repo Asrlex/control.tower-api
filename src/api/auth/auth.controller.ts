@@ -19,7 +19,10 @@ import {
   ErrorCodes,
 } from '../entities/enums/response-codes.enum';
 import { AuthMessages } from './entities/enums/auth.enum';
-import { RegistrationResponseJSON } from '@simplewebauthn/server';
+import {
+  AuthenticationResponseJSON,
+  RegistrationResponseJSON,
+} from '@simplewebauthn/server';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -191,6 +194,48 @@ export class AuthController {
       throw new UnauthorizedException(AuthMessages.UserNotFound);
     }
     const credential = await this.authService.verifyAndStoreRegistration(
+      user,
+      attestation,
+    );
+    return formatResponse(credential);
+  }
+
+  @Post('biometrics/authenticate')
+  @ApiOperation({ summary: 'Verify WebAuthn authentication assertion' })
+  @ApiBody({
+    type: Object,
+    description: 'WebAuthn attestation object',
+    required: true,
+  })
+  @ApiResponse({
+    status: SuccessCodes.Ok,
+    description: 'WebAuthn authentication successful',
+  })
+  @ApiResponse({ status: ErrorCodes.BadRequest, description: 'Bad Request' })
+  @ApiResponse({ status: ErrorCodes.Unauthorized, description: 'Unauthorized' })
+  @ApiResponse({ status: ErrorCodes.Forbidden, description: 'Forbidden' })
+  @ApiResponse({ status: ErrorCodes.NotFound, description: 'Not Found' })
+  @ApiResponse({
+    status: ErrorCodes.InternalServerError,
+    description: 'Internal Server Error',
+  })
+  async verifyAuthenticationAssertion(
+    @Req() req: Request,
+    @Body() attestation: AuthenticationResponseJSON,
+  ) {
+    const token = await this.authService.getTokenFromRequest(req);
+    if (!token) {
+      throw new UnauthorizedException(AuthMessages.NoTokenProvided);
+    }
+    const response = await this.authService.validateToken(token);
+    if (!response) {
+      throw new UnauthorizedException(AuthMessages.InvalidToken);
+    }
+    const user = await this.authService.getUserFromToken(token);
+    if (!user) {
+      throw new UnauthorizedException(AuthMessages.UserNotFound);
+    }
+    const credential = await this.authService.verifyAuthenticationAssertion(
       user,
       attestation,
     );
